@@ -67,15 +67,6 @@ angular.module('myPage', ['ionic'])
         }
       }
     })
-    // .state('tabs.contact', {
-    //   url: '/contact',
-    //   views: {
-    //     'contact-tab': {
-    //       templateUrl: 'templates/contact.html'
-    //     }
-    //   }
-    // });
-
 
    $urlRouterProvider.otherwise('/sign-in');
 
@@ -100,4 +91,13 @@ angular.module('myPage', ['ionic'])
 
 .controller('ScheduleTabCtrl', function() {
 
+})
+
+.controller('NavCtrl', function($scope, $ionicSideMenuDelegate) {
+  $scope.showLeftMenu = function () {
+    $ionicSideMenuDelegate.toggleLeft();
+  };
+  $scope.showRightMenu = function () {
+    $ionicSideMenuDelegate.toggleRight();
+  };
 })
