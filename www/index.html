@@ -71,5 +71,27 @@
       </ion-view>
     </script>
 
+    <script id="templates/tabs.html" type="text/ng-template">
+      <ion-view>
+        <ion-tabs class="tabs-icon-top tabs-calm">
+
+          <ion-tab title="Home" icon="ion-home" href="#/tab/home">
+            <ion-nav-view name="home-tab"></ion-nav-view>
+          </ion-tab>
+
+        </ion-tabs>
+      </ion-view>
+    </script>
+
+    <script id="templates/home.html" type="text/ng-template">
+      <ion-view view-title="Home">
+        <ion-content padding="true">
+          <p>Example of Ionic tabs. Navigate to each tab, and
+          navigate to child views of each tab and notice how
+          each tab has its own navigation history.</p>
+        </ion-content>
+      </ion-view>
+    </script>
+
   </body>
 </html>
