@@ -23,13 +23,45 @@
   </head>
   <body>
 
+    <ion-side-menus>
 
-    <ion-nav-bar class="bar-calm">
-      <ion-nav-back-button>
-      </ion-nav-back-button>
-    </ion-nav-bar>
+      <ion-side-menu-content ng-controller="NavCtrl">
+        <ion-nav-bar class="bar-calm">
+          <ion-nav-back-button>
+          </ion-nav-back-button>
 
-    <ion-nav-view></ion-nav-view>
+          <ion-nav-buttons side="left">
+            <button class="button button-icon button-clear ion-navicon" ng-click="showLeftMenu()">
+            </button>
+          </ion-nav-buttons>
+
+          <ion-nav-buttons side="right">
+            <button class="button button-icon button-clear ion-android-settings" ng-click="showRightMenu()">
+            </button>
+          </ion-nav-buttons>
+        </ion-nav-bar>
+        <ion-nav-view animation="slide-left-right"></ion-nav-view>
+      </ion-side-menu-content>
+
+      <ion-side-menu side="left">
+        <ion-header-bar class="bar bar-header bar-calm">
+          <h1 class="title">Left Menu</h1>
+        </ion-header-bar>
+        <ion-content class="padding">
+          <p> Left Side Menu </p>
+        </ion-content>
+      </ion-side-menu>
+
+      <ion-side-menu side="right">
+        <ion-header-bar class="bar bar-header bar-calm">
+          <h1 class="title">Right Menu</h1>
+        </ion-header-bar>
+        <ion-content class="padding">
+          <p> Right Side Menu </p>
+        </ion-content>
+      </ion-side-menu>
+
+    </ion-side-menus>
 
     <script id="templates/sign-in.html" type="text/ng-template">
      <ion-view view-title="Login to My Page">
@@ -67,6 +99,14 @@
             There''s no username/password, just click
             the Sign-In button back a the sign-in view.
           </p>
+        </ion-content>
+      </ion-view>
+    </script>
+
+    <script id="settings.html" type="text/ng-template">
+      <ion-view title="Settings">
+        <ion-content>
+          Settings page
         </ion-content>
       </ion-view>
     </script>
