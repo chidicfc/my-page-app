@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <title></title>
+    <title>Sign in</title>
 
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -21,14 +21,55 @@
     <!-- your app's js -->
     <script src="js/app.js"></script>
   </head>
-  <body ng-app="starter">
+  <body ng-app="myPage">
 
-    <ion-pane>
-      <ion-header-bar class="bar-calm">
-        <h1 class="title">Coach in a Box</h1>
-      </ion-header-bar>
-      <ion-content>
-      </ion-content>
-    </ion-pane>
+
+    <ion-nav-bar class="bar-calm">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+    </ion-nav-bar>
+
+    <ion-nav-view></ion-nav-view>
+
+    <script id="templates/sign-in.html" type="text/ng-template">
+     <ion-view view-title="Login to My Page">
+       <ion-content>
+         <div class="list">
+           <label class="item item-input">
+             <span class="input-label">Username</span>
+             <input type="text" ng-model="user.username">
+           </label>
+           <label class="item item-input">
+             <span class="input-label">Password</span>
+             <input type="password" ng-model="user.password">
+           </label>
+         </div>
+         <div class="padding">
+           <button class="button button-block button-calm" ng-click="signIn(user)">
+             SIGN IN
+           </button>
+           <p>
+             <a href="#/forgot-password">Forgot password</a>
+           </p>
+         </div>
+       </ion-content>
+     </ion-view>
+    </script>
+
+    <script id="templates/forgot-password.html" type="text/ng-template">
+      <ion-view view-title="Forgot Password">
+        <ion-content padding="true">
+          <p>
+            Yeah this is just a demo showing how views can be shown without tabs, then you can navigate
+            to views within tabs. Additionally, only one set of tabs needs to be written for all of the different views that should go inside the tabs. (Compared to written the same tab links in the footer of every view that''s in a tab.)
+          </p>
+          <p>
+            There''s no username/password, just click
+            the Sign-In button back a the sign-in view.
+          </p>
+        </ion-content>
+      </ion-view>
+    </script>
+
   </body>
 </html>
