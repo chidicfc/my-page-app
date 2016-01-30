@@ -35,20 +35,20 @@ angular.module('myPage', ['ionic'])
       url: '/forgot-password',
       templateUrl: 'templates/forgot-password.html'
     })
-    // .state('tabs', {
-    //   url: '/tab',
-    //   abstract: true,
-    //   templateUrl: 'templates/tabs.html'
-    // })
-    // .state('tabs.home', {
-    //   url: '/home',
-    //   views: {
-    //     'home-tab': {
-    //       templateUrl: 'templates/home.html',
-    //       controller: 'HomeTabCtrl'
-    //     }
-    //   }
-    // })
+    .state('tabs', {
+      url: '/tab',
+      abstract: true,
+      templateUrl: 'templates/tabs.html'
+    })
+    .state('tabs.home', {
+      url: '/home',
+      views: {
+        'home-tab': {
+          templateUrl: 'templates/home.html',
+          controller: 'HomeTabCtrl'
+        }
+      }
+    })
     // .state('tabs.facts', {
     //   url: '/facts',
     //   views: {
@@ -99,7 +99,11 @@ angular.module('myPage', ['ionic'])
 
   $scope.signIn = function(user) {
     console.log('Sign-In', user);
-    // $state.go('tabs.home');
+    $state.go('tabs.home');
   };
+
+})
+
+.controller('HomeTabCtrl', function() {
 
 })
