@@ -49,38 +49,24 @@ angular.module('myPage', ['ionic'])
         }
       }
     })
-    // .state('tabs.facts', {
-    //   url: '/facts',
-    //   views: {
-    //     'home-tab': {
-    //       templateUrl: 'templates/facts.html'
-    //     }
-    //   }
-    // })
-    // .state('tabs.facts2', {
-    //   url: '/facts2',
-    //   views: {
-    //     'home-tab': {
-    //       templateUrl: 'templates/facts2.html'
-    //     }
-    //   }
-    // })
-    // .state('tabs.about', {
-    //   url: '/about',
-    //   views: {
-    //     'about-tab': {
-    //       templateUrl: 'templates/about.html'
-    //     }
-    //   }
-    // })
-    // .state('tabs.navstack', {
-    //   url: '/navstack',
-    //   views: {
-    //     'about-tab': {
-    //       templateUrl: 'templates/nav-stack.html'
-    //     }
-    //   }
-    // })
+    .state('tabs.coaches', {
+      url: '/coaches',
+      views: {
+        'coaches-tab': {
+          templateUrl: 'templates/coaches.html',
+          controller: 'CoachesTabCtrl'
+        }
+      }
+    })
+    .state('tabs.schedule', {
+      url: '/schedule',
+      views: {
+        'schedule-tab': {
+          templateUrl: 'templates/schedule.html',
+          controller: 'ScheduleTabCtrl'
+        }
+      }
+    })
     // .state('tabs.contact', {
     //   url: '/contact',
     //   views: {
@@ -105,5 +91,13 @@ angular.module('myPage', ['ionic'])
 })
 
 .controller('HomeTabCtrl', function() {
+
+})
+
+.controller('CoachesTabCtrl', function() {
+
+})
+
+.controller('ScheduleTabCtrl', function() {
 
 })
