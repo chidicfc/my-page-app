@@ -23,7 +23,7 @@
   </head>
   <body>
 
-    <ion-side-menus>
+    <ion-side-menus enable-menu-with-back-views="true">
 
       <ion-side-menu-content ng-controller="SideMenuCtrl">
         <ion-nav-bar class="bar-calm" align-title="left">
@@ -65,17 +65,17 @@
             <div class="item item-divider">
             </div>
 
-            <a class="item item-icon-left" href="#">
+            <a menu-close class="item item-icon-left" href="#/edit-profile">
               <i class="icon ion-android-person button-small"></i>
               Edit Profile
             </a>
 
-            <a class="item item-icon-left" href="#">
+            <a menu-close class="item item-icon-left" href="#">
               <i class="icon ion-edit button-small"></i>
               Change Password
             </a>
 
-            <a class="item item-icon-left" href="#">
+            <a menu-close class="item item-icon-left" href="#">
               <i class="icon ion-log-out button-small"></i>
               Sign Out
             </a>
@@ -170,6 +170,16 @@
       <ion-view view-title="Schedule">
         <ion-content padding="true">
           <h4>Schedule</h4>
+        </ion-content>
+      </ion-view>
+    </script>
+
+    <script id="templates/edit-profile.html" type="text/ng-template">
+      <ion-view view-title="Edit Profile">
+        <ion-content padding="true">
+          <p>
+            Edit Profile
+          </p>
         </ion-content>
       </ion-view>
     </script>

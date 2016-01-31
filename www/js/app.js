@@ -67,6 +67,11 @@ angular.module('myPage', ['ionic'])
         }
       }
     })
+    .state('editProfile', {
+      url: '/edit-profile',
+      templateUrl: 'templates/edit-profile.html',
+      controller: 'EditProfileCtrl'
+    })
 
    $urlRouterProvider.otherwise('/sign-in');
 
@@ -99,4 +104,8 @@ angular.module('myPage', ['ionic'])
   $scope.showRightMenu = function () {
     $ionicSideMenuDelegate.toggleRight();
   };
+})
+
+.controller('EditProfileCtrl', function() {
+
 })
