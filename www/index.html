@@ -85,7 +85,7 @@
 
     </ion-side-menus> -->
 
-    <ion-nav-bar class="bar-calm" align-title="left">
+    <ion-nav-bar class="bar-calm">
       <ion-nav-back-button class="button-clear button-icon ion-android-arrow-back">
       </ion-nav-back-button>
     </ion-nav-bar>
@@ -151,7 +151,7 @@
             <ion-nav-view name="schedule-tab"></ion-nav-view>
           </ion-tab>
 
-          <ion-tab icon="ion-android-settings" href="#/tabs/settings">
+          <ion-tab icon="ion-android-settings" ui-sref="tabs.settings">
             <ion-nav-view name="settings-tab"></ion-nav-view>
           </ion-tab>
 
@@ -231,10 +231,7 @@
     </script>
 
     <script id="templates/edit-profile.html" type="text/ng-template">
-      <ion-view>
-        <ion-nav-title>
-          <img src="">
-        </ion-nav-title>
+      <ion-view view-title="Edit Profile">
         <ion-content padding="true">
           <p>
             Edit Profile
