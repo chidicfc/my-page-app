@@ -23,7 +23,7 @@
   </head>
   <body>
 
-    <ion-side-menus enable-menu-with-back-views="true">
+    <!-- <ion-side-menus enable-menu-with-back-views="true">
 
       <ion-side-menu-content ng-controller="SideMenuCtrl">
         <ion-nav-bar class="bar-calm" align-title="left">
@@ -83,7 +83,14 @@
         </ion-content>
       </ion-side-menu>
 
-    </ion-side-menus>
+    </ion-side-menus> -->
+
+    <ion-nav-bar class="bar-calm" align-title="left">
+      <ion-nav-back-button class="button-clear button-icon ion-android-arrow-back">
+      </ion-nav-back-button>
+    </ion-nav-bar>
+
+    <ion-nav-view></ion-nav-view>
 
     <script id="templates/sign-in.html" type="text/ng-template">
       <ion-header-bar class="bar-calm">
@@ -180,44 +187,44 @@
       <ion-view view-title="Settings">
         <ion-content>
 
-        <div class="list">
+          <div class="list">
 
-          <div class="item item-avatar item-text-wrap" href="#">
-            <img src="img/avatar.png">
-            <h2>Bob Coachee</h2>
+            <div class="item item-avatar item-text-wrap" href="#">
+              <img src="img/avatar.png">
+              <h2>Bob Coachee</h2>
+            </div>
+
+            <div class="item">
+              dummy1@coachinabox.biz
+            </div>
+
+            <div class="item">
+              07871267058
+            </div>
+
+            <div class="item">
+              Europe/London
+            </div>
+
+            <div class="item item-divider">
+            </div>
+
+            <a menu-close class="item item-icon-left" href="#/edit-profile">
+              <i class="icon ion-android-person button-small"></i>
+              Edit Profile
+            </a>
+
+            <a menu-close class="item item-icon-left" href="#">
+              <i class="icon ion-edit button-small"></i>
+              Change Password
+            </a>
+
+            <a menu-close class="item item-icon-left" href="#">
+              <i class="icon ion-log-out button-small"></i>
+              Sign Out
+            </a>
+
           </div>
-
-          <div class="item">
-            dummy1@coachinabox.biz
-          </div>
-
-          <div class="item">
-            07871267058
-          </div>
-
-          <div class="item">
-            Europe/London
-          </div>
-
-          <div class="item item-divider">
-          </div>
-
-          <a menu-close class="item item-icon-left" href="#/edit-profile">
-            <i class="icon ion-android-person button-small"></i>
-            Edit Profile
-          </a>
-
-          <a menu-close class="item item-icon-left" href="#">
-            <i class="icon ion-edit button-small"></i>
-            Change Password
-          </a>
-
-          <a menu-close class="item item-icon-left" href="#">
-            <i class="icon ion-log-out button-small"></i>
-            Sign Out
-          </a>
-
-        </div>
 
         </ion-content>
       </ion-view>
