@@ -35,8 +35,9 @@ angular.module('myPage', ['ionic'])
       url: '/forgot-password',
       templateUrl: 'templates/forgot-password.html'
     })
+    
     .state('tabs', {
-      url: '/tab',
+      url: '/tabs',
       abstract: true,
       templateUrl: 'templates/tabs.html'
     })
@@ -76,11 +77,15 @@ angular.module('myPage', ['ionic'])
         }
       }
     })
-    // .state('tabs.settings.edit-profile', {
-    //   url: '/edit-profile',
-    //   templateUrl: 'templates/edit-profile.html',
-    //   controller: 'EditProfileCtrl'
-    // })
+    .state('tabs.settings.edit-profile', {
+      url: '/edit-profile',
+      views: {
+        'settings-tab@tabs': {
+          templateUrl: "templates/edit-profile.html",
+          controller: 'EditProfileTabCtrl'
+        }
+      }
+    })
 
    $urlRouterProvider.otherwise('/sign-in');
 
@@ -110,15 +115,6 @@ angular.module('myPage', ['ionic'])
 
 })
 
-.controller('SideMenuCtrl', function($scope, $ionicSideMenuDelegate) {
-  $scope.showLeftMenu = function () {
-    $ionicSideMenuDelegate.toggleLeft();
-  };
-  $scope.showRightMenu = function () {
-    $ionicSideMenuDelegate.toggleRight();
-  };
-})
-
-.controller('EditProfileCtrl', function() {
+.controller('EditProfileTabCtrl', function() {
 
 })
