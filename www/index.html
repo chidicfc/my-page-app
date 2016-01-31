@@ -26,7 +26,7 @@
     <ion-side-menus>
 
       <ion-side-menu-content ng-controller="NavCtrl">
-        <ion-nav-bar class="bar-calm">
+        <ion-nav-bar class="bar-calm" align-title="left">
           <ion-nav-back-button>
           </ion-nav-back-button>
 
@@ -45,10 +45,10 @@
 
           <div class="list">
 
-            <a class="item item-avatar item-text-wrap" href="#">
+            <div class="item item-avatar item-text-wrap" href="#">
               <img src="img/avatar.png">
               <h2>Bob Coachee</h2>
-            </a>
+            </div>
 
             <div class="item">
               dummy1@coachinabox.biz
@@ -64,6 +64,21 @@
 
             <div class="item item-divider">
             </div>
+
+            <a class="item item-icon-left" href="#">
+              <i class="icon ion-android-person button-small"></i>
+              Edit Profile
+            </a>
+
+            <a class="item item-icon-left" href="#">
+              <i class="icon ion-edit button-small"></i>
+              Change Password
+            </a>
+
+            <a class="item item-icon-left" href="#">
+              <i class="icon ion-log-out button-small"></i>
+              Sign Out
+            </a>
 
           </div>
 
@@ -117,7 +132,7 @@
 
     <script id="templates/tabs.html" type="text/ng-template">
       <ion-view>
-        <ion-tabs class="tabs-calm tabs-icon-only tabs-striped">
+        <ion-tabs class="tabs-stable tabs-icon-only tabs-top tabs-striped">
 
           <ion-tab icon="ion-android-home" href="#/tab/home">
             <ion-nav-view name="home-tab"></ion-nav-view>
