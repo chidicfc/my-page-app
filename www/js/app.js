@@ -35,7 +35,7 @@ angular.module('myPage', ['ionic'])
       url: '/forgot-password',
       templateUrl: 'templates/forgot-password.html'
     })
-    
+
     .state('tabs', {
       url: '/tabs',
       abstract: true,
@@ -111,10 +111,8 @@ angular.module('myPage', ['ionic'])
 
 })
 
-.controller('SettingsTabCtrl', function() {
-
+.controller('SettingsTabCtrl', function($scope) {
 })
 
-.controller('EditProfileTabCtrl', function() {
-
+.controller('EditProfileTabCtrl', function($scope) {
 })
