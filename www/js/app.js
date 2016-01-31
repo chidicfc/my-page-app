@@ -92,7 +92,7 @@ angular.module('myPage', ['ionic'])
 
 })
 
-.controller('NavCtrl', function($scope, $ionicSideMenuDelegate) {
+.controller('SideMenuCtrl', function($scope, $ionicSideMenuDelegate) {
   $scope.showLeftMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();
   };
