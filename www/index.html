@@ -31,8 +31,6 @@
           </ion-nav-back-button>
 
           <ion-nav-buttons side="right">
-            <button class="button button-icon button-clear ion-android-settings" ng-click="showRightMenu()">
-            </button>
           </ion-nav-buttons>
         </ion-nav-bar>
         <ion-nav-view animation="slide-left-right"></ion-nav-view>
@@ -146,6 +144,10 @@
             <ion-nav-view name="schedule-tab"></ion-nav-view>
           </ion-tab>
 
+          <ion-tab icon="ion-android-settings" href="#/tab/settings">
+            <ion-nav-view name="settings-tab"></ion-nav-view>
+          </ion-tab>
+
         </ion-tabs>
       </ion-view>
     </script>
@@ -170,6 +172,53 @@
       <ion-view view-title="Schedule">
         <ion-content padding="true">
           <h4>Schedule</h4>
+        </ion-content>
+      </ion-view>
+    </script>
+
+    <script id="templates/settings.html" type="text/ng-template">
+      <ion-view view-title="Settings">
+        <ion-content>
+
+        <div class="list">
+
+          <div class="item item-avatar item-text-wrap" href="#">
+            <img src="img/avatar.png">
+            <h2>Bob Coachee</h2>
+          </div>
+
+          <div class="item">
+            dummy1@coachinabox.biz
+          </div>
+
+          <div class="item">
+            07871267058
+          </div>
+
+          <div class="item">
+            Europe/London
+          </div>
+
+          <div class="item item-divider">
+          </div>
+
+          <a menu-close class="item item-icon-left" href="#/edit-profile">
+            <i class="icon ion-android-person button-small"></i>
+            Edit Profile
+          </a>
+
+          <a menu-close class="item item-icon-left" href="#">
+            <i class="icon ion-edit button-small"></i>
+            Change Password
+          </a>
+
+          <a menu-close class="item item-icon-left" href="#">
+            <i class="icon ion-log-out button-small"></i>
+            Sign Out
+          </a>
+
+        </div>
+
         </ion-content>
       </ion-view>
     </script>

@@ -67,11 +67,20 @@ angular.module('myPage', ['ionic'])
         }
       }
     })
-    .state('editProfile', {
-      url: '/edit-profile',
-      templateUrl: 'templates/edit-profile.html',
-      controller: 'EditProfileCtrl'
+    .state('tabs.settings', {
+      url: '/settings',
+      views: {
+        'settings-tab': {
+          templateUrl: 'templates/settings.html',
+          controller: 'SettingsTabCtrl'
+        }
+      }
     })
+    // .state('tabs.settings.edit-profile', {
+    //   url: '/edit-profile',
+    //   templateUrl: 'templates/edit-profile.html',
+    //   controller: 'EditProfileCtrl'
+    // })
 
    $urlRouterProvider.otherwise('/sign-in');
 
@@ -94,6 +103,10 @@ angular.module('myPage', ['ionic'])
 })
 
 .controller('ScheduleTabCtrl', function() {
+
+})
+
+.controller('SettingsTabCtrl', function() {
 
 })
 
