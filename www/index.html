@@ -130,6 +130,7 @@
             <div class="item item-avatar item-text-wrap" href="#">
               <img src="img/avatar.png">
               <h2>Bob Coachee</h2>
+              <p>bob_coachee<p>
             </div>
 
             <div class="item">
@@ -137,7 +138,15 @@
             </div>
 
             <div class="item">
+              dummy2@coachinabox.biz
+            </div>
+
+            <div class="item">
               07871267058
+            </div>
+
+            <div class="item">
+              07871267123
             </div>
 
             <div class="item">
@@ -170,10 +179,63 @@
 
     <script id="templates/edit-profile.html" type="text/ng-template">
       <ion-view view-title="Edit Profile">
-        <ion-content padding="true">
-          <p>
-            Edit Profile
-          </p>
+        <ion-content>
+          <div class="list">
+            <div class="item item-avatar item-text-wrap" href="#">
+              <img src="img/avatar.png">
+              <a href="#">
+                <i class="icon ion-edit button-small"></i>
+              </a>
+            </div>
+
+            <label class="item item-input">
+              <span class="input-label">Username</span>
+              <input type="text" ng-model="user.username">
+            </label>
+
+            <label class="item item-input">
+              <span class="input-label">Name</span>
+              <input type="text" ng-model="user.name">
+            </label>
+
+            <label class="item item-input">
+              <span class="input-label">Email 1</span>
+              <input type="email" ng-model="user.email1">
+            </label>
+
+            <label class="item item-input">
+              <span class="input-label">Email 2</span>
+              <input type="email" ng-model="user.email2">
+            </label>
+
+            <label class="item item-input">
+              <span class="input-label">Phone 1</span>
+              <input type="tel" ng-model="user.phone1">
+            </label>
+
+            <label class="item item-input">
+              <span class="input-label">Phone 2</span>
+              <input type="tel" ng-model="user.phone2">
+            </label>
+
+            <label class="item item-input item-select">
+              <div class="input-label">
+                Time zone
+              </div>
+              <select>
+                <option>Time zone 1</option>
+                <option selected>Time zone 2</option>
+                <option>Time zone 3</option>
+              </select>
+            </label>
+
+            <div class="padding">
+              <button class="button button-block button-calm" ng-click="editProfile(user)">
+                EDIT PROFILE
+              </button>
+            </div>
+
+          </div>
         </ion-content>
       </ion-view>
     </script>
