@@ -82,7 +82,7 @@ angular.module('myPage', ['ionic'])
       views: {
         'settings-tab@tabs': {
           templateUrl: "templates/edit-profile.html",
-          controller: 'EditProfileTabCtrl'
+          controller: 'EditProfileCtrl'
         }
       }
     })
@@ -111,12 +111,25 @@ angular.module('myPage', ['ionic'])
 
 })
 
-.controller('SettingsTabCtrl', function($scope) {
+.controller('SettingsTabCtrl', function($scope, $ionicPopup) {
+  $scope.confirmPasswordChange = function() {
+    var confirmPopup = $ionicPopup.confirm({
+      title: 'Confirm',
+      template: 'For security reasons, if you wish to reset your password, you will be signed out and you will receive an email with instructions on how to change it. Do you wish to proceed?'
+    });
+
+    confirmPopup.then(function(res) {
+      if(res) {
+        console.log('You are sure');
+      } else {
+        console.log('You are not sure');
+      }
+    });
+  };
 })
 
-.controller('EditProfileTabCtrl', function($scope, $state) {
+.controller('EditProfileCtrl', function($scope) {
   $scope.editProfile = function(user) {
     console.log('Edit Profile', user);
-    // $state.go('tabs.settings');
   };
 })
