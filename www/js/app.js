@@ -114,5 +114,9 @@ angular.module('myPage', ['ionic'])
 .controller('SettingsTabCtrl', function($scope) {
 })
 
-.controller('EditProfileTabCtrl', function($scope) {
+.controller('EditProfileTabCtrl', function($scope, $state) {
+  $scope.editProfile = function(user) {
+    console.log('Edit Profile', user);
+    // $state.go('tabs.settings');
+  };
 })
