@@ -70,15 +70,6 @@ angular.module('myPage', ['ionic'])
         }
       }
     })
-    .state('tabs.schedule', {
-      url: '/schedule',
-      views: {
-        'schedule-tab': {
-          templateUrl: 'templates/schedule.html',
-          controller: 'ScheduleTabCtrl'
-        }
-      }
-    })
     .state('tabs.settings', {
       url: '/settings',
       views: {
@@ -115,10 +106,6 @@ angular.module('myPage', ['ionic'])
 })
 
 .controller('CoachesTabCtrl', function() {
-
-})
-
-.controller('ScheduleTabCtrl', function() {
 
 })
 
