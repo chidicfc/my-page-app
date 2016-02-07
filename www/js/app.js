@@ -24,7 +24,7 @@ angular.module('myPage', ['ionic'])
 })
 
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
-  
+
   $ionicConfigProvider.tabs.position('bottom');
 
   $stateProvider
@@ -49,6 +49,15 @@ angular.module('myPage', ['ionic'])
         'home-tab': {
           templateUrl: 'templates/home.html',
           controller: 'HomeTabCtrl'
+        }
+      }
+    })
+    .state('tabs.home.pathway-details', {
+      url: '/pathway-details',
+      views: {
+        'home-tab@tabs': {
+          templateUrl: 'templates/pathway-details.html',
+          controller: 'PathwayDetailsCtrl'
         }
       }
     })
@@ -134,4 +143,8 @@ angular.module('myPage', ['ionic'])
   $scope.editProfile = function(user) {
     console.log('Edit Profile', user);
   };
+})
+
+.controller('PathwayDetailsCtrl', function($scope) {
+
 })
