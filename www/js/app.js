@@ -146,5 +146,12 @@ angular.module('myPage', ['ionic'])
 })
 
 .controller('PathwayDetailsCtrl', function($scope) {
+  $scope.alert = function() {
+    console.log("alerted");
+  };
+
+  $scope.onHold = function() {
+    console.log("on hold");
+  };
 
 })
