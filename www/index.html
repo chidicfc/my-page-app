@@ -77,7 +77,7 @@
       <ion-view>
         <ion-tabs class="tabs-stable tabs-striped">
 
-          <ion-tab icon="ion-home" href="#/tabs/home">
+          <ion-tab icon="ion-home" ui-sref="tabs.home">
             <ion-nav-view name="home-tab"></ion-nav-view>
           </ion-tab>
 
@@ -112,22 +112,22 @@
         <ion-content>
           <div class="list">
 
-            <a class="item" href="#">
+            <a class="item" ui-sref="tabs.home.pathway-details">
               <h2>Pathway 1</h2>
               <p>Dummy Test Cohort One</p>
             </a>
 
-            <a class="item" href="#">
+            <a class="item" ui-sref="tabs.home.pathway-details">
               <h2>Pathway 2</h2>
               <p>Dummy Test Cohort Two</p>
             </a>
 
-            <a class="item" href="#">
+            <a class="item" ui-sref="tabs.home.pathway-details">
               <h2>Pathway 3</h2>
               <p>Dummy Test Cohort Three</p>
             </a>
 
-            <a class="item" href="#">
+            <a class="item" ui-sref="tabs.home.pathway-details">
               <h2>Pathway 4</h2>
               <p>Dummy Test Cohort Four</p>
             </a>
@@ -313,6 +313,14 @@
             </div>
 
           </div>
+        </ion-content>
+      </ion-view>
+    </script>
+
+    <script id="templates/pathway-details.html" type="text/ng-template">
+      <ion-view view-title="Pathway Details">
+        <ion-content padding="true">
+          <h4>Pathway Details</h4>
         </ion-content>
       </ion-view>
     </script>
