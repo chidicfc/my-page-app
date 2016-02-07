@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <title>Sign in</title>
+    <title>Coach in a Box</title>
 
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -98,9 +98,41 @@
     </script>
 
     <script id="templates/home.html" type="text/ng-template">
-      <ion-view view-title="Coach in a Box">
-        <ion-content padding="true">
-          <h4>Pathways</h4>
+      <ion-header-bar class="bar-calm item-input-inset">
+       <label class="item-input-wrapper">
+         <i class="icon ion-search placeholder-icon"></i>
+         <input type="search" placeholder="Search">
+       </label>
+       <button class="button button-clear">
+        Cancel
+       </button>
+      </ion-header-bar>
+
+      <ion-view hide-nav-bar="true">
+        <ion-content>
+          <div class="list">
+
+            <a class="item" href="#">
+              <h2>Pathway 1</h2>
+              <p>Dummy Test Cohort One</p>
+            </a>
+
+            <a class="item" href="#">
+              <h2>Pathway 2</h2>
+              <p>Dummy Test Cohort Two</p>
+            </a>
+
+            <a class="item" href="#">
+              <h2>Pathway 3</h2>
+              <p>Dummy Test Cohort Three</p>
+            </a>
+
+            <a class="item" href="#">
+              <h2>Pathway 4</h2>
+              <p>Dummy Test Cohort Four</p>
+            </a>
+
+          </div>
         </ion-content>
       </ion-view>
     </script>
