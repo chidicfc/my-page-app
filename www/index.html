@@ -309,7 +309,12 @@
       <ion-view view-title="Pathway Details">
         <ion-content padding="true">
 
+          <a ui-sref="tabs.home.pathway-details.view-materials">
+            View Materials
+          </a>
+
           <div class="list list-inset">
+
             <div class="item">
               <h2>Session 1 Call</h2>
               <p>(booked)</p>
@@ -409,6 +414,18 @@
             </div>
           </div>
 
+          <a ui-sref="tabs.home.pathway-details.view-materials">
+            View Materials
+          </a>
+
+        </ion-content>
+      </ion-view>
+    </script>
+
+    <script id="templates/view-materials.html" type="text/ng-template">
+      <ion-view view-title="View Materials">
+        <ion-content padding="true">
+          View Materials
         </ion-content>
       </ion-view>
     </script>
