@@ -61,6 +61,17 @@ angular.module('myPage', ['ionic'])
         }
       }
     })
+
+    .state('tabs.home.pathway-details.view-materials', {
+      url: '/view-materials',
+      views: {
+        'home-tab@tabs': {
+          templateUrl: 'templates/view-materials.html',
+          controller: 'ViewMaterialsCtrl'
+        }
+      }
+    })
+
     .state('tabs.coaches', {
       url: '/coaches',
       views: {
@@ -140,5 +151,9 @@ angular.module('myPage', ['ionic'])
   $scope.onHold = function() {
     console.log("on hold");
   };
+
+})
+
+.controller('ViewMaterialsCtrl', function($scope) {
 
 })
