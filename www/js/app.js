@@ -104,13 +104,13 @@ angular.module('myPage', ['ionic'])
 
 })
 
-.controller('SignInCtrl', function($scope, $state) {
+.controller('SignInCtrl', ["$scope", "$state", function($scope, $state) {
   $scope.signIn = function(user) {
     console.log('Sign-In', user);
     $state.go('tabs.home');
   };
 
-})
+}])
 
 .controller('HomeTabCtrl', function() {
 
@@ -120,7 +120,7 @@ angular.module('myPage', ['ionic'])
 
 })
 
-.controller('SettingsTabCtrl', function($scope, $ionicPopup) {
+.controller('SettingsTabCtrl', ["$scope", "$ionicPopup", function($scope, $ionicPopup) {
   $scope.confirmPasswordChange = function() {
     var confirmPopup = $ionicPopup.confirm({
       title: 'Confirm',
@@ -135,15 +135,15 @@ angular.module('myPage', ['ionic'])
       }
     });
   };
-})
+}])
 
-.controller('EditProfileCtrl', function($scope) {
+.controller('EditProfileCtrl', ["$scope", function($scope) {
   $scope.editProfile = function(user) {
     console.log('Edit Profile', user);
   };
-})
+}])
 
-.controller('PathwayDetailsCtrl', function($scope) {
+.controller('PathwayDetailsCtrl', ["$scope", function($scope) {
   $scope.alert = function() {
     console.log("alerted");
   };
@@ -152,8 +152,8 @@ angular.module('myPage', ['ionic'])
     console.log("on hold");
   };
 
-})
+}])
 
-.controller('ViewMaterialsCtrl', function($scope) {
+.controller('ViewMaterialsCtrl', ["$scope", function($scope) {
 
-})
+}])
