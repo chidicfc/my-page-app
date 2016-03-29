@@ -106,27 +106,31 @@ angular.module('myPage', ['ionic'])
 
 .controller('SignInCtrl', ["$scope", "$state", "$http", function($scope, $state, $http) {
   $scope.signIn = function(user) {
+    // call ajax if user object has username and password
+    if (user && user.username && user.password) {
+      $http({
+        method: 'POST',
+        url: 'http://local.ciabos.dev/api/v1/sessions',
+        data: {user: user}
+      }).then(function successCallback(response) {
+        // this callback will be called asynchronously
+        // when the response is available
+        $scope.token = response.data.user.token;
+        $scope.pathways = response.data.user.pathway_attributes;
+        console.log($scope.pathways);
+        console.log($scope.token);
+        $state.go('tabs.home');
+      }, function errorCallback(response) {
+        // called asynchronously if an error occurs
+        // or server returns response with an error status.
+        $scope.statusText = response.statusText;
+        if (response.data) {
+          $scope.errorMessage = response.data.message;
+        }
 
-    $http({
-      method: 'POST',
-      url: 'http://local.ciabos.dev/api/v1/sessions',
-      data: {user: user}
-    }).then(function successCallback(response) {
-      // this callback will be called asynchronously
-      // when the response is available
-      console.log("back");
-      console.log(response);
-      $state.go('tabs.home');
-    }, function errorCallback(response) {
-      // called asynchronously if an error occurs
-      // or server returns response with an error status.
+      });
+    }
 
-      $scope.statusText = response.statusText;
-      $scope.errorMessage = response.data.message;
-
-      console.log(response.status);
-      console.log(response);
-    });
   };
 
 }])
