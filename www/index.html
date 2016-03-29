@@ -45,6 +45,9 @@
              <span class="input-label">Password</span>
              <input type="password" ng-model="user.password">
            </label>
+           <label class="red">
+            <span ng-show ="statusText">{{ statusText }}!</span> <span>{{ errorMessage }}</span>
+           </label>
          </div>
          <div class="padding">
            <button class="button button-block button-calm" ng-click="signIn(user)">
