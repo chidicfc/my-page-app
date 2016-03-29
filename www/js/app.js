@@ -104,7 +104,11 @@ angular.module('myPage', ['ionic'])
 
 })
 
-.controller('SignInCtrl', ["$scope", "$state", "$http", function($scope, $state, $http) {
+.service('tokenService', function() {
+  this.token = "";
+})
+
+.controller('SignInCtrl', ["$scope", "$state", "$http", "tokenService", function($scope, $state, $http, tokenService) {
   $scope.signIn = function(user) {
     // call ajax if user object has username and password
     if (user && user.username && user.password) {
@@ -115,10 +119,10 @@ angular.module('myPage', ['ionic'])
       }).then(function successCallback(response) {
         // this callback will be called asynchronously
         // when the response is available
-        $scope.token = response.data.user.token;
+        tokenService.token = response.data.user.token;
         $scope.pathways = response.data.user.pathway_attributes;
         console.log($scope.pathways);
-        console.log($scope.token);
+        console.log(tokenService.token);
         $state.go('tabs.home');
       }, function errorCallback(response) {
         // called asynchronously if an error occurs
@@ -166,7 +170,9 @@ angular.module('myPage', ['ionic'])
   };
 }])
 
-.controller('PathwayDetailsCtrl', ["$scope", function($scope) {
+.controller('PathwayDetailsCtrl', ["$scope", "tokenService", function($scope, tokenService) {
+  console.log("pathway details");
+  console.log(tokenService.token);
   $scope.alert = function() {
     console.log("alerted");
   };
