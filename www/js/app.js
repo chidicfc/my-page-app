@@ -104,10 +104,25 @@ angular.module('myPage', ['ionic'])
 
 })
 
-.controller('SignInCtrl', ["$scope", "$state", function($scope, $state) {
+.controller('SignInCtrl', ["$scope", "$state", "$http", function($scope, $state, $http) {
   $scope.signIn = function(user) {
-    console.log('Sign-In', user);
-    $state.go('tabs.home');
+
+    $http({
+      method: 'POST',
+      url: 'http://local.ciabos.dev/api/v1/sessions',
+      data: {user: user}
+    }).then(function successCallback(response) {
+      // this callback will be called asynchronously
+      // when the response is available
+      console.log("back");
+      console.log(response);
+      $state.go('tabs.home');
+    }, function errorCallback(response) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+      console.log(response.status);
+      console.log(response);
+    });
   };
 
 }])
