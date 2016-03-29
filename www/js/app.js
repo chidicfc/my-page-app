@@ -120,6 +120,10 @@ angular.module('myPage', ['ionic'])
     }, function errorCallback(response) {
       // called asynchronously if an error occurs
       // or server returns response with an error status.
+
+      $scope.statusText = response.statusText;
+      $scope.errorMessage = response.data.message;
+
       console.log(response.status);
       console.log(response);
     });
