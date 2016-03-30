@@ -118,24 +118,9 @@
         <ion-content>
           <div class="list">
 
-            <a class="item" ui-sref="tabs.home.pathway-details">
-              <h2>Pathway 1</h2>
-              <p>Dummy Test Cohort One</p>
-            </a>
-
-            <a class="item" ui-sref="tabs.home.pathway-details">
-              <h2>Pathway 2</h2>
-              <p>Dummy Test Cohort Two</p>
-            </a>
-
-            <a class="item" ui-sref="tabs.home.pathway-details">
-              <h2>Pathway 3</h2>
-              <p>Dummy Test Cohort Three</p>
-            </a>
-
-            <a class="item" ui-sref="tabs.home.pathway-details">
-              <h2>Pathway 4</h2>
-              <p>Dummy Test Cohort Four</p>
+            <a class="item" ui-sref="tabs.home.pathway-details({ id: {{ pathway[0] }} })" ng-repeat="pathway in pathways">
+              <h2> {{ pathway[1] }}</h2>
+              <p> {{ pathway[2] }}</p>
             </a>
 
           </div>

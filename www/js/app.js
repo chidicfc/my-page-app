@@ -41,7 +41,8 @@ angular.module('myPage', ['ionic'])
     .state('tabs', {
       url: '/tabs',
       abstract: true,
-      templateUrl: 'templates/tabs.html'
+      templateUrl: 'templates/tabs.html',
+      cache: false
     })
     .state('tabs.home', {
       url: '/home',
@@ -53,7 +54,7 @@ angular.module('myPage', ['ionic'])
       }
     })
     .state('tabs.home.pathway-details', {
-      url: '/pathway-details',
+      url: '/pathway-details/:id',
       views: {
         'home-tab@tabs': {
           templateUrl: 'templates/pathway-details.html',
@@ -103,16 +104,23 @@ angular.module('myPage', ['ionic'])
    $urlRouterProvider.otherwise('/sign-in');
 
 })
-
+// service starts
 .service('tokenService', function() {
   this.token = "";
 })
 
-.controller('SignInCtrl', ["$scope", "$state", "$http", "tokenService", function($scope, $state, $http, tokenService) {
+.service('pathwayService', function() {
+  this.pathways = [];
+})
+
+// service ends
+
+.controller('SignInCtrl', ["$scope", "$state", "$http", "tokenService", "pathwayService", function($scope, $state, $http, tokenService, pathwayService) {
   $scope.signIn = function(user) {
     // call ajax if user object has username and password
     if (user && user.username && user.password) {
       $scope.loading = true;
+
       $http({
         method: 'POST',
         url: 'http://local.ciabos.dev/api/v1/sessions',
@@ -121,9 +129,8 @@ angular.module('myPage', ['ionic'])
         // this callback will be called asynchronously
         // when the response is available
         tokenService.token = response.data.user.token;
-        $scope.pathways = response.data.user.pathway_attributes;
+        pathwayService.pathways = response.data.user.pathway_attributes;
         $scope.loading = false;
-        console.log($scope.pathways);
         console.log(tokenService.token);
         $state.go('tabs.home');
       }, function errorCallback(response) {
@@ -136,15 +143,19 @@ angular.module('myPage', ['ionic'])
         }
 
       });
+
     }
 
   };
 
 }])
 
-.controller('HomeTabCtrl', function() {
+.controller('HomeTabCtrl', ["$scope", "pathwayService", function($scope, pathwayService) {
+  $scope.pathways = pathwayService.pathways
 
-})
+  console.log("in home controller");
+  console.log(pathwayService.pathways);
+}])
 
 .controller('CoachesTabCtrl', function() {
 
@@ -173,17 +184,9 @@ angular.module('myPage', ['ionic'])
   };
 }])
 
-.controller('PathwayDetailsCtrl', ["$scope", "tokenService", function($scope, tokenService) {
-  console.log("pathway details");
-  console.log(tokenService.token);
-  $scope.alert = function() {
-    console.log("alerted");
-  };
-
-  $scope.onHold = function() {
-    console.log("on hold");
-  };
-
+.controller('PathwayDetailsCtrl', ["$scope", "$stateParams", function($scope, $stateParams) {
+  console.log("get pathway details");
+  console.log($stateParams);
 }])
 
 .controller('ViewMaterialsCtrl', ["$scope", function($scope) {
