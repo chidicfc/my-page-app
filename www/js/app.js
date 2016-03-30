@@ -112,6 +112,7 @@ angular.module('myPage', ['ionic'])
   $scope.signIn = function(user) {
     // call ajax if user object has username and password
     if (user && user.username && user.password) {
+      $scope.loading = true;
       $http({
         method: 'POST',
         url: 'http://local.ciabos.dev/api/v1/sessions',
@@ -121,6 +122,7 @@ angular.module('myPage', ['ionic'])
         // when the response is available
         tokenService.token = response.data.user.token;
         $scope.pathways = response.data.user.pathway_attributes;
+        $scope.loading = false;
         console.log($scope.pathways);
         console.log(tokenService.token);
         $state.go('tabs.home');
@@ -130,6 +132,7 @@ angular.module('myPage', ['ionic'])
         $scope.statusText = response.statusText;
         if (response.data) {
           $scope.errorMessage = response.data.message;
+          $scope.loading = false;
         }
 
       });

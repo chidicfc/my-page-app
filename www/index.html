@@ -47,11 +47,14 @@
                <input type="password" name="password" ng-model="user.password" required>
              </label>
            </div>
+           <div class="cssload-container" ng-show="loading">
+             <div class="cssload-whirlpool"></div>
+           </div>
            <div class="padding red">
-            <label ng-show ="statusText">{{ statusText }}!</span> <span>{{ errorMessage }}</label>
-            <label ng-show="(loginForm.username.$dirty || loginForm.$submitted) && loginForm.username.$error.required">Username is required</label>
-            <label ng-show="(loginForm.password.$dirty || loginForm.$submitted) && loginForm.password.$error.required">Password is required</label>
-        </div>
+              <label ng-show ="statusText">{{ statusText }}!</span> <span>{{ errorMessage }}</label>
+              <label ng-show="(loginForm.username.$dirty || loginForm.$submitted) && loginForm.username.$error.required">Username is required</label>
+              <label ng-show="(loginForm.password.$dirty || loginForm.$submitted) && loginForm.password.$error.required">Password is required</label>
+            </div>
            <div class="padding">
              <button class="button button-block button-calm" type="submit">
                SIGN IN

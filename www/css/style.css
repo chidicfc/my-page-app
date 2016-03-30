@@ -6,3 +6,90 @@
 .padding.red label {
   display: block;
 }
+
+
+.cssload-container{
+	position:relative;
+}
+
+.cssload-whirlpool,
+.cssload-whirlpool::before,
+.cssload-whirlpool::after {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	border: 1px solid rgb(19,133,209);
+	border-left-color: rgb(17,122,214);
+	border-radius: 549px;
+		-o-border-radius: 549px;
+		-ms-border-radius: 549px;
+		-webkit-border-radius: 549px;
+		-moz-border-radius: 549px;
+}
+
+.cssload-whirlpool {
+	margin: -14px 0 0 -14px;
+	height: 27px;
+	width: 27px;
+	animation: cssload-rotate 1900ms linear infinite;
+		-o-animation: cssload-rotate 1900ms linear infinite;
+		-ms-animation: cssload-rotate 1900ms linear infinite;
+		-webkit-animation: cssload-rotate 1900ms linear infinite;
+		-moz-animation: cssload-rotate 1900ms linear infinite;
+}
+
+.cssload-whirlpool::before {
+	content: "";
+	margin: -13px 0 0 -13px;
+	height: 24px;
+	width: 24px;
+	animation: cssload-rotate 1900ms linear infinite;
+		-o-animation: cssload-rotate 1900ms linear infinite;
+		-ms-animation: cssload-rotate 1900ms linear infinite;
+		-webkit-animation: cssload-rotate 1900ms linear infinite;
+		-moz-animation: cssload-rotate 1900ms linear infinite;
+}
+
+.cssload-whirlpool::after {
+	content: "";
+	margin: -16px 0 0 -16px;
+	height: 31px;
+	width: 31px;
+	animation: cssload-rotate 3800ms linear infinite;
+		-o-animation: cssload-rotate 3800ms linear infinite;
+		-ms-animation: cssload-rotate 3800ms linear infinite;
+		-webkit-animation: cssload-rotate 3800ms linear infinite;
+		-moz-animation: cssload-rotate 3800ms linear infinite;
+}
+
+
+
+@keyframes cssload-rotate {
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@-o-keyframes cssload-rotate {
+	100% {
+		-o-transform: rotate(360deg);
+	}
+}
+
+@-ms-keyframes cssload-rotate {
+	100% {
+		-ms-transform: rotate(360deg);
+	}
+}
+
+@-webkit-keyframes cssload-rotate {
+	100% {
+		-webkit-transform: rotate(360deg);
+	}
+}
+
+@-moz-keyframes cssload-rotate {
+	100% {
+		-moz-transform: rotate(360deg);
+	}
+}
