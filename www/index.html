@@ -107,7 +107,7 @@
       <ion-header-bar class="bar-calm item-input-inset">
        <label class="item-input-wrapper">
          <i class="icon ion-search placeholder-icon"></i>
-         <input type="search" placeholder="Search Pathways">
+         <input type="search" placeholder="Search Pathways" ng-model="query">
        </label>
        <button class="button button-clear">
         Cancel
@@ -118,7 +118,7 @@
         <ion-content>
           <div class="list">
 
-            <a class="item" ui-sref="tabs.home.pathway-details({ id: {{ pathway[0] }} })" ng-repeat="pathway in pathways">
+            <a class="item" ui-sref="tabs.home.pathway-details({ id: {{ pathway[0] }} })" ng-repeat="pathway in pathways | filter: query">
               <h2> {{ pathway[1] }}</h2>
               <p> {{ pathway[2] }}</p>
             </a>
