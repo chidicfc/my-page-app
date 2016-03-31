@@ -312,13 +312,24 @@
           </a>
 
           <div class="list list-inset" ng-repeat="coachingSession in coachingSessions">
-            <div class="item">
+            <div class="item item-divider">
               <h2>{{ coachingSession.session_title }}</h2>
             </div>
             <div class="item item-body details">
               <label ng-show="coachingSession.description"> {{ coachingSession.description}} </label>
               <label ng-show="coachingSession.duration"> Date: {{ coachingSession.duration}} </label>
               <label ng-show="coachingSession.venue"> Venue: {{ coachingSession.venue}} </label>
+              <label ng-show="coachingSession.booking_date"> {{ coachingSession.booking_date}} </label>
+              <label ng-show="coachingSession.start_time_in_12hour"> {{ coachingSession.start_time_in_12hour}} </label>
+              <a href="/{{ coachingSession.material }}" ng-show="coachingSession.material">
+                <img src="img/pdf-icon.png" />
+              </a>
+            </div>
+            <div class="item item-divider">
+              <button class="button icon-left ion-home button-calm button-small">
+                Delete Booking
+              </button>
+
             </div>
           </div>
 
