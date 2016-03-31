@@ -118,6 +118,7 @@ angular.module('myPage', ['ionic'])
 
 .controller('SignInCtrl', ["$scope", "$state", "$http", "sessionService", "pathwayService", function($scope, $state, $http, sessionService, pathwayService) {
   $scope.signIn = function(user) {
+    $scope.statusText = null;
     // call ajax if user object has username and password
     if (user && user.username && user.password) {
       $scope.loading = true;
@@ -189,11 +190,7 @@ angular.module('myPage', ['ionic'])
 
 .controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "sessionService", "$http", function($scope, $stateParams, sessionService, $http) {
   console.log("get pathway details");
-  console.log($stateParams);
-  console.log(sessionService);
-  $scope.onHold = function(){
-    console.log("on hold");
-  }
+  $scope.loading = true;
 
   $http({
     method: 'GET',
@@ -204,9 +201,15 @@ angular.module('myPage', ['ionic'])
     // when the response is available
     console.log("success");
     console.log(response);
+    $scope.coachingSessions = response.data.pathway.coaching_sessions;
+    $scope.pathwayName = response.data.pathway.name;
+    $scope.loading = false;
+    console.log($scope.coachingSessions);
+    console.log($scope.pathwayName);
   }, function errorCallback(response) {
     // called asynchronously if an error occurs
     // or server returns response with an error status.
+    $scope.loading = false;
     console.log("error");
     console.log(response);
   });
