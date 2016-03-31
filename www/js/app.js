@@ -105,8 +105,9 @@ angular.module('myPage', ['ionic'])
 
 })
 // service starts
-.service('tokenService', function() {
+.service('sessionService', function() {
   this.token = "";
+  this.username = "";
 })
 
 .service('pathwayService', function() {
@@ -115,11 +116,12 @@ angular.module('myPage', ['ionic'])
 
 // service ends
 
-.controller('SignInCtrl', ["$scope", "$state", "$http", "tokenService", "pathwayService", function($scope, $state, $http, tokenService, pathwayService) {
+.controller('SignInCtrl', ["$scope", "$state", "$http", "sessionService", "pathwayService", function($scope, $state, $http, sessionService, pathwayService) {
   $scope.signIn = function(user) {
     // call ajax if user object has username and password
     if (user && user.username && user.password) {
       $scope.loading = true;
+      console.log(user);
 
       $http({
         method: 'POST',
@@ -128,10 +130,11 @@ angular.module('myPage', ['ionic'])
       }).then(function successCallback(response) {
         // this callback will be called asynchronously
         // when the response is available
-        tokenService.token = response.data.user.token;
+        sessionService.token = response.data.user.token;
+        sessionService.username = user.username;
         pathwayService.pathways = response.data.user.pathway_attributes;
         $scope.loading = false;
-        console.log(tokenService.token);
+        console.log(sessionService.token);
         $state.go('tabs.home');
       }, function errorCallback(response) {
         // called asynchronously if an error occurs
@@ -184,9 +187,30 @@ angular.module('myPage', ['ionic'])
   };
 }])
 
-.controller('PathwayDetailsCtrl', ["$scope", "$stateParams", function($scope, $stateParams) {
+.controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "sessionService", "$http", function($scope, $stateParams, sessionService, $http) {
   console.log("get pathway details");
   console.log($stateParams);
+  console.log(sessionService);
+  $scope.onHold = function(){
+    console.log("on hold");
+  }
+
+  $http({
+    method: 'GET',
+    url: 'http://local.ciabos.dev/api/v1/pathways',
+    params: {user: {token: sessionService.token, username: sessionService.username}, pathway: {id: $stateParams.id}}
+  }).then(function successCallback(response) {
+    // this callback will be called asynchronously
+    // when the response is available
+    console.log("success");
+    console.log(response);
+  }, function errorCallback(response) {
+    // called asynchronously if an error occurs
+    // or server returns response with an error status.
+    console.log("error");
+    console.log(response);
+  });
+
 }])
 
 .controller('ViewMaterialsCtrl', ["$scope", function($scope) {
