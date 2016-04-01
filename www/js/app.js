@@ -251,6 +251,23 @@ angular.module('myPage', ['ionic'])
   console.log(sessionService);
   $scope.loading = true;
 
+  $scope.date = function(d){
+    var date = new Date(d);
+    return date;
+  }
+
+  $scope.dateHours = function(d){
+    var date = new Date(d);
+    var hours = date.getHours();
+    return ("0" + hours).slice(-2);
+  }
+
+  $scope.dateMins = function(d){
+    var date = new Date(d);
+    var mins = date.getMinutes();
+    return ("0" + mins).slice(-2);
+  }
+
   $http({
     method: 'GET',
     url: 'http://local.ciabos.dev/api/v1/get_availability/' + $stateParams.coachingSession,
@@ -258,9 +275,12 @@ angular.module('myPage', ['ionic'])
   }).then(function successCallback(response) {
     // this callback will be called asynchronously
     // when the response is available
+    $scope.availabilitySlots = response.data;
+    $scope.coachingSession = $stateParams.coachingSession;
     $scope.loading = false;
     console.log("success");
-    console.log(response);
+    console.log(response.data);
+    console.log($stateParams.coachingSession);
   }, function errorCallback(response) {
     // called asynchronously if an error occurs
     // or server returns response with an error status.
@@ -272,5 +292,10 @@ angular.module('myPage', ['ionic'])
     console.log("error");
     console.log(response);
   });
+
+  $scope.bookSession = function(coachingSession, availabilitySlot) {
+    console.log(coachingSession);
+    console.log(availabilitySlot.id);
+  }
 
 }])
