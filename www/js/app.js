@@ -116,6 +116,17 @@ angular.module('myPage', ['ionic'])
 
 // service ends
 
+
+// directive starts
+.directive("preLoader", function() {
+   return {
+       restrict: 'E',
+       templateUrl: 'loading.html',
+       replace: true
+   }
+})
+// directive ends
+
 .controller('SignInCtrl', ["$scope", "$state", "$http", "sessionService", "pathwayService", function($scope, $state, $http, sessionService, pathwayService) {
   $scope.signIn = function(user) {
     $scope.statusText = null;
