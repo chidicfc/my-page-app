@@ -37,9 +37,7 @@
       <ion-view hide-nav-bar="true">
        <ion-content padding="true">
 
-         <div class="cssload-container padding" ng-show="loading">
-           <div class="cssload-whirlpool"></div>
-         </div>
+         <pre-loader> </pre-loader>
 
          <form name="loginForm" ng-submit="signIn(user)" novalidate class="padding">
            <div class="list">
@@ -304,9 +302,8 @@
         <ion-nav-title> {{ pathwayName }} </ion-nav-title>
         <ion-content padding="true">
 
-          <div class="cssload-container padding" ng-show="loading">
-            <div class="cssload-whirlpool"></div>
-          </div>
+          <pre-loader> </pre-loader>
+          
           <a ui-sref="tabs.home.pathway-details.view-materials">
             View Materials
           </a>
