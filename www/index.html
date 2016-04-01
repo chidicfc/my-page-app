@@ -323,40 +323,19 @@
               </a>
             </div>
             <div class="item item-divider">
-              <button class="button icon-left ion-information-circled button-calm button-small" ng-if="coachingSession.session_type == 'GroupCoachingSession' && !(coachingSession.group_session_details)">
+              <button class="button icon-left ion-information-circled button-calm button-small"
+                ng-if="(coachingSession.session_type == 'GroupCoachingSession' && !(coachingSession.group_session_details)) || (coachingSession.session_type == 'NonBookableCoachingSession' && !(coachingSession.nonbookable_session_details))">
                 Details TBC
               </button>
 
-            </div>
-          </div>
-
-          <div class="list list-inset">
-            <div class="item">
-              <h2>Session 1 Call</h2>
-              <p>(booked)</p>
-            </div>
-            <div class="item item-body">
-              <p>60m Phone Call <br/>
-               with Adam Gobert <br/>
-               09 Feb 2016<br/>
-               10:00am</p>
-               <a href="#">
-                 <img src="img/pdf-icon.png" />
-               </a>
-            </div>
-            <div class="item item-divider">
-              <button class="button icon-left ion-information-circled button-calm button-small">
-                Details TBC
+              <button class="button icon-left ion-eye button-calm button-small" ng-if="coachingSession.session_type == 'SelfLearningCoachingSession'">
+                View Details
               </button>
 
-              <button class="button button-calm button-small">
-                Add to Calendar
+              <button class="button icon-left ion-ios-book button-calm button-small" ng-if="coachingSession.session_locked && !(coachingSession.session_flexible) && (coachingSession.session_type == 'PhoneCallCoachingSession' || (coachingSession.session_type == 'GroupCoachingSession') && coachingSession.group_session_details)">
+                Book Session
               </button>
 
-              <a class="button icon-left button-clear button-calm">
-                <i class="ion-chevron-left"> </i>
-                Back
-              </a>
             </div>
           </div>
 
