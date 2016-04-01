@@ -303,7 +303,7 @@
         <ion-content padding="true">
 
           <pre-loader> </pre-loader>
-          
+
           <a ui-sref="tabs.home.pathway-details.view-materials">
             View Materials
           </a>
@@ -323,8 +323,8 @@
               </a>
             </div>
             <div class="item item-divider">
-              <button class="button icon-left ion-home button-calm button-small">
-                Delete Booking
+              <button class="button icon-left ion-information-circled button-calm button-small" ng-if="coachingSession.session_type == 'GroupCoachingSession' && !(coachingSession.group_session_details)">
+                Details TBC
               </button>
 
             </div>
@@ -345,8 +345,8 @@
                </a>
             </div>
             <div class="item item-divider">
-              <button class="button icon-left ion-home button-calm button-small">
-                Delete Booking
+              <button class="button icon-left ion-information-circled button-calm button-small">
+                Details TBC
               </button>
 
               <button class="button button-calm button-small">
