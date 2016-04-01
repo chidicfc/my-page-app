@@ -54,11 +54,21 @@ angular.module('myPage', ['ionic'])
       }
     })
     .state('tabs.home.pathway-details', {
-      url: '/pathway-details/:id',
+      url: '/pathway-details/:pathwayId',
       views: {
         'home-tab@tabs': {
           templateUrl: 'templates/pathway-details.html',
           controller: 'PathwayDetailsCtrl'
+        }
+      }
+    })
+
+    .state('tabs.home.pathway-details.coach-availability', {
+      url: '/coach-availability/:coachingSession',
+      views: {
+        'home-tab@tabs': {
+          templateUrl: 'templates/coach-availability.html',
+          controller: 'CoachAvailabilityCtrl'
         }
       }
     })
@@ -154,8 +164,8 @@ angular.module('myPage', ['ionic'])
         $scope.statusText = response.statusText;
         if (response.data) {
           $scope.errorMessage = response.data.message;
-          $scope.loading = false;
         }
+        $scope.loading = false;
 
       });
 
@@ -206,7 +216,7 @@ angular.module('myPage', ['ionic'])
   $http({
     method: 'GET',
     url: 'http://local.ciabos.dev/api/v1/pathways',
-    params: {user: {token: sessionService.token, username: sessionService.username}, pathway: {id: $stateParams.id}}
+    params: {user: {token: sessionService.token, username: sessionService.username}, pathway: {id: $stateParams.pathwayId}}
   }).then(function successCallback(response) {
     // this callback will be called asynchronously
     // when the response is available
@@ -220,6 +230,10 @@ angular.module('myPage', ['ionic'])
   }, function errorCallback(response) {
     // called asynchronously if an error occurs
     // or server returns response with an error status.
+    $scope.statusText = response.statusText;
+    if (response.data) {
+      $scope.errorMessage = response.data.message;
+    }
     $scope.loading = false;
     console.log("error");
     console.log(response);
@@ -228,5 +242,35 @@ angular.module('myPage', ['ionic'])
 }])
 
 .controller('ViewMaterialsCtrl', ["$scope", function($scope) {
+
+}])
+
+.controller('CoachAvailabilityCtrl', ["$scope", "$stateParams", "$http", "sessionService", function($scope, $stateParams, $http, sessionService) {
+  console.log("coach availability");
+  console.log($stateParams);
+  console.log(sessionService);
+  $scope.loading = true;
+
+  $http({
+    method: 'GET',
+    url: 'http://local.ciabos.dev/api/v1/get_availability/' + $stateParams.coachingSession,
+    params: {user: {token: sessionService.token, username: sessionService.username}}
+  }).then(function successCallback(response) {
+    // this callback will be called asynchronously
+    // when the response is available
+    $scope.loading = false;
+    console.log("success");
+    console.log(response);
+  }, function errorCallback(response) {
+    // called asynchronously if an error occurs
+    // or server returns response with an error status.
+    $scope.statusText = response.statusText;
+    if (response.data) {
+      $scope.errorMessage = response.data.message;
+    }
+    $scope.loading = false;
+    console.log("error");
+    console.log(response);
+  });
 
 }])

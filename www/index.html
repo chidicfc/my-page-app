@@ -115,7 +115,7 @@
         <ion-content>
           <div class="list">
 
-            <a class="item" ui-sref="tabs.home.pathway-details({ id: {{ pathway[0] }} })" ng-repeat="pathway in pathways | filter: query">
+            <a class="item" ui-sref="tabs.home.pathway-details({ pathwayId: {{ pathway[0] }} })" ng-repeat="pathway in pathways | filter: query">
               <h2> {{ pathway[1] }}</h2>
               <p> {{ pathway[2] }}</p>
             </a>
@@ -332,9 +332,9 @@
                 View Details
               </button>
 
-              <button class="button icon-left ion-ios-book button-calm button-small" ng-if="coachingSession.session_locked && !(coachingSession.session_flexible) && (coachingSession.session_type == 'PhoneCallCoachingSession' || (coachingSession.session_type == 'GroupCoachingSession') && coachingSession.group_session_details)">
+              <a ui-sref="tabs.home.pathway-details.coach-availability({ coachingSession: {{ coachingSession.session_id }} })" class="button icon-left ion-ios-book button-calm button-small" ng-if="coachingSession.session_locked && !(coachingSession.session_flexible) && (coachingSession.session_type == 'PhoneCallCoachingSession' || (coachingSession.session_type == 'GroupCoachingSession') && coachingSession.group_session_details)">
                 Book Session
-              </button>
+              </a>
 
             </div>
           </div>
@@ -381,6 +381,28 @@
             </div>
 
 
+          </div>
+
+        </ion-content>
+      </ion-view>
+    </script>
+
+    <script id="templates/coach-availability.html" type="text/ng-template">
+
+      <ion-view view-title="Coach Availability">
+        <ion-content padding="true">
+
+          <pre-loader> </pre-loader>
+          
+          <div class="list">
+            <div class="item">
+              <h3>
+                Coach
+              </h3>
+              <a href="#">
+                <img src="img/pdf-icon.png" />
+              </a>
+            </div>
           </div>
 
         </ion-content>
