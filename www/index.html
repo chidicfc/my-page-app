@@ -393,17 +393,26 @@
         <ion-content padding="true">
 
           <pre-loader> </pre-loader>
-          
-          <div class="list">
+
+          <div class="list availability padding">
+
             <div class="item">
-              <h3>
-                Coach
-              </h3>
-              <a href="#">
-                <img src="img/pdf-icon.png" />
-              </a>
+              <button class="button button-calm button-small">
+                CLICK HERE TO SEE MORE BOOKINGS
+              </button>
             </div>
-          </div>
+
+            <div ng-repeat="availabilitySlot in availabilitySlots">
+              <div class="item item-divider">
+                <span class="date"> {{ date(availabilitySlot.start_time).toDateString() }}</span>
+              </div>
+              <div class="item">
+                <span class="time">{{ dateHours(availabilitySlot.start_time) }}:{{ dateMins(availabilitySlot.start_time) }}</span>
+                <button class="book_session button button-calm button-small button-clear" ng-click="bookSession(coachingSession, availabilitySlot)">
+                  Book Session
+                </button>
+              </div>
+            </div>
 
         </ion-content>
       </ion-view>
