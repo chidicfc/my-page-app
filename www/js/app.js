@@ -26,7 +26,7 @@ angular.module('myPage', ['ionic'])
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
   $ionicConfigProvider.tabs.position('bottom');
-
+  $ionicConfigProvider.views.maxCache(0);
   $stateProvider
     .state('signin', {
       url: '/sign-in',
@@ -41,8 +41,7 @@ angular.module('myPage', ['ionic'])
     .state('tabs', {
       url: '/tabs',
       abstract: true,
-      templateUrl: 'templates/tabs.html',
-      cache: false
+      templateUrl: 'templates/tabs.html'
     })
     .state('tabs.home', {
       url: '/home',
@@ -122,6 +121,10 @@ angular.module('myPage', ['ionic'])
 
 .service('pathwayService', function() {
   this.pathways = [];
+  this.pathwayName = "";
+  this.coachingSessions = [];
+  this.coachingSession = "";
+  this.bookedSession = false;
 })
 
 // service ends
@@ -209,35 +212,47 @@ angular.module('myPage', ['ionic'])
   };
 }])
 
-.controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "sessionService", "$http", function($scope, $stateParams, sessionService, $http) {
+.controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "sessionService", "$http", "pathwayService", function($scope, $stateParams, sessionService, $http, pathwayService) {
   console.log("get pathway details");
   $scope.loading = true;
 
-  $http({
-    method: 'GET',
-    url: 'http://local.ciabos.dev/api/v1/pathways',
-    params: {user: {token: sessionService.token, username: sessionService.username}, pathway: {id: $stateParams.pathwayId}}
-  }).then(function successCallback(response) {
-    // this callback will be called asynchronously
-    // when the response is available
-    console.log("success");
-    console.log(response);
-    $scope.coachingSessions = response.data.pathway.coaching_sessions;
-    $scope.pathwayName = response.data.pathway.name;
+  if (pathwayService.bookedSession){
+    // fetch data from pathwayService
+    console.log("in if construct");
+    $scope.coachingSessions = pathwayService.coachingSessions;
+    $scope.pathwayName = pathwayService.pathwayName;
     $scope.loading = false;
-    console.log($scope.coachingSessions);
-    console.log($scope.pathwayName);
-  }, function errorCallback(response) {
-    // called asynchronously if an error occurs
-    // or server returns response with an error status.
-    $scope.statusText = response.statusText;
-    if (response.data) {
-      $scope.errorMessage = response.data.message;
-    }
-    $scope.loading = false;
-    console.log("error");
-    console.log(response);
-  });
+    pathwayService.bookedSession = false;
+  }else {
+    // fetch data from api
+    console.log("not in if construct");
+    $http({
+      method: 'GET',
+      url: 'http://local.ciabos.dev/api/v1/pathways',
+      params: {user: {token: sessionService.token, username: sessionService.username}, pathway: {id: $stateParams.pathwayId}}
+    }).then(function successCallback(response) {
+      // this callback will be called asynchronously
+      // when the response is available
+      console.log("success");
+      console.log(response);
+      $scope.coachingSessions = response.data.pathway.coaching_sessions;
+      //pathwayService.coachingSessions = $scope.coachingSessions;
+      $scope.pathwayName = response.data.pathway.name;
+      $scope.loading = false;
+      console.log($scope.coachingSessions);
+      console.log($scope.pathwayName);
+    }, function errorCallback(response) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+      $scope.statusText = response.statusText;
+      if (response.data) {
+        $scope.errorMessage = response.data.message;
+      }
+      $scope.loading = false;
+      console.log("error");
+      console.log(response);
+    });
+  }
 
 }])
 
@@ -245,7 +260,7 @@ angular.module('myPage', ['ionic'])
 
 }])
 
-.controller('CoachAvailabilityCtrl', ["$scope", "$stateParams", "$http", "sessionService", function($scope, $stateParams, $http, sessionService) {
+.controller('CoachAvailabilityCtrl', ["$scope", "$stateParams", "$http", "sessionService", "$state", "pathwayService", function($scope, $stateParams, $http, sessionService, $state, pathwayService) {
   console.log("coach availability");
   console.log($stateParams);
   console.log(sessionService);
@@ -296,6 +311,32 @@ angular.module('myPage', ['ionic'])
   $scope.bookSession = function(coachingSession, availabilitySlot) {
     console.log(coachingSession);
     console.log(availabilitySlot.id);
+
+    $http({
+      method: 'POST',
+      url: 'http://local.ciabos.dev/api/v1/book_session/' + coachingSession + '/' + availabilitySlot.id,
+      params: {user: {token: sessionService.token, username: sessionService.username}}
+    }).then(function successCallback(response) {
+      // this callback will be called asynchronously
+      // when the response is available
+      $scope.loading = false;
+      console.log("success from book session");
+      console.log(response.data);
+      pathwayService.bookedSession = true;
+      pathwayService.coachingSessions = response.data.pathway.coaching_sessions;
+      pathwayService.pathwayName = response.data.pathway.name;
+      $state.go('tabs.home.pathway-details');
+    }, function errorCallback(response) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+      $scope.statusText = response.statusText;
+      if (response.data) {
+        $scope.errorMessage = response.data.message;
+      }
+      $scope.loading = false;
+      console.log("error");
+      console.log(response);
+    });
   }
 
 }])
