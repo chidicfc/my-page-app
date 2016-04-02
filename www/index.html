@@ -328,7 +328,7 @@
                 <img src="img/pdf-icon.png" />
               </a>
             </div>
-            <div class="item item-divider">
+            <div class="item item-divider action-buttons">
               <button class="button icon-left ion-information-circled button-calm button-small"
                 ng-if="(coachingSession.session_type == 'GroupCoachingSession' && !(coachingSession.group_session_details)) || (coachingSession.session_type == 'NonBookableCoachingSession' && !(coachingSession.nonbookable_session_details))">
                 Details TBC
@@ -338,8 +338,12 @@
                 View Details
               </button>
 
-              <a ui-sref="tabs.home.pathway-details.coach-availability({ coachingSession: {{ coachingSession.session_id }} })" class="button icon-left ion-ios-book button-calm button-small" ng-if="coachingSession.session_locked && !(coachingSession.session_flexible) && (coachingSession.session_type == 'PhoneCallCoachingSession' || (coachingSession.session_type == 'GroupCoachingSession') && coachingSession.group_session_details)">
+              <a ui-sref="tabs.home.pathway-details.coach-availability({ coachingSession: {{ coachingSession.session_id }} })" class="button icon-left ion-ios-book button-calm button-small" ng-if="coachingSession.status != 'booked' && coachingSession.session_locked && !(coachingSession.session_flexible) && (coachingSession.session_type == 'PhoneCallCoachingSession' || (coachingSession.session_type == 'GroupCoachingSession') && coachingSession.group_session_details)">
                 Book Session
+              </a>
+
+              <a ui-sref="tabs.home.pathway-details.coach-availability({ coachingSession: {{ coachingSession.session_id }} })" class="button icon-left ion-trash-a button-assertive button-small" ng-if="coachingSession.status == 'booked'">
+                Delete Booking
               </a>
 
             </div>
