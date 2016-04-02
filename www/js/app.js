@@ -231,6 +231,7 @@ angular.module('myPage', ['ionic'])
     $scope.coachingSessions = pathwayService.pathway.sessions;
     $scope.pathwayName = pathwayService.pathway.name;
     $scope.loading = false;
+    $scope.status = 200;
     pathwayService.pathway.session.booked = false;
   }else {
     // fetch data from api
