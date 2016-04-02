@@ -313,7 +313,8 @@
             View Materials
           </a>
 
-          <div class="list list-inset" ng-repeat="coachingSession in coachingSessions">
+          <div class="list list-inset coaching-sessions {{coachingSession.session_type}} {{coachingSession.status}}"
+            ng-class="{ 'nonbookable':  coachingSession.session_type == 'NonBookableCoachingSession' || coachingSession.session_type == 'SelfLearningCoachingSession', 'flexible': coachingSession.session_flexible, 'locked': coachingSession.session_locked }" ng-repeat="coachingSession in coachingSessions">
             <div class="item item-divider">
               <h2>{{ coachingSession.session_title }}</h2>
             </div>
@@ -321,7 +322,7 @@
               <label ng-show="coachingSession.description"> {{ coachingSession.description}} </label>
               <label ng-show="coachingSession.duration"> Date: {{ coachingSession.duration}} </label>
               <label ng-show="coachingSession.venue"> Venue: {{ coachingSession.venue}} </label>
-              <label ng-show="coachingSession.booking_date"> {{ coachingSession.booking_date}} </label>
+              <label ng-show="coachingSession.booking_date"> {{ date(coachingSession.booking_date).toDateString() }} </label>
               <label ng-show="coachingSession.start_time_in_12hour"> {{ coachingSession.start_time_in_12hour}} </label>
               <a href="/{{ coachingSession.material }}" ng-show="coachingSession.material">
                 <img src="img/pdf-icon.png" />
