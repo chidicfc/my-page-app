@@ -138,6 +138,14 @@ angular.module('myPage', ['ionic'])
        replace: true
    }
 })
+
+.directive("errorMessage", function() {
+   return {
+       restrict: 'E',
+       templateUrl: 'error_message.html',
+       replace: true
+   }
+})
 // directive ends
 
 .controller('SignInCtrl', ["$scope", "$state", "$http", "sessionService", "pathwayService", function($scope, $state, $http, sessionService, pathwayService) {
@@ -159,6 +167,7 @@ angular.module('myPage', ['ionic'])
         sessionService.username = user.username;
         pathwayService.pathways = response.data.user.pathway_attributes;
         $scope.loading = false;
+        $scope.status = response.status;
         console.log(sessionService.token);
         $state.go('tabs.home');
       }, function errorCallback(response) {
@@ -169,7 +178,7 @@ angular.module('myPage', ['ionic'])
           $scope.errorMessage = response.data.message;
         }
         $scope.loading = false;
-
+        $scope.status = response.status;
       });
 
     }
@@ -236,11 +245,12 @@ angular.module('myPage', ['ionic'])
       console.log("success");
       console.log(response);
       $scope.coachingSessions = response.data.pathway.coaching_sessions;
-      //pathwayService.pathway.sessions = $scope.coachingSessions;
       $scope.pathwayName = response.data.pathway.name;
       $scope.loading = false;
+      $scope.status = response.status;
       console.log($scope.coachingSessions);
       console.log($scope.pathwayName);
+      console.log(response.status);
     }, function errorCallback(response) {
       // called asynchronously if an error occurs
       // or server returns response with an error status.
@@ -249,8 +259,10 @@ angular.module('myPage', ['ionic'])
         $scope.errorMessage = response.data.message;
       }
       $scope.loading = false;
+      $scope.status = response.status;
       console.log("error");
       console.log(response);
+      console.log(response.status);
     });
   }
 
@@ -293,6 +305,7 @@ angular.module('myPage', ['ionic'])
     $scope.availabilitySlots = response.data;
     $scope.coachingSession = $stateParams.coachingSession;
     $scope.loading = false;
+    $scope.status = response.status;
     console.log("success");
     console.log(response.data);
     console.log($stateParams.coachingSession);
@@ -304,6 +317,7 @@ angular.module('myPage', ['ionic'])
       $scope.errorMessage = response.data.message;
     }
     $scope.loading = false;
+    $scope.status = response.status;
     console.log("error");
     console.log(response);
   });
@@ -320,6 +334,7 @@ angular.module('myPage', ['ionic'])
       // this callback will be called asynchronously
       // when the response is available
       $scope.loading = false;
+      $scope.status = response.status;
       console.log("success from book session");
       console.log(response.data);
       pathwayService.pathway.session.booked = true;
@@ -334,6 +349,7 @@ angular.module('myPage', ['ionic'])
         $scope.errorMessage = response.data.message;
       }
       $scope.loading = false;
+      $scope.status = response.status;
       console.log("error");
       console.log(response);
     });

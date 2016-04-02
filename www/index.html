@@ -51,6 +51,7 @@
              </label>
            </div>
            <div class="messages red">
+              <label ng-show = "status && (status != '200')">Error! </label>
               <label ng-show ="statusText">{{ statusText }}!</span> <span>{{ errorMessage }}</label>
               <label ng-show="(loginForm.username.$dirty || loginForm.$submitted) && loginForm.username.$error.required">Username is required</label>
               <label ng-show="(loginForm.password.$dirty || loginForm.$submitted) && loginForm.password.$error.required">Password is required</label>
@@ -303,8 +304,9 @@
         <ion-content padding="true">
 
           <pre-loader> </pre-loader>
+          <error-message> </error-message>
 
-          <a ui-sref="tabs.home.pathway-details.view-materials">
+          <a ui-sref="tabs.home.pathway-details.view-materials" ng-show="(status == '200')">
             View Materials
           </a>
 
@@ -339,7 +341,7 @@
             </div>
           </div>
 
-          <a ui-sref="tabs.home.pathway-details.view-materials">
+          <a ui-sref="tabs.home.pathway-details.view-materials" ng-show="(status == '200')">
             View Materials
           </a>
 
@@ -393,8 +395,9 @@
         <ion-content padding="true">
 
           <pre-loader> </pre-loader>
+          <error-message> </error-message>
 
-          <div class="list availability padding">
+          <div class="list availability padding" ng-show="status == '200'">
 
             <div class="item">
               <button class="button button-calm button-small">
