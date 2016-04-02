@@ -121,10 +121,10 @@ angular.module('myPage', ['ionic'])
 
 .service('pathwayService', function() {
   this.pathways = [];
-  this.pathwayName = "";
-  this.coachingSessions = [];
-  this.coachingSession = "";
-  this.bookedSession = false;
+  this.pathway = {
+    session: {},
+    sessions: []
+  };
 })
 
 // service ends
@@ -216,13 +216,13 @@ angular.module('myPage', ['ionic'])
   console.log("get pathway details");
   $scope.loading = true;
 
-  if (pathwayService.bookedSession){
+  if (pathwayService.pathway.session.booked){
     // fetch data from pathwayService
     console.log("in if construct");
-    $scope.coachingSessions = pathwayService.coachingSessions;
-    $scope.pathwayName = pathwayService.pathwayName;
+    $scope.coachingSessions = pathwayService.pathway.sessions;
+    $scope.pathwayName = pathwayService.pathway.name;
     $scope.loading = false;
-    pathwayService.bookedSession = false;
+    pathwayService.pathway.session.booked = false;
   }else {
     // fetch data from api
     console.log("not in if construct");
@@ -236,7 +236,7 @@ angular.module('myPage', ['ionic'])
       console.log("success");
       console.log(response);
       $scope.coachingSessions = response.data.pathway.coaching_sessions;
-      //pathwayService.coachingSessions = $scope.coachingSessions;
+      //pathwayService.pathway.sessions = $scope.coachingSessions;
       $scope.pathwayName = response.data.pathway.name;
       $scope.loading = false;
       console.log($scope.coachingSessions);
@@ -322,9 +322,9 @@ angular.module('myPage', ['ionic'])
       $scope.loading = false;
       console.log("success from book session");
       console.log(response.data);
-      pathwayService.bookedSession = true;
-      pathwayService.coachingSessions = response.data.pathway.coaching_sessions;
-      pathwayService.pathwayName = response.data.pathway.name;
+      pathwayService.pathway.session.booked = true;
+      pathwayService.pathway.sessions = response.data.pathway.coaching_sessions;
+      pathwayService.pathway.name = response.data.pathway.name;
       $state.go('tabs.home.pathway-details');
     }, function errorCallback(response) {
       // called asynchronously if an error occurs
