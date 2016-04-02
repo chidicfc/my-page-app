@@ -224,10 +224,12 @@ angular.module('myPage', ['ionic'])
 .controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "sessionService", "$http", "pathwayService", function($scope, $stateParams, sessionService, $http, pathwayService) {
   console.log("get pathway details");
   $scope.loading = true;
+  $scope.bookingErrorMessage = false;
   $scope.date = function(d){
     var date = new Date(d);
     return date;
   }
+
   if (pathwayService.pathway.session.booked){
     // fetch data from pathwayService
     console.log("in if construct");
@@ -267,7 +269,42 @@ angular.module('myPage', ['ionic'])
       console.log("error");
       console.log(response);
       console.log(response.status);
+      pathwayService.pathway.session.booked = false;
     });
+  }
+
+  $scope.deleteBooking = function(coachingSessionId){
+    console.log("deleting coaching session");
+    console.log(coachingSessionId);
+
+    $http({
+      method: 'DELETE',
+      url: 'http://local.ciabos.dev/api/v1/delete_booking/' + coachingSessionId,
+      params: {user: {token: sessionService.token, username: sessionService.username}, pathway: {id: $stateParams.pathwayId}}
+    }).then(function successCallback(response) {
+      // this callback will be called asynchronously
+      // when the response is available
+      console.log("success");
+      console.log(response);
+      $scope.coachingSessions = response.data.pathway.coaching_sessions;
+      $scope.pathwayName = response.data.pathway.name;
+      $scope.loading = false;
+      $scope.status = response.status;
+      console.log($scope.coachingSessions);
+      console.log($scope.pathwayName);
+      console.log(response.status);
+    }, function errorCallback(response) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+      console.log("error");
+      $scope.bookingErrorMessage = "Error! Could not delete booking";
+      $scope.coachingSessionId = coachingSessionId;
+      $scope.loading = false;
+      console.log($scope);
+      //$scope.coachingSessions = response.data.pathway.coaching_sessions;
+      //$scope.pathwayName = response.data.pathway.name;
+    });
+
   }
 
 }])
