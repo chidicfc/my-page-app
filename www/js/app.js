@@ -224,7 +224,10 @@ angular.module('myPage', ['ionic'])
 .controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "sessionService", "$http", "pathwayService", function($scope, $stateParams, sessionService, $http, pathwayService) {
   console.log("get pathway details");
   $scope.loading = true;
-
+  $scope.date = function(d){
+    var date = new Date(d);
+    return date;
+  }
   if (pathwayService.pathway.session.booked){
     // fetch data from pathwayService
     console.log("in if construct");
