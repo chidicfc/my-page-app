@@ -342,10 +342,10 @@
                 Book Session
               </a>
 
-              <a ui-sref="tabs.home.pathway-details.coach-availability({ coachingSession: {{ coachingSession.session_id }} })" class="button icon-left ion-trash-a button-assertive button-small" ng-if="coachingSession.status == 'booked'">
+              <button class="button icon-left ion-trash-a button-assertive button-small" ng-if="coachingSession.status == 'booked'" ng-click="deleteBooking(coachingSession.session_id)">
                 Delete Booking
-              </a>
-
+              </button>
+              <span class="booking-error-message" ng-if="coachingSessionId == coachingSession.session_id && bookingErrorMessage"> {{ bookingErrorMessage }} </span>
             </div>
           </div>
 
