@@ -39,6 +39,11 @@
   background-color: #D7F2FB !important;
 }
 
+span.booking-error-message {
+  font-size: 80% !important;
+  color: red !important;
+}
+
 
 
 /* spinner start */
