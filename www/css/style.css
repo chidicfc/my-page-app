@@ -12,6 +12,35 @@
   margin-right: 30px;
 }
 
+.coaching-sessions.locked .item {
+  border-style: solid !important;
+  border-color: #00C8E7;
+}
+
+.coaching-sessions.flexible {
+  margin-left: 40px;
+}
+
+.coaching-sessions.nonbookable .item-divider {
+  background-color: transparent !important;
+  background: url("http://app.coachinabox.biz/assets/crossHatch.jpg") !important;
+}
+
+.coaching-sessions.flexible .item {
+  border-style: dashed !important;
+  border-color: #00C8E7;
+}
+
+.coaching-sessions.not-yet-booked .item.item-divider {
+  background-color: #EEEEEE !important;
+}
+
+.coaching-sessions.booked .item.item-divider {
+  background-color: #D7F2FB !important;
+}
+
+
+
 /* spinner start */
 .cssload-container{
 	position:relative;
