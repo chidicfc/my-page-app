@@ -342,17 +342,21 @@
                 View Details
               </button>
 
+              <button ng-click="viewGroupSessionDetails(coachingSession)" class="button icon-left ion-eye button-calm button-small" ng-if="coachingSession.session_type == 'GroupCoachingSession' && coachingSession.group_session_details">
+                View Details
+              </button>
+
               <button ng-click="viewNonBookableDetails(coachingSession)" class="button icon-left ion-eye button-calm button-small" ng-if="(coachingSession.session_type == 'NonBookableCoachingSession' && coachingSession.nonbookable_session_details)">
                 View Details
               </button>
 
               <a href="#" ui-sref="tabs.home.pathway-details.coach-availability({ coachingSession: {{ coachingSession.session_id }}, all_slots: 'false' })" class="button icon-left ion-ios-book button-calm button-small"
-                ng-if="coachingSession.status != 'greyed-out' && coachingSession.status != 'booked' && coachingSession.session_locked && !(coachingSession.session_flexible) && (coachingSession.session_type == 'PhoneCallCoachingSession' || (coachingSession.session_type == 'GroupCoachingSession') && coachingSession.group_session_details)">
+                ng-if="coachingSession.status != 'greyed-out' && coachingSession.status != 'booked' && coachingSession.session_locked && !(coachingSession.session_flexible) && (coachingSession.session_type == 'PhoneCallCoachingSession')">
                 Book Session
               </a>
 
               <a href="#" ui-sref="tabs.home.pathway-details.coach-availability({ coachingSession: {{ coachingSession.session_id }}, all_slots: 'false' })" class="button icon-left ion-ios-book button-calm button-small"
-                ng-if="coachingSession.status != 'greyed-out' && coachingSession.status != 'booked' && coachingSession.session_locked && coachingSession.session_flexible && (coachingSession.session_type == 'PhoneCallCoachingSession' || (coachingSession.session_type == 'GroupCoachingSession') && coachingSession.group_session_details)">
+                ng-if="coachingSession.status != 'greyed-out' && coachingSession.status != 'booked' && coachingSession.session_locked && coachingSession.session_flexible && (coachingSession.session_type == 'PhoneCallCoachingSession')">
                 Book Session
               </a>
 
@@ -502,6 +506,35 @@
               <label ng-show="nonBookableSessionDetails.venue"><strong>Venue:</strong> {{ nonBookableSessionDetails.venue }}</label>
               <label ng-show="nonBookableSessionDetails.brief_details"><strong>Summary:</strong> {{ nonBookableSessionDetails.brief_details }}</label>
               <label ng-show="nonBookableSessionDetails.additional_details"><strong>Additional Details:</strong> {{ nonBookableSessionDetails.additional_details }} {{ nonBookableSessionDetails.additional_details }} {{ nonBookableSessionDetails.additional_details }} {{ nonBookableSessionDetails.additional_details }} {{ nonBookableSessionDetails.additional_details }} {{ nonBookableSessionDetails.additional_details }}{{ nonBookableSessionDetails.additional_details }}{{ nonBookableSessionDetails.additional_details }}</label>
+            </div>
+
+            <div class="item item-divider">
+            </div>
+
+          </div>
+
+        </ion-content>
+      </ion-view>
+    </script>
+
+    <script id="templates/view-group-coaching-session-details.html" type="text/ng-template">
+
+      <ion-view view-title="Session Details">
+        <ion-content padding="true">
+
+          <div class="list list-inset pre-works">
+
+            <div class="item item-divider">
+              {{ groupCoachingSession.session_title }}
+            </div>
+
+            <div class="item item-body">
+              <label ng-show="groupCoachingSession.group_session_details.participant_details"><strong>Participant Details:</strong> {{ groupCoachingSession.group_session_details.participant_details }}</label>
+              <div ng-show="groupCoachingSession.group_coaching_members">
+                <label class="underline"><strong>Group Members</strong></label>
+                <label>{{ groupCoachingSession.coachee }}</label>
+                <label ng-repeat="coachingMember in groupCoachingSession.group_coaching_members"> {{ coachingMember }}</label>
+              </div>
             </div>
 
             <div class="item item-divider">
