@@ -43,6 +43,14 @@
   background-color: #D7F2FB !important;
 }
 
+.coaching-sessions.missed .item.item-divider {
+  background-color: #FAC5C5 !important;
+}
+
+.coaching-sessions.completed .item.item-divider {
+  background-color: #E6EFC2 !important;
+}
+
 span.booking-error-message {
   font-size: 80% !important;
   color: red !important;
