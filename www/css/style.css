@@ -25,6 +25,10 @@
   margin-left: 40px;
 }
 
+.coaching-sessions.flexible.locked {
+  margin-left: 0px;
+}
+
 .coaching-sessions.nonbookable .item-divider {
   background-color: transparent !important;
   background: url("http://app.coachinabox.biz/assets/crossHatch.jpg") !important;
@@ -49,6 +53,10 @@
 
 .coaching-sessions.completed .item.item-divider {
   background-color: #E6EFC2 !important;
+}
+
+.coaching-sessions.greyed-out .item.item-divider {
+  background-color: #777777 !important;
 }
 
 span.booking-error-message {
