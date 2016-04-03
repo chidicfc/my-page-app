@@ -346,18 +346,24 @@
                 View Details
               </button>
 
-              <a href="#" ui-sref="tabs.home.pathway-details.coach-availability({ coachingSession: {{ coachingSession.session_id }}, all_slots: 'false' })" class="button icon-left ion-ios-book button-calm button-small" ng-if="coachingSession.status != 'booked' && coachingSession.session_locked && !(coachingSession.session_flexible) && (coachingSession.session_type == 'PhoneCallCoachingSession' || (coachingSession.session_type == 'GroupCoachingSession') && coachingSession.group_session_details)">
+              <a href="#" ui-sref="tabs.home.pathway-details.coach-availability({ coachingSession: {{ coachingSession.session_id }}, all_slots: 'false' })" class="button icon-left ion-ios-book button-calm button-small"
+                ng-if="coachingSession.status != 'greyed-out' && coachingSession.status != 'booked' && coachingSession.session_locked && !(coachingSession.session_flexible) && (coachingSession.session_type == 'PhoneCallCoachingSession' || (coachingSession.session_type == 'GroupCoachingSession') && coachingSession.group_session_details)">
                 Book Session
               </a>
 
-              <a href="#" ui-sref="tabs.home.pathway-details.coach-availability({ coachingSession: {{ coachingSession.session_id }}, all_slots: 'false' })" class="button icon-left ion-ios-book button-calm button-small" ng-if="coachingSession.status == 'missed' && !(coachingSession.session_flexible) && (coachingSession.session_type == 'PhoneCallCoachingSession' || (coachingSession.session_type == 'GroupCoachingSession') && coachingSession.group_session_details)">
+              <a href="#" ui-sref="tabs.home.pathway-details.coach-availability({ coachingSession: {{ coachingSession.session_id }}, all_slots: 'false' })" class="button icon-left ion-ios-book button-calm button-small"
+                ng-if="coachingSession.status != 'greyed-out' && coachingSession.status != 'booked' && coachingSession.session_locked && coachingSession.session_flexible && (coachingSession.session_type == 'PhoneCallCoachingSession' || (coachingSession.session_type == 'GroupCoachingSession') && coachingSession.group_session_details)">
+                Book Session
+              </a>
+
+              <a href="#" ui-sref="tabs.home.pathway-details.coach-availability({ coachingSession: {{ coachingSession.session_id }}, all_slots: 'false' })" class="button icon-left ion-ios-book button-calm button-small" ng-if="coachingSession.status != 'greyed-out' && coachingSession.status == 'missed' && !(coachingSession.session_flexible) && (coachingSession.session_type == 'PhoneCallCoachingSession' || (coachingSession.session_type == 'GroupCoachingSession') && coachingSession.group_session_details)">
                 Re-book Session
               </a>
 
-              <button class="button icon-left ion-trash-a button-assertive button-small" ng-if="coachingSession.status == 'booked'" ng-click="deleteBooking(coachingSession.session_id)">
+              <button class="button icon-left ion-trash-a button-assertive button-small" ng-if="coachingSession.session_type != 'FaceToFaceCoachingSession' && coachingSession.status == 'booked' && coachingSession.status != 'greyed-out'" ng-click="deleteBooking(coachingSession.session_id)">
                 Delete Booking
               </button>
-              <label ng-if="coachingSession.status == 'completed'">No action required</label>
+              <label ng-if="coachingSession.status == 'completed' || coachingSession.status == 'greyed-out' || coachingSession.session_type == 'FaceToFaceCoachingSession'">No action required</label>
               <span class="booking-error-message" ng-if="coachingSessionId == coachingSession.session_id && bookingErrorMessage"> {{ bookingErrorMessage }} </span>
             </div>
           </div>
