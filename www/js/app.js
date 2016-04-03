@@ -72,6 +72,16 @@ angular.module('myPage', ['ionic'])
       }
     })
 
+    .state('tabs.home.pathway-details.view-pre-works', {
+      url: '/view-pre-works',
+      views: {
+        'home-tab@tabs': {
+          templateUrl: 'templates/view-pre-works.html',
+          controller: 'ViewPreWorksCtrl'
+        }
+      }
+    })
+
     .state('tabs.home.pathway-details.view-materials', {
       url: '/view-materials',
       views: {
@@ -221,7 +231,7 @@ angular.module('myPage', ['ionic'])
   };
 }])
 
-.controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "sessionService", "$http", "pathwayService", function($scope, $stateParams, sessionService, $http, pathwayService) {
+.controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "sessionService", "$http", "$state", "pathwayService", function($scope, $stateParams, sessionService, $http, $state, pathwayService) {
   console.log("get pathway details");
   $scope.loading = true;
   $scope.bookingErrorMessage = false;
@@ -305,6 +315,14 @@ angular.module('myPage', ['ionic'])
       //$scope.pathwayName = response.data.pathway.name;
     });
 
+
+
+  }
+
+  $scope.viewPreWorks = function(preWorks){
+    console.log(preWorks);
+    pathwayService.pathway.session.preWorks = preWorks;
+    $state.go('tabs.home.pathway-details.view-pre-works');
   }
 
 }])
@@ -396,4 +414,10 @@ angular.module('myPage', ['ionic'])
     });
   }
 
+}])
+
+.controller('ViewPreWorksCtrl', ["$scope", "$stateParams", "pathwayService", function($scope, $stateParams, pathwayService) {
+  console.log("pre-works");
+  $scope.preWorks = pathwayService.pathway.session.preWorks;
+  console.log($scope.preWorks);
 }])
