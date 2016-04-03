@@ -328,6 +328,9 @@
               <a href="#" browse-to="http://local.ciabos.dev/documents/download/{{ coachingSession.material }}" ng-show="coachingSession.material">
                 <img src="img/pdf-icon.png" />
               </a>
+              <div ng-if="loading && coachingSessionId == coachingSession.session_id">
+                <pre-loader> </pre-loader>
+              </div>
             </div>
             <div class="item item-divider action-buttons">
               <button class="button icon-left ion-information-circled button-calm button-small"
