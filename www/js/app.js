@@ -63,7 +63,7 @@ angular.module('myPage', ['ionic'])
     })
 
     .state('tabs.home.pathway-details.coach-availability', {
-      url: '/coach-availability/:coachingSession',
+      url: '/coach-availability/:coachingSession/:all_slots',
       views: {
         'home-tab@tabs': {
           templateUrl: 'templates/coach-availability.html',
@@ -367,6 +367,7 @@ angular.module('myPage', ['ionic'])
 
 .controller('CoachAvailabilityCtrl', ["$scope", "$stateParams", "$http", "sessionService", "$state", "pathwayService", function($scope, $stateParams, $http, sessionService, $state, pathwayService) {
   console.log("coach availability");
+  console.log("All slots:" + $stateParams.all_slots);
   console.log($stateParams);
   console.log(sessionService);
   $scope.loading = true;
@@ -390,7 +391,7 @@ angular.module('myPage', ['ionic'])
 
   $http({
     method: 'GET',
-    url: 'http://local.ciabos.dev/api/v1/get_availability/' + $stateParams.coachingSession,
+    url: 'http://local.ciabos.dev/api/v1/get_availability/' + $stateParams.coachingSession + '/' + $stateParams.all_slots,
     params: {user: {token: sessionService.token, username: sessionService.username}}
   }).then(function successCallback(response) {
     // this callback will be called asynchronously
