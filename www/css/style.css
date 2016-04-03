@@ -48,6 +48,10 @@ span.booking-error-message {
   color: red !important;
 }
 
+.pre-works a {
+  text-decoration: none !important;
+}
+
 /* spinner start */
 .cssload-container{
 	position:relative;

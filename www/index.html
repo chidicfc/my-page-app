@@ -442,11 +442,11 @@
 
             <div class="item item-body">
               <label><strong> Title:</strong> Tile 1</label>
-              <label ng-if="!(preWork.pre_work_type_name == 'Material' || preWork.pre_work_type_name == 'CiaB Diagnostic')"> <a href="http://{{ preWork.link }}" target="_blank"> Link </a></label>
+              <label ng-if="!(preWork.pre_work_type_name == 'Material' || preWork.pre_work_type_name == 'CiaB Diagnostic')"> <a href="#" browse-to="http://{{ preWork.link }}"> Link </a></label>
 
-              <label ng-if="preWork.pre_work_type_name == 'Material'"><a href="/documents/download/{{ preWork.link }}" target="_blank"><img src="img/pdf-icon.png" /></a></label>
+              <label ng-if="preWork.pre_work_type_name == 'Material'"><a href="#" browse-to="http://local.ciabos.dev/documents/download/{{ preWork.link }}"><img src="img/pdf-icon.png" /></a></label>
 
-              <label ng-if="preWork.pre_work_type_name == 'CiaB Diagnostic'"><a href="{{ preWork.link }}" target="_blank"> Card Sort </a></label>
+              <label ng-if="preWork.pre_work_type_name == 'CiaB Diagnostic'"><a href="#" browse-to="http://{{ preWork.link }}"> Card Sort </a></label>
 
               <div ng-if="!(loading) && (preWorkId == preWork.id)">
                 <label ng-show = "completionStatus" class="red small"> {{ completionStatus }} </label>
