@@ -82,6 +82,16 @@ angular.module('myPage', ['ionic'])
       }
     })
 
+    .state('tabs.home.pathway-details.view-non-bookable-session-details', {
+      url: '/view-non-bookable-session-details',
+      views: {
+        'home-tab@tabs': {
+          templateUrl: 'templates/view-non-bookable-session-details.html',
+          controller: 'ViewNonBookableSessionDetailsCtrl'
+        }
+      }
+    })
+
     .state('tabs.home.pathway-details.view-materials', {
       url: '/view-materials',
       views: {
@@ -342,6 +352,12 @@ angular.module('myPage', ['ionic'])
     $state.go('tabs.home.pathway-details.view-pre-works');
   }
 
+  $scope.viewNonBookableDetails = function(coachingSession){
+    console.log(coachingSession.nonbookable_session_details);
+    pathwayService.pathway.session.nonBookableSessionDetails = coachingSession.nonbookable_session_details;
+    $state.go('tabs.home.pathway-details.view-non-bookable-session-details');
+  }
+
 }])
 
 .controller('ViewMaterialsCtrl', ["$scope", function($scope) {
@@ -470,5 +486,15 @@ angular.module('myPage', ['ionic'])
       console.log(response);
     });
 
+  }
+}])
+
+.controller('ViewNonBookableSessionDetailsCtrl', ["$scope", "pathwayService", function($scope, pathwayService) {
+  console.log("viewing non-bookable session details");
+  console.log(pathwayService.pathway.session.nonBookableSessionDetails);
+  $scope.nonBookableSessionDetails = pathwayService.pathway.session.nonBookableSessionDetails;
+  $scope.date = function(d){
+    var date = new Date(d);
+    return date;
   }
 }])

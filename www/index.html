@@ -320,8 +320,9 @@
             </div>
             <div class="item item-body details">
               <label ng-show="coachingSession.description"> {{ coachingSession.description}} </label>
-              <label ng-show="coachingSession.duration"> Date: {{ coachingSession.duration}} </label>
-              <label ng-show="coachingSession.venue"> Venue: {{ coachingSession.venue}} </label>
+              <label ng-show="coachingSession.duration"> Date: <strong>{{ coachingSession.duration}}</strong> </label>
+              <label ng-show="coachingSession.venue"> Venue: <strong>{{ coachingSession.venue}}</strong> </label>
+              <label ng-show="coachingSession.summary">Summary: <strong>{{ coachingSession.summary }}</strong></label>
               <label ng-show="coachingSession.booking_date"> {{ date(coachingSession.booking_date).toDateString() }} </label>
               <label ng-show="coachingSession.start_time_in_12hour"> {{ coachingSession.start_time_in_12hour}} </label>
               <a href="#" browse-to="http://local.ciabos.dev/documents/download/{{ coachingSession.material }}" ng-show="coachingSession.material">
@@ -335,6 +336,10 @@
               </button>
 
               <button ng-click="viewPreWorks(coachingSession.pre_works)" class="button icon-left ion-eye button-calm button-small" ng-if="coachingSession.session_type == 'SelfLearningCoachingSession'">
+                View Details
+              </button>
+
+              <button ng-click="viewNonBookableDetails(coachingSession)" class="button icon-left ion-eye button-calm button-small" ng-if="(coachingSession.session_type == 'NonBookableCoachingSession' && coachingSession.nonbookable_session_details)">
                 View Details
               </button>
 
@@ -461,6 +466,34 @@
             </div>
           </div>
 
+
+        </ion-content>
+      </ion-view>
+    </script>
+
+    <script id="templates/view-non-bookable-session-details.html" type="text/ng-template">
+
+      <ion-view view-title="Session Details">
+        <ion-content padding="true">
+
+          <div class="list list-inset pre-works">
+
+            <div class="item item-divider">
+              {{ nonBookableSessionDetails.title }}
+            </div>
+
+            <div class="item item-body">
+              <label ng-show="nonBookableSessionDetails.start_at"><strong>Start Date:</strong> {{ date(nonBookableSessionDetails.start_at).toDateString() }}</label>
+              <label ng-show="nonBookableSessionDetails.end_at"><strong>End Date:</strong> {{ date(nonBookableSessionDetails.end_at).toDateString() }}</label>
+              <label ng-show="nonBookableSessionDetails.venue"><strong>Venue:</strong> {{ nonBookableSessionDetails.venue }}</label>
+              <label ng-show="nonBookableSessionDetails.brief_details"><strong>Summary:</strong> {{ nonBookableSessionDetails.brief_details }}</label>
+              <label ng-show="nonBookableSessionDetails.additional_details"><strong>Additional Details:</strong> {{ nonBookableSessionDetails.additional_details }} {{ nonBookableSessionDetails.additional_details }} {{ nonBookableSessionDetails.additional_details }} {{ nonBookableSessionDetails.additional_details }} {{ nonBookableSessionDetails.additional_details }} {{ nonBookableSessionDetails.additional_details }}{{ nonBookableSessionDetails.additional_details }}{{ nonBookableSessionDetails.additional_details }}</label>
+            </div>
+
+            <div class="item item-divider">
+            </div>
+
+          </div>
 
         </ion-content>
       </ion-view>
