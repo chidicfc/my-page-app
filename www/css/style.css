@@ -3,6 +3,10 @@
   color: red;
 }
 
+.small {
+  font-size: 80% !important;
+}
+
 .messages.red label, .item-body.details label, .pre-works .item label {
   display: block;
 }
