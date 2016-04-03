@@ -313,7 +313,8 @@ angular.module('myPage', ['ionic'])
   $scope.deleteBooking = function(coachingSessionId){
     console.log("deleting coaching session");
     console.log(coachingSessionId);
-
+    $scope.loading = true;
+    $scope.coachingSessionId = coachingSessionId;
     $http({
       method: 'DELETE',
       url: 'http://local.ciabos.dev/api/v1/delete_booking/' + coachingSessionId,
