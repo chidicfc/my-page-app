@@ -434,8 +434,6 @@
       <ion-view view-title="Self Learning Session">
         <ion-content padding="true">
 
-
-
           <div class="list list-inset pre-works" ng-repeat="preWork in preWorks">
 
             <div class="item item-divider">
@@ -446,13 +444,15 @@
               <label><strong> Title:</strong> Tile 1</label>
               <label ng-if="!(preWork.pre_work_type_name == 'Material' || preWork.pre_work_type_name == 'CiaB Diagnostic')"> <a href="http://{{ preWork.link }}" target="_blank"> Link </a></label>
 
-              <label ng-if="preWork.pre_work_type_name == 'Material'"><a href="{{ preWork.link }}" target="_blank"><img src="img/pdf-icon.png" /></a></label>
+              <label ng-if="preWork.pre_work_type_name == 'Material'"><a href="/documents/download/{{ preWork.link }}" target="_blank"><img src="img/pdf-icon.png" /></a></label>
 
               <label ng-if="preWork.pre_work_type_name == 'CiaB Diagnostic'"><a href="{{ preWork.link }}" target="_blank"> Card Sort </a></label>
 
               <div ng-if="!(loading) && (preWorkId == preWork.id)">
+                <label ng-show = "completionStatus" class="red small"> {{ completionStatus }} </label>
+              </div>
+              <div ng-if="loading && (preWorkId == preWork.id)">
                 <pre-loader> </pre-loader>
-                <error-message> </error-message>
               </div>
 
             </div>
