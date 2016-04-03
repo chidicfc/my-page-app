@@ -82,6 +82,16 @@ angular.module('myPage', ['ionic'])
       }
     })
 
+    .state('tabs.home.pathway-details.view-group-coaching-session-details', {
+      url: '/view-group-coaching-session-details',
+      views: {
+        'home-tab@tabs': {
+          templateUrl: 'templates/view-group-coaching-session-details.html',
+          controller: 'ViewGroupCoachingSessionDetailsCtrl'
+        }
+      }
+    })
+
     .state('tabs.home.pathway-details.view-non-bookable-session-details', {
       url: '/view-non-bookable-session-details',
       views: {
@@ -353,6 +363,13 @@ angular.module('myPage', ['ionic'])
     $state.go('tabs.home.pathway-details.view-pre-works');
   }
 
+  $scope.viewGroupSessionDetails = function(groupCoachingSession){
+    console.log("in group coaching session");
+    console.log(groupCoachingSession);
+    pathwayService.pathway.groupCoachingSession = groupCoachingSession;
+    $state.go('tabs.home.pathway-details.view-group-coaching-session-details');
+  }
+
   $scope.viewNonBookableDetails = function(coachingSession){
     console.log(coachingSession.nonbookable_session_details);
     pathwayService.pathway.session.nonBookableSessionDetails = coachingSession.nonbookable_session_details;
@@ -499,4 +516,10 @@ angular.module('myPage', ['ionic'])
     var date = new Date(d);
     return date;
   }
+}])
+
+.controller('ViewGroupCoachingSessionDetailsCtrl', ["$scope", "pathwayService", function($scope, pathwayService) {
+  console.log("viewing group coaching session details");
+  console.log(pathwayService.pathway.groupCoachingSession);
+  $scope.groupCoachingSession = pathwayService.pathway.groupCoachingSession;
 }])
