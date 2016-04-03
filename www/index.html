@@ -324,7 +324,7 @@
               <label ng-show="coachingSession.venue"> Venue: {{ coachingSession.venue}} </label>
               <label ng-show="coachingSession.booking_date"> {{ date(coachingSession.booking_date).toDateString() }} </label>
               <label ng-show="coachingSession.start_time_in_12hour"> {{ coachingSession.start_time_in_12hour}} </label>
-              <a href="/{{ coachingSession.material }}" ng-show="coachingSession.material">
+              <a href="#" browse-to="http://local.ciabos.dev/documents/download/{{ coachingSession.material }}" ng-show="coachingSession.material">
                 <img src="img/pdf-icon.png" />
               </a>
             </div>
