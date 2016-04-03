@@ -3,7 +3,7 @@
   color: red;
 }
 
-.messages.red label, .item-body.details label {
+.messages.red label, .item-body.details label, .pre-works .item label {
   display: block;
 }
 
@@ -43,8 +43,6 @@ span.booking-error-message {
   font-size: 80% !important;
   color: red !important;
 }
-
-
 
 /* spinner start */
 .cssload-container{
