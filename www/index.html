@@ -434,8 +434,7 @@
       <ion-view view-title="Self Learning Session">
         <ion-content padding="true">
 
-          <pre-loader> </pre-loader>
-          <error-message> </error-message>
+
 
           <div class="list list-inset pre-works" ng-repeat="preWork in preWorks">
 
@@ -451,9 +450,14 @@
 
               <label ng-if="preWork.pre_work_type_name == 'CiaB Diagnostic'"><a href="{{ preWork.link }}" target="_blank"> Card Sort </a></label>
 
+              <div ng-if="!(loading) && (preWorkId == preWork.id)">
+                <pre-loader> </pre-loader>
+                <error-message> </error-message>
+              </div>
+
             </div>
             <div class="item item-divider">
-              Tick when complete: <input type="checkbox" ng-model="preWork.is_complete" ng-change="completePreWork()" />
+              Tick when complete: <input type="checkbox" ng-model="preWork.is_complete" ng-change="completePreWork(preWork)" />
             </div>
           </div>
 
