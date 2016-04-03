@@ -416,8 +416,42 @@ angular.module('myPage', ['ionic'])
 
 }])
 
-.controller('ViewPreWorksCtrl', ["$scope", "$stateParams", "pathwayService", function($scope, $stateParams, pathwayService) {
+.controller('ViewPreWorksCtrl', ["$scope", "$stateParams", "$http", "pathwayService", "sessionService", function($scope, $stateParams, $http, pathwayService, sessionService) {
   console.log("pre-works");
   $scope.preWorks = pathwayService.pathway.session.preWorks;
   console.log($scope.preWorks);
+  $scope.completePreWork = function(preWork){
+    console.log(preWork);
+    $scope.loading = true;
+    $scope.preWorkId = preWork.id
+    $http({
+      method: 'PATCH',
+      url: 'http://local.ciabos.dev/api/v1/pre_works/' + preWork.id + '/is_complete/' + preWork.is_complete,
+      params: {user: {token: sessionService.token, username: sessionService.username}}
+    }).then(function successCallback(response) {
+      // this callback will be called asynchronously
+      // when the response is available
+      $scope.loading = false;
+      $scope.status = response.status;
+      $scope.completionStatus = "Completion status updated";
+      console.log("pre-work completed");
+      console.log(response);
+    }, function errorCallback(response) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+      $scope.completionStatus = "Can't update completion status";
+      $scope.statusText = response.statusText;
+      preWork.is_complete = false;
+      $scope
+      if (response.data) {
+        $scope.errorMessage = response.data.message;
+      }
+      $scope.loading = false;
+      $scope.status = response.status;
+      console.log($scope);
+      console.log("error: status not completed");
+      console.log(response);
+    });
+
+  }
 }])
