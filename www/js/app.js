@@ -103,7 +103,7 @@ angular.module('myPage', ['ionic'])
     })
 
     .state('tabs.home.pathway-details.view-materials', {
-      url: '/view-materials',
+      url: '/view-materials/:pathwayId',
       views: {
         'home-tab@tabs': {
           templateUrl: 'templates/view-materials.html',
@@ -282,6 +282,7 @@ angular.module('myPage', ['ionic'])
     console.log("in if construct");
     $scope.coachingSessions = pathwayService.pathway.sessions;
     $scope.pathwayName = pathwayService.pathway.name;
+    $scope.pathwayId = pathwayService.pathway.id;
     $scope.loading = false;
     $scope.status = 200;
     pathwayService.pathway.session.booked = false;
@@ -299,6 +300,7 @@ angular.module('myPage', ['ionic'])
       console.log(response);
       $scope.coachingSessions = response.data.pathway.coaching_sessions;
       $scope.pathwayName = response.data.pathway.name;
+      $scope.pathwayId = response.data.pathway.id;
       $scope.loading = false;
       $scope.status = response.status;
       console.log($scope.coachingSessions);
@@ -378,7 +380,34 @@ angular.module('myPage', ['ionic'])
 
 }])
 
-.controller('ViewMaterialsCtrl', ["$scope", function($scope) {
+.controller('ViewMaterialsCtrl', ["$scope", "$stateParams", "$http", "sessionService", function($scope, $stateParams, $http, sessionService) {
+  console.log("view materials");
+  console.log($stateParams);
+  $scope.loading = true;
+  $http({
+    method: 'GET',
+    url: 'http://local.ciabos.dev/api/v1/materials',
+    params: {user: {token: sessionService.token, username: sessionService.username}, pathway: {id: $stateParams.pathwayId}}
+  }).then(function successCallback(response) {
+    // this callback will be called asynchronously
+    // when the response is available
+    $scope.loading = false;
+    $scope.status = response.status;
+    $scope.materials = response.data.materials;
+    console.log("materials gotten");
+    console.log(response);
+  }, function errorCallback(response) {
+    // called asynchronously if an error occurs
+    // or server returns response with an error status.
+    $scope.statusText = response.statusText;
+    if (response.data) {
+      $scope.errorMessage = response.data.message;
+    }
+    $scope.loading = false;
+    $scope.status = response.status;
+    console.log($scope);
+    console.log(response);
+  });
 
 }])
 
@@ -451,6 +480,7 @@ angular.module('myPage', ['ionic'])
       pathwayService.pathway.session.booked = true;
       pathwayService.pathway.sessions = response.data.pathway.coaching_sessions;
       pathwayService.pathway.name = response.data.pathway.name;
+      pathwayService.pathway.id = response.data.pathway.id;
       $state.go('tabs.home.pathway-details');
     }, function errorCallback(response) {
       // called asynchronously if an error occurs
@@ -494,7 +524,6 @@ angular.module('myPage', ['ionic'])
       $scope.completionStatus = "Can't update completion status";
       $scope.statusText = response.statusText;
       preWork.is_complete = false;
-      $scope
       if (response.data) {
         $scope.errorMessage = response.data.message;
       }
