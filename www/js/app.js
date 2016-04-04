@@ -394,6 +394,9 @@ angular.module('myPage', ['ionic'])
     $scope.loading = false;
     $scope.status = response.status;
     $scope.materials = response.data.materials;
+    if (response.data) {
+      $scope.noMaterial = response.data.message;
+    }
     console.log("materials gotten");
     console.log(response);
   }, function errorCallback(response) {
