@@ -114,7 +114,9 @@
 
       <ion-view hide-nav-bar="true">
         <ion-content>
-          <div class="list">
+          <pre-loader> </pre-loader>
+          <error-message> </error-message>
+          <div class="list padding">
 
             <a class="item" ui-sref="tabs.home.pathway-details({ pathwayId: {{ pathway[0] }} })" ng-repeat="pathway in pathways | filter: query" href="#">
               <h2> {{ pathway[1] }}</h2>
@@ -131,53 +133,30 @@
       <ion-header-bar class="bar-calm item-input-inset">
        <label class="item-input-wrapper">
          <i class="icon ion-search placeholder-icon"></i>
-         <input type="search" placeholder="Search Coaches">
+         <input type="search" placeholder="Search Coaches" ng-model="query">
        </label>
-       <button class="button button-clear">
-        Cancel
-       </button>
       </ion-header-bar>
 
       <ion-view hide-nav-bar="true">
         <ion-content padding="true">
 
-          <div class="list list-inset">
-            <div class="item item-avatar item-text-wrap">
-              <img src="img/avatar.png" />
-              <h2>Will Stokely</h2>
-              <p>dummy@coachinabox.biz</p>
-              <p>555-555-5555</p>
-            </div>
-            <div class="item item-body">
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-                dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
-            </div>
-            <a class="item item-divider" href="#">
-              <i class="icon ion-email"></i>
-            </a>
-          </div>
+        <pre-loader> </pre-loader>
+        <error-message> </error-message>
 
-          <div class="list list-inset">
-            <div class="item item-avatar item-text-wrap">
-              <img src="img/avatar.png" />
-              <h2>Adam Gorbert</h2>
-              <p>dummy1@coachinabox.biz</p>
-              <p>555-555-5555</p>
+          <div class="list list-inset" ng-repeat="coach in coaches | filter: query">
+            <div class="item item-thumbnail-left">
+              <img ng-src="{{ coach.profile_image ? 'http://local.ciabos.dev' + coach.profile_image : 'img/avatar.png' }}"/>
+              <h2>{{ coach.name }}</h2>
+              <p class="small" ng-show="coach.timezone"> ({{ coach.timezone }}) </p>
+              <p class="small" ng-show="coach.email"> {{ coach.email }}</p>
+              <p class="small" ng-show="coach.phone"> {{ coach.phone }}</p>
             </div>
             <div class="item item-body">
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-                dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
+              <label ng-bind-html="coach.biography | unsafe" ng-show="coach.biography"></label>
             </div>
             <a class="item item-divider" href="#">
               <i class="icon ion-email"></i>
+               <span class="small">Email Coach</span>
             </a>
           </div>
 
