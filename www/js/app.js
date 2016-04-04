@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('myPage', ['ionic'])
+angular.module('myPage', ['ionic', 'ngSanitize'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -195,6 +195,14 @@ angular.module('myPage', ['ionic'])
 })
 // directive ends
 
+// filter starts
+.filter('unsafe', function ($sce) {
+    return function (val) {
+        return $sce.trustAsHtml(val);
+    };
+})
+// filter ends
+
 .controller('SignInCtrl', ["$scope", "$state", "$http", "sessionService", "pathwayService", function($scope, $state, $http, sessionService, pathwayService) {
   $scope.signIn = function(user) {
     $scope.statusText = null;
@@ -241,9 +249,40 @@ angular.module('myPage', ['ionic'])
   console.log(pathwayService.pathways);
 }])
 
-.controller('CoachesTabCtrl', function() {
+.controller('CoachesTabCtrl', ["$scope", "$http", "sessionService", function($scope, $http, sessionService) {
+  console.log("coaches tab");
 
-})
+  $http({
+    method: 'GET',
+    url: 'http://local.ciabos.dev/api/v1/coaches',
+    params: {user: {token: sessionService.token, username: sessionService.username}}
+  }).then(function successCallback(response) {
+    // this callback will be called asynchronously
+    // when the response is available
+    console.log("success");
+    console.log(response);
+
+    $scope.loading = false;
+    $scope.status = response.status;
+    $scope.coaches = response.data.coaches;
+    console.log(response.status);
+  }, function errorCallback(response) {
+    // called asynchronously if an error occurs
+    // or server returns response with an error status.
+    $scope.statusText = response.statusText;
+    if (response.data) {
+      $scope.errorMessage = response.data.message;
+    }
+    $scope.loading = false;
+    $scope.status = response.status;
+    console.log("error");
+    console.log(response);
+    console.log(response.status);
+
+  });
+
+
+}])
 
 .controller('SettingsTabCtrl', ["$scope", "$ionicPopup", function($scope, $ionicPopup) {
   $scope.confirmPasswordChange = function() {
