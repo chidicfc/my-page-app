@@ -72,6 +72,10 @@ span.booking-error-message {
   text-decoration: underline;
 }
 
+a {
+  text-decoration: none;
+}
+
 /* spinner start */
 .cssload-container{
 	position:relative;
