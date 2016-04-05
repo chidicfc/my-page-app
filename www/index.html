@@ -513,21 +513,36 @@
       <ion-view view-title="Email Coach">
         <ion-content padding="true">
 
-          <div class="list">
-          
+          <pre-loader> </pre-loader>
+          <error-message> </error-message>
+          <label class="red" ng-show="successMessage"> {{ successMessage }} </label>
 
-            <label class="item item-input">
-              <textarea ng-model="message" placeholder="Enter Message" id="message"
-	               ng-keyup="expandTextArea()" ng-keydown="expandTextArea()">
-              </textarea>
-            </label>
+          <form name="emailCoachForm" ng-submit="sendEmail(message, coachId)" novalidate class="padding">
+            <div class="list">
 
-            <button class="button button-calm button-small padding button-clear" ng-click="sendEmail(message, coachId)">
-              SUBMIT
-            </button>
-          </div>
+              <label class="item item-input">
+                <input name="subject" ng-model="message.subject" type="text" placeholder="Subject" required>
+                </input>
+              </label>
 
+              <label class="item item-input">
+                <textarea name="content" ng-model="message.content" placeholder="Enter Message" id="message"
+  	               ng-keyup="expandTextArea()" ng-keydown="expandTextArea()" required>
+                </textarea>
+              </label>
 
+              <div class"messages red">
+                <label class="red block" ng-show="(emailCoachForm.subject.$dirty || emailCoachForm.$submitted) && emailCoachForm.subject.$error.required">Subject is required</label>
+                <label class="red block" ng-show="(emailCoachForm.content.$dirty || emailCoachForm.$submitted) && emailCoachForm.content.$error.required">Enter message</label>
+              </div>
+
+              <button class="button button-calm button-small padding button-clear" type="submit">
+                SUBMIT
+              </button>
+
+            </div>
+
+          </form>
 
         </ion-content>
       </ion-view>
