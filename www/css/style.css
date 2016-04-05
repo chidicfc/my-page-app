@@ -3,6 +3,10 @@
   color: red;
 }
 
+.block {
+  display: block;
+}
+
 .small {
   font-size: 80% !important;
 }
