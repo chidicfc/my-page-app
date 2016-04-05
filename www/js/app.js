@@ -121,6 +121,17 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
         }
       }
     })
+
+    .state('tabs.coaches.send-email', {
+      url: '/send-email/:coachId',
+      views: {
+        'coaches-tab@tabs': {
+          templateUrl: 'templates/send-email.html',
+          controller: 'SendEmailCtrl'
+        }
+      }
+    })
+
     .state('tabs.settings', {
       url: '/settings',
       views: {
@@ -593,4 +604,49 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   console.log("viewing group coaching session details");
   console.log(pathwayService.pathway.groupCoachingSession);
   $scope.groupCoachingSession = pathwayService.pathway.groupCoachingSession;
+}])
+
+
+
+.controller('SendEmailCtrl', ["$scope", "$stateParams", "sessionService", "$http", function($scope, $stateParams, sessionService, $http) {
+  console.log("send email controller");
+  console.log($stateParams.coachId);
+  $scope.coachId = $stateParams.coachId;
+
+  $scope.expandTextArea = function(){
+  	var element = document.getElementById("message");
+    console.log("increasing");
+  	element.style.height =  element.scrollHeight + "px";
+  }
+
+  $scope.sendEmail = function(message, coachId){
+    console.log("sending email");
+    console.log(message);
+    console.log(coachId);
+
+    $http({
+      method: 'POST',
+      url: 'http://local.ciabos.dev/api/v1/send_email/' + coachId,
+      data: {user: {token: sessionService.token, username: sessionService.username}, message: message}
+    }).then(function successCallback(response) {
+      // this callback will be called asynchronously
+      // when the response is available
+      $scope.loading = false;
+      $scope.status = response.status;
+      console.log("sent email");
+      console.log(response);
+    }, function errorCallback(response) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+      $scope.statusText = response.statusText;
+      if (response.data) {
+        $scope.errorMessage = response.data.message;
+      }
+      $scope.loading = false;
+      $scope.status = response.status;
+      console.log(response);
+    });
+
+  }
+
 }])
