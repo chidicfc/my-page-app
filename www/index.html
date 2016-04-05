@@ -154,7 +154,7 @@
             <div class="item item-body">
               <label ng-bind-html="coach.biography | unsafe" ng-show="coach.biography"></label>
             </div>
-            <a class="item item-divider" href="#">
+            <a class="item item-divider" href="#" ui-sref="tabs.coaches.send-email({ coachId: coach.id })">
               <i class="icon ion-email"></i>
                <span class="small">Email Coach</span>
             </a>
@@ -503,6 +503,31 @@
             </div>
 
           </div>
+
+        </ion-content>
+      </ion-view>
+    </script>
+
+    <script id="templates/send-email.html" type="text/ng-template">
+
+      <ion-view view-title="Email Coach">
+        <ion-content padding="true">
+
+          <div class="list">
+          
+
+            <label class="item item-input">
+              <textarea ng-model="message" placeholder="Enter Message" id="message"
+	               ng-keyup="expandTextArea()" ng-keydown="expandTextArea()">
+              </textarea>
+            </label>
+
+            <button class="button button-calm button-small padding button-clear" ng-click="sendEmail(message, coachId)">
+              SUBMIT
+            </button>
+          </div>
+
+
 
         </ion-content>
       </ion-view>
