@@ -612,6 +612,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   console.log("send email controller");
   console.log($stateParams.coachId);
   $scope.coachId = $stateParams.coachId;
+  $scope.message = {};
 
   $scope.expandTextArea = function(){
   	var element = document.getElementById("message");
@@ -620,33 +621,38 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   }
 
   $scope.sendEmail = function(message, coachId){
-    console.log("sending email");
-    console.log(message);
-    console.log(coachId);
 
-    $http({
-      method: 'POST',
-      url: 'http://local.ciabos.dev/api/v1/send_email/' + coachId,
-      data: {user: {token: sessionService.token, username: sessionService.username}, message: message}
-    }).then(function successCallback(response) {
-      // this callback will be called asynchronously
-      // when the response is available
-      $scope.loading = false;
-      $scope.status = response.status;
-      console.log("sent email");
-      console.log(response);
-    }, function errorCallback(response) {
-      // called asynchronously if an error occurs
-      // or server returns response with an error status.
-      $scope.statusText = response.statusText;
-      if (response.data) {
-        $scope.errorMessage = response.data.message;
-      }
-      $scope.loading = false;
-      $scope.status = response.status;
-      console.log(response);
-    });
-
+    if (message && message.subject && message.content) {
+      console.log("sending email");
+      console.log(message);
+      console.log(coachId);
+      $scope.loading = true;
+      $http({
+        method: 'POST',
+        url: 'http://local.ciabos.dev/api/v1/send_email/' + coachId,
+        data: {user: {token: sessionService.token, username: sessionService.username}, message: message}
+      }).then(function successCallback(response) {
+        // this callback will be called asynchronously
+        // when the response is available
+        $scope.loading = false;
+        $scope.status = response.status;
+        if (response.data) {
+          $scope.successMessage = response.data.message;
+        }
+        console.log("sent email");
+        console.log(response);
+      }, function errorCallback(response) {
+        // called asynchronously if an error occurs
+        // or server returns response with an error status.
+        $scope.statusText = "message not sent";
+        if (response.data) {
+          $scope.errorMessage = response.data.message;
+        }
+        $scope.loading = false;
+        $scope.status = response.status;
+        console.log(response);
+      });
+    }
   }
 
 }])
