@@ -114,10 +114,14 @@
 
       <ion-view hide-nav-bar="true">
         <ion-content>
-          <pre-loader> </pre-loader>
-          <error-message> </error-message>
-          <div class="list padding">
 
+          <div class="list">
+
+            <div class="item">
+              <pre-loader> </pre-loader>
+              <error-message> </error-message>
+            </div>
+            
             <a class="item" ui-sref="tabs.home.pathway-details({ pathwayId: {{ pathway[0] }} })" ng-repeat="pathway in pathways | filter: query" href="#">
               <h2> {{ pathway[1] }}</h2>
               <p> {{ pathway[2] }}</p>
@@ -168,26 +172,32 @@
       <ion-view view-title="Settings">
         <ion-content>
 
+
+
           <div class="list">
+            <div class="item">
+              <pre-loader> </pre-loader>
+              <error-message> </error-message>
+            </div>
 
-            <div class="item item-avatar item-text-wrap" href="#">
-              <img src="img/avatar.png" />
-              <h2>Bob Coachee</h2>
-              <p>bob_coachee<p>
+            <div class="item item-thumbnail-left" href="#">
+              <img ng-src="{{ profile.photo ? 'http://local.ciabos.dev' + profile.photo : 'img/avatar.png' }}"/>
+              <h2> {{ profile.name }}</h2>
+              <p> {{ profile.username }} </p>
             </div>
 
             <div class="item">
-              <h2>dummy1@coachinabox.biz</h2>
-              <p>dummy2@coachinabox.biz<p>
+              <h2>{{ profile.email }}</h2>
+              <p ng-show="profile.email2"> {{ profile.email2}} </p>
             </div>
 
             <div class="item">
-              <h2>07871267058</h2>
-              <p>07871267123</p>
+              <h2 ng-show="profile.phone1"> {{ profile.phone1 }}</h2>
+              <p ng-show="profile.phone2"> {{ profile.phone2}} </p>
             </div>
 
             <div class="item">
-              <h2>Europe/London</h2>
+              <h2> {{ profile.timezone }}</h2>
             </div>
 
             <div class="item item-divider">
