@@ -295,7 +295,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
 }])
 
-.controller('SettingsTabCtrl', ["$scope", "$ionicPopup", function($scope, $ionicPopup) {
+.controller('SettingsTabCtrl', ["$scope", "$ionicPopup", "sessionService", "$http", function($scope, $ionicPopup, sessionService, $http) {
   $scope.confirmPasswordChange = function() {
     var confirmPopup = $ionicPopup.confirm({
       title: 'Confirm',
@@ -310,6 +310,38 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
       }
     });
   };
+  $scope.loading = true;
+  console.log("in settings controller")
+  $http({
+    method: 'GET',
+    url: 'http://local.ciabos.dev/api/v1/profile',
+    params: {user: {token: sessionService.token, username: sessionService.username}}
+  }).then(function successCallback(response) {
+    // this callback will be called asynchronously
+    // when the response is available
+    console.log("gotten profile");
+    console.log(response);
+
+    $scope.loading = false;
+    $scope.status = response.status;
+    $scope.profile = response.data.profile
+    console.log(response.status);
+  }, function errorCallback(response) {
+    // called asynchronously if an error occurs
+    // or server returns response with an error status.
+    $scope.statusText = response.statusText;
+    if (response.data) {
+      $scope.errorMessage = response.data.message;
+    }
+    $scope.loading = false;
+    $scope.status = response.status;
+
+    console.log("error");
+
+    console.log(response.status);
+
+  });
+
 }])
 
 .controller('EditProfileCtrl', ["$scope", function($scope) {
