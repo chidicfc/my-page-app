@@ -156,8 +156,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 })
 // service starts
 .service('sessionService', function() {
-  this.token = "";
-  this.username = "";
+  this.user = {}
 })
 
 .service('profileService', function() {
@@ -233,12 +232,15 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
       }).then(function successCallback(response) {
         // this callback will be called asynchronously
         // when the response is available
-        sessionService.token = response.data.user.token;
-        sessionService.username = user.username;
+        sessionService.user.id = response.data.user.id;
+        sessionService.user.token = response.data.user.token;
+        sessionService.user.username = response.data.user.username;
         pathwayService.pathways = response.data.user.pathway_attributes;
         $scope.loading = false;
         $scope.status = response.status;
-        console.log(sessionService.token);
+        console.log("signed in");
+        console.log(response);
+        console.log(sessionService.user);
         $state.go('tabs.home');
       }, function errorCallback(response) {
         // called asynchronously if an error occurs
@@ -270,7 +272,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   $http({
     method: 'GET',
     url: 'http://local.ciabos.dev/api/v1/coaches',
-    params: {user: {token: sessionService.token, username: sessionService.username}}
+    params: {user: sessionService.user}
   }).then(function successCallback(response) {
     // this callback will be called asynchronously
     // when the response is available
@@ -329,7 +331,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   $http({
     method: 'GET',
     url: 'http://local.ciabos.dev/api/v1/profile',
-    params: {user: {token: sessionService.token, username: sessionService.username}}
+    params: {user: sessionService.user}
   }).then(function successCallback(response) {
     // this callback will be called asynchronously
     // when the response is available
@@ -393,15 +395,20 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
     $http({
       method: 'GET',
       url: 'http://local.ciabos.dev/api/v1/pathways',
-      params: {user: {token: sessionService.token, username: sessionService.username}, pathway: {id: $stateParams.pathwayId}}
+      params: {user: sessionService.user, pathway: {id: $stateParams.pathwayId}}
     }).then(function successCallback(response) {
       // this callback will be called asynchronously
       // when the response is available
       console.log("success");
       console.log(response);
-      $scope.coachingSessions = response.data.pathway.coaching_sessions;
-      $scope.pathwayName = response.data.pathway.name;
-      $scope.pathwayId = response.data.pathway.id;
+      if (response.data.pathway){
+        $scope.coachingSessions = response.data.pathway.coaching_sessions;
+        $scope.pathwayName = response.data.pathway.name;
+        $scope.pathwayId = response.data.pathway.id;
+      }
+      if (response.data.noProgramme){
+        $scope.noProgrammeMessage = response.data.noProgramme;
+      }
       $scope.loading = false;
       $scope.status = response.status;
       console.log($scope.coachingSessions);
@@ -431,7 +438,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
     $http({
       method: 'DELETE',
       url: 'http://local.ciabos.dev/api/v1/delete_booking/' + coachingSessionId,
-      params: {user: {token: sessionService.token, username: sessionService.username}, pathway: {id: $stateParams.pathwayId}}
+      params: {user: sessionService.user, pathway: {id: $stateParams.pathwayId}}
     }).then(function successCallback(response) {
       // this callback will be called asynchronously
       // when the response is available
@@ -488,7 +495,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   $http({
     method: 'GET',
     url: 'http://local.ciabos.dev/api/v1/materials',
-    params: {user: {token: sessionService.token, username: sessionService.username}, pathway: {id: $stateParams.pathwayId}}
+    params: {user: sessionService.user, pathway: {id: $stateParams.pathwayId}}
   }).then(function successCallback(response) {
     // this callback will be called asynchronously
     // when the response is available
@@ -542,7 +549,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   $http({
     method: 'GET',
     url: 'http://local.ciabos.dev/api/v1/get_availability/' + $stateParams.coachingSession + '/' + $stateParams.all_slots,
-    params: {user: {token: sessionService.token, username: sessionService.username}}
+    params: {user: sessionService.user}
   }).then(function successCallback(response) {
     // this callback will be called asynchronously
     // when the response is available
@@ -573,7 +580,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
     $http({
       method: 'POST',
       url: 'http://local.ciabos.dev/api/v1/book_session/' + coachingSession + '/' + availabilitySlot.id,
-      params: {user: {token: sessionService.token, username: sessionService.username}}
+      params: {user: sessionService.user}
     }).then(function successCallback(response) {
       // this callback will be called asynchronously
       // when the response is available
@@ -613,7 +620,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
     $http({
       method: 'PATCH',
       url: 'http://local.ciabos.dev/api/v1/pre_works/' + preWork.id + '/is_complete/' + preWork.is_complete,
-      params: {user: {token: sessionService.token, username: sessionService.username}}
+      params: {user: sessionService.user}
     }).then(function successCallback(response) {
       // this callback will be called asynchronously
       // when the response is available
@@ -681,7 +688,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
       $http({
         method: 'POST',
         url: 'http://local.ciabos.dev/api/v1/send_email/' + coachId,
-        data: {user: {token: sessionService.token, username: sessionService.username}, message: message}
+        data: {user: sessionService.user, message: message}
       }).then(function successCallback(response) {
         // this callback will be called asynchronously
         // when the response is available
