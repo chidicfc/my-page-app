@@ -141,22 +141,13 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
         }
       }
     })
+
     .state('tabs.settings.edit-profile', {
       url: '/edit-profile',
       views: {
         'settings-tab@tabs': {
           templateUrl: "templates/edit-profile.html",
           controller: 'EditProfileCtrl'
-        }
-      }
-    })
-
-    .state('tabs.settings.edit-profile.edit-photo', {
-      url: '/edit-photo',
-      views: {
-        'settings-tab@tabs': {
-          templateUrl: "templates/edit-photo.html",
-          controller: 'EditPhotoCtrl'
         }
       }
     })
@@ -218,20 +209,21 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
  }
 })
 
-.directive('fileModel', ['$parse', function ($parse) {
-  return {
-    restrict: 'A',
-    link: function($scope, $element, $attrs) {
-      var model = $parse($attrs.fileModel);
-      var modelSetter = model.assign;
-      $element.bind('change', function(){
-        $scope.$apply(function(){
-          modelSetter($scope, $element[0].files[0]);
-        });
-      });
-    }
-  }
-}])
+.directive('fileUpload', function () {
+    return {
+        scope: true,        //create a new scope
+        link: function (scope, element, attrs) {
+            element.bind('change', function (event) {
+                var files = event.target.files;
+                //iterate files since 'multiple' may be specified on the element
+                for (var i = 0;i<files.length;i++) {
+                    //emit event upward
+                    scope.$emit("fileSelected", { file: files[i] });
+                }
+            });
+        }
+    };
+})
 // directive ends
 
 // filter starts
@@ -385,20 +377,69 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
 }])
 
-.controller('EditProfileCtrl', ["$scope", "profileService", function($scope, profileService) {
+.controller('EditProfileCtrl', ["$scope", "profileService", "$http", "sessionService", function($scope, profileService, $http, sessionService) {
   console.log("edit profile ctrl");
   console.log(profileService);
 
   $scope.profile = profileService.profile;
 
+  $scope.files = [];
+
+  $scope.$on("fileSelected", function (event, args) {
+    $scope.$apply(function () {
+      //add the file object to the scope's files collection
+      $scope.files.push(args.file);
+    });
+  });
+
+  $scope.save = function() {
+    $scope.loading = true;
+    $http({
+      method: 'POST',
+      url: 'http://local.ciabos.dev/api/v1/uploadPhoto',
+      headers: { 'Content-Type': undefined },
+      transformRequest: function (data) {
+          var formData = new FormData();
+          formData.append("user", angular.toJson(data.user));
+          formData.append("photo", data.files[0]);
+          return formData;
+      },
+      //Create an object that contains the model and files which will be transformed
+      // in the above transformRequest method
+      data: { user: sessionService.user, files: $scope.files }
+    }).then(function successCallback(response) {
+      // this callback will be called asynchronously
+      // when the response is available
+      console.log("success");
+      console.log(response);
+      console.log($scope);
+      if(response.data.photo_url){
+        $scope.profile.photo = response.data.photo_url;
+      }
+      $scope.loading = false;
+      $scope.files = [];
+      $scope.status = response.status;
+      console.log(response.status);
+    }, function errorCallback(response) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+      $scope.statusText = response.statusText;
+      if (response.data) {
+        $scope.errorMessage = response.data.message;
+      }
+      $scope.loading = false;
+      $scope.status = response.status;
+      $scope.files = [];
+      console.log("error");
+      console.log(response);
+
+    });
+  };
+
   $scope.updateProfile = function(user) {
     console.log(user);
   };
-}])
 
-.controller('EditPhotoCtrl', ["$scope", function($scope) {
-  console.log("edit photo ctrl");
-  
 }])
 
 .controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "sessionService", "$http", "$state", "pathwayService", function($scope, $stateParams, sessionService, $http, $state, pathwayService) {
