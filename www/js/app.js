@@ -160,6 +160,10 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   this.username = "";
 })
 
+.service('profileService', function() {
+  this.profile = {};
+})
+
 .service('pathwayService', function() {
   this.pathways = [];
   this.pathway = {
@@ -295,7 +299,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
 }])
 
-.controller('SettingsTabCtrl', ["$scope", "$ionicPopup", "sessionService", "$http", function($scope, $ionicPopup, sessionService, $http) {
+.controller('SettingsTabCtrl', ["$scope", "$ionicPopup", "sessionService", "$http", "$state", "profileService", function($scope, $ionicPopup, sessionService, $http, $state, profileService) {
   $scope.confirmPasswordChange = function() {
     var confirmPopup = $ionicPopup.confirm({
       title: 'Confirm',
@@ -309,7 +313,17 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
         console.log('You are not sure');
       }
     });
-  };
+  }
+
+
+  $scope.editProfile = function(profile) {
+    profileService.profile = profile;
+    console.log("profile editing");
+    console.log(profileService);
+    $state.go('tabs.settings.edit-profile');
+  }
+
+
   $scope.loading = true;
   console.log("in settings controller")
   $http({
@@ -344,9 +358,14 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
 }])
 
-.controller('EditProfileCtrl', ["$scope", function($scope) {
-  $scope.editProfile = function(user) {
-    console.log('Edit Profile', user);
+.controller('EditProfileCtrl', ["$scope", "profileService", function($scope, profileService) {
+  console.log("edit profile ctrl");
+  console.log(profileService);
+
+  $scope.profile = profileService.profile;
+
+  $scope.updateProfile = function(user) {
+    console.log(user);
   };
 }])
 
