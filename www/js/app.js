@@ -210,19 +210,19 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 })
 
 .directive('fileUpload', function () {
-    return {
-        scope: true,        //create a new scope
-        link: function (scope, element, attrs) {
-            element.bind('change', function (event) {
-                var files = event.target.files;
-                //iterate files since 'multiple' may be specified on the element
-                for (var i = 0;i<files.length;i++) {
-                    //emit event upward
-                    scope.$emit("fileSelected", { file: files[i] });
-                }
-            });
+  return {
+    scope: true,        //create a new scope
+    link: function (scope, element, attrs) {
+      element.bind('change', function (event) {
+        var files = event.target.files;
+        //iterate files since 'multiple' may be specified on the element
+        for (var i = 0;i<files.length;i++) {
+            //emit event upward
+            scope.$emit("fileSelected", { file: files[i] });
         }
-    };
+      });
+    }
+  };
 })
 // directive ends
 
@@ -390,9 +390,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
       //add the file object to the scope's files collection
       $scope.files.push(args.file);
     });
-  });
 
-  $scope.save = function() {
     $scope.loading = true;
     $http({
       method: 'POST',
@@ -434,7 +432,8 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
       console.log(response);
 
     });
-  };
+    
+  });
 
   $scope.updateProfile = function(user) {
     console.log(user);
