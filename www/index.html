@@ -42,11 +42,11 @@
          <form name="loginForm" ng-submit="signIn(user)" novalidate class="padding">
            <div class="list">
              <label class="item item-input">
-               <span class="input-label">Username</span>
+               <span class="input-label">Username:</span>
                <input type="text" name="username" ng-model="user.username" required>
              </label>
              <label class="item item-input">
-               <span class="input-label">Password</span>
+               <span class="input-label">Password:</span>
                <input type="password" name="password" ng-model="user.password" required>
              </label>
            </div>
@@ -121,7 +121,7 @@
               <pre-loader> </pre-loader>
               <error-message> </error-message>
             </div>
-            
+
             <a class="item" ui-sref="tabs.home.pathway-details({ pathwayId: {{ pathway[0] }} })" ng-repeat="pathway in pathways | filter: query" href="#">
               <h2> {{ pathway[1] }}</h2>
               <p> {{ pathway[2] }}</p>
@@ -172,8 +172,6 @@
       <ion-view view-title="Settings">
         <ion-content>
 
-
-
           <div class="list">
             <div class="item">
               <pre-loader> </pre-loader>
@@ -203,7 +201,7 @@
             <div class="item item-divider">
             </div>
 
-            <a menu-close class="item item-icon-left" ui-sref="tabs.settings.edit-profile" href="#">
+            <a class="item item-icon-left" ng-click="editProfile(profile)">
               <i class="icon ion-person button-small"></i>
               Edit Profile
             </a>
@@ -228,56 +226,53 @@
       <ion-view view-title="Edit Profile">
         <ion-content>
           <div class="list">
-            <div class="item item-avatar item-text-wrap" href="#">
-              <img src="img/avatar.png" />
+            <div class="item item-thumbnail-left" href="#">
+              <img ng-src="{{ profile.photo ? 'http://local.ciabos.dev' + profile.photo : 'img/avatar.png' }}"/>
+
               <a href="#">
                 <i class="icon ion-edit button-small"></i>
               </a>
             </div>
 
             <label class="item item-input">
-              <span class="input-label">Username</span>
-              <input type="text" ng-model="user.username">
+              <span class="input-label">Name:</span>
+              <input type="text" ng-model="profile.name">
             </label>
 
             <label class="item item-input">
-              <span class="input-label">Name</span>
-              <input type="text" ng-model="user.name">
+              <span class="input-label"> Username: </span>
+              <input type="text" ng-model="profile.username">
             </label>
 
             <label class="item item-input">
-              <span class="input-label">Email 1</span>
-              <input type="email" ng-model="user.email1">
+              <span class="input-label">Email:</span>
+              <input type="email" ng-model="profile.email">
             </label>
 
             <label class="item item-input">
-              <span class="input-label">Email 2</span>
-              <input type="email" ng-model="user.email2">
+              <span class="input-label">Email (2):</span>
+              <input type="email" ng-model="profile.email2">
             </label>
 
             <label class="item item-input">
-              <span class="input-label">Phone 1</span>
-              <input type="tel" ng-model="user.phone1">
+              <span class="input-label">Phone:</span>
+              <input type="tel" ng-model="profile.phone1">
             </label>
 
             <label class="item item-input">
-              <span class="input-label">Phone 2</span>
-              <input type="tel" ng-model="user.phone2">
+              <span class="input-label">Phone (2):</span>
+              <input type="tel" ng-model="profile.phone2">
             </label>
 
             <label class="item item-input item-select">
-              <div class="input-label">
-                Time zone
-              </div>
-              <select>
-                <option>Time zone 1</option>
-                <option selected>Time zone 2</option>
-                <option>Time zone 3</option>
+              <span class="input-label">Timezone:</span>
+              <select ng-model="profile.timezone">
+                <option ng-repeat="timezone in profile.timezones">{{ timezone }}</option>
               </select>
             </label>
 
             <div class="padding">
-              <button class="button button-block button-calm" ng-click="editProfile(user)">
+              <button class="button button-block button-calm" ng-click="updateProfile(user)">
                 EDIT PROFILE
               </button>
             </div>
