@@ -227,10 +227,11 @@
         <ion-content>
           <div class="list">
             <div class="item item-thumbnail-left" href="#">
-              <img ng-src="{{ profile.photo ? 'http://local.ciabos.dev' + profile.photo : 'img/avatar.png' }}"/>
+              <img ng-src="{{ profile.photo ? 'http://local.ciabos.dev' + profile.photo : 'img/avatar.png' }}" ng-model="photo"/>
 
-              <a href="#">
+              <a href="#" ui-sref="tabs.settings.edit-profile.edit-photo">
                 <i class="icon ion-edit button-small"></i>
+                 Edit photo
               </a>
             </div>
 
@@ -550,6 +551,22 @@
 
           </form>
 
+        </ion-content>
+      </ion-view>
+    </script>
+
+    <script id="templates/edit-photo.html" type="text/ng-template">
+
+      <ion-view view-title="Edit Photo">
+        <ion-content>
+          <div class="list">
+            <div class="item item-body">
+              <input type="file" file-model="myFile" class="block"/>
+              <button ng-click="uploadFile()" class="button button-calm button-small">
+                Upload
+              </button>
+            </div>
+          </div>
         </ion-content>
       </ion-view>
     </script>
