@@ -235,10 +235,7 @@
             <div class="item item-thumbnail-left" href="#">
               <img ng-src="{{ profile.photo ? 'http://local.ciabos.dev' + profile.photo : 'img/avatar.png' }}"/>
 
-              <input type="file" file-upload class="block"/>
-              <button ng-click="save()" class="button button-calm button-small">
-                Upload
-              </button>
+              <input type="file" file-upload />
             </div>
 
             <label class="item item-input">
@@ -560,6 +557,6 @@
         </ion-content>
       </ion-view>
     </script>
-      
+
   </body>
 </html>
