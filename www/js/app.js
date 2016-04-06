@@ -151,6 +151,16 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
       }
     })
 
+    .state('tabs.settings.edit-profile.edit-photo', {
+      url: '/edit-photo',
+      views: {
+        'settings-tab@tabs': {
+          templateUrl: "templates/edit-photo.html",
+          controller: 'EditPhotoCtrl'
+        }
+      }
+    })
+
    $urlRouterProvider.otherwise('/sign-in');
 
 })
@@ -207,6 +217,21 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   }
  }
 })
+
+.directive('fileModel', ['$parse', function ($parse) {
+  return {
+    restrict: 'A',
+    link: function($scope, $element, $attrs) {
+      var model = $parse($attrs.fileModel);
+      var modelSetter = model.assign;
+      $element.bind('change', function(){
+        $scope.$apply(function(){
+          modelSetter($scope, $element[0].files[0]);
+        });
+      });
+    }
+  }
+}])
 // directive ends
 
 // filter starts
@@ -369,6 +394,11 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   $scope.updateProfile = function(user) {
     console.log(user);
   };
+}])
+
+.controller('EditPhotoCtrl', ["$scope", function($scope) {
+  console.log("edit photo ctrl");
+  
 }])
 
 .controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "sessionService", "$http", "$state", "pathwayService", function($scope, $stateParams, sessionService, $http, $state, pathwayService) {
