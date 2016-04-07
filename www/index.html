@@ -230,6 +230,7 @@
             <div class="item">
               <pre-loader> </pre-loader>
               <error-message> </error-message>
+              <label class="red block" ng-show='successMessage'> {{ successMessage }}</label>
             </div>
 
             <div class="item item-thumbnail-left" href="#">
@@ -276,7 +277,7 @@
             </label>
 
             <div class="padding">
-              <button class="button button-block button-calm" ng-click="updateProfile(user)">
+              <button class="button button-block button-calm" ng-click="updateProfile(profile)">
                 EDIT PROFILE
               </button>
             </div>
@@ -353,7 +354,7 @@
                 Re-book Session
               </a>
 
-              <button class="button icon-left ion-trash-a button-assertive button-small" ng-if="coachingSession.session_type != 'FaceToFaceCoachingSession' && coachingSession.status == 'booked' && coachingSession.status != 'greyed-out'" ng-click="deleteBooking(coachingSession.session_id)">
+              <button class="button icon-left ion-trash-a button-assertive button-small" ng-if="coachingSession.session_type != 'FaceToFaceCoachingSession' && coachingSession.session_type != 'GroupCoachingSession' && coachingSession.status == 'booked' && coachingSession.status != 'greyed-out'" ng-click="deleteBooking(coachingSession.session_id)">
                 Delete Booking
               </button>
               <label ng-if="coachingSession.status == 'completed' || coachingSession.status == 'greyed-out' || coachingSession.session_type == 'FaceToFaceCoachingSession'">No action required</label>
@@ -403,17 +404,17 @@
           <div class="list availability padding" ng-show="status == '200'">
 
             <div class="item">
-              <a class="button button-calm button-small" ui-sref="tabs.home.pathway-details.coach-availability({ coachingSession: coachingSession, all_slots: 'true' })">
+              <a class="button button-calm button-small" ui-sref="tabs.home.pathway-details.coach-availability({ coachingSession: coachingSession, all_slots: 'true' })" ng-if="allSlots == 'false'">
                 CLICK HERE TO SEE MORE BOOKINGS
               </a>
             </div>
 
             <div ng-repeat="availabilitySlot in availabilitySlots">
               <div class="item item-divider">
-                <span class="date"> {{ date(availabilitySlot.start_time).toDateString() }}</span>
+                <span class="date"> {{  date(availabilitySlot.date).toDateString() }}</span>
               </div>
               <div class="item">
-                <span class="time">{{ dateHours(availabilitySlot.start_time) }}:{{ dateMins(availabilitySlot.start_time) }}</span>
+                <span class="time">{{ availabilitySlot.time_24_hrs }}</span>
                 <button class="book_session button button-calm button-small button-clear" ng-click="bookSession(coachingSession, availabilitySlot)">
                   Book Session
                 </button>
@@ -477,7 +478,7 @@
               <label ng-show="nonBookableSessionDetails.end_at"><strong>End Date:</strong> {{ date(nonBookableSessionDetails.end_at).toDateString() }}</label>
               <label ng-show="nonBookableSessionDetails.venue"><strong>Venue:</strong> {{ nonBookableSessionDetails.venue }}</label>
               <label ng-show="nonBookableSessionDetails.brief_details"><strong>Summary:</strong> {{ nonBookableSessionDetails.brief_details }}</label>
-              <label ng-show="nonBookableSessionDetails.additional_details"><strong>Additional Details:</strong> {{ nonBookableSessionDetails.additional_details }} {{ nonBookableSessionDetails.additional_details }} {{ nonBookableSessionDetails.additional_details }} {{ nonBookableSessionDetails.additional_details }} {{ nonBookableSessionDetails.additional_details }} {{ nonBookableSessionDetails.additional_details }}{{ nonBookableSessionDetails.additional_details }}{{ nonBookableSessionDetails.additional_details }}</label>
+              <label ng-show="nonBookableSessionDetails.additional_details"><strong>Additional Details:</strong> {{ nonBookableSessionDetails.additional_details }} </label>
             </div>
 
             <div class="item item-divider">
