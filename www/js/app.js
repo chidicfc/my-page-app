@@ -347,9 +347,11 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
     confirmPopup.then(function(res) {
       if(res) {
-        console.log('You are sure');
+        console.log('Ok clicked');
+        signOutService.signOut();
+        window.open('http://local.ciabos.dev/users/password/new', '_blank', 'location=yes');
       } else {
-        console.log('You are not sure');
+        console.log('Cancel clicked');
       }
     });
 
