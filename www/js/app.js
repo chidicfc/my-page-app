@@ -152,6 +152,15 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
       }
     })
 
+    .state('tabs.settings.sign-out', {
+      url: '/sign-out',
+      views: {
+        'settings-tab@tabs': {
+          controller: 'SignOutCtrl'
+        }
+      }
+    })
+
    $urlRouterProvider.otherwise('/sign-in');
 
 })
@@ -171,6 +180,21 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
     sessions: []
   };
 })
+
+.service('signOutService', ["sessionService", "profileService", "pathwayService", "$state", function(sessionService, profileService, pathwayService, $state) {
+  this.signOut = function(){
+    console.log("signing out");
+    sessionService.user = {};
+    profileService.profile = {};
+
+    pathwayService.pathways = [];
+    pathwayService.pathway = {
+      session: {},
+      sessions: []
+    };
+    $state.go('signin');
+  }
+}])
 
 // service ends
 
@@ -332,6 +356,10 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
         console.log('You are not sure');
       }
     });
+
+    $scope.signOut = function(){
+      console.log("signing out");
+    }
   }
 
 
@@ -764,8 +792,6 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   $scope.groupCoachingSession = pathwayService.pathway.groupCoachingSession;
 }])
 
-
-
 .controller('SendEmailCtrl', ["$scope", "$stateParams", "sessionService", "$http", function($scope, $stateParams, sessionService, $http) {
   console.log("send email controller");
   console.log($stateParams.coachId);
@@ -813,4 +839,8 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
     }
   }
 
+}])
+
+.controller('SignOutCtrl', ["$scope", "signOutService", function($scope, signOutService) {
+  signOutService.signOut();
 }])
