@@ -432,11 +432,49 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
       console.log(response);
 
     });
-    
   });
 
-  $scope.updateProfile = function(user) {
-    console.log(user);
+  $scope.updateProfile = function(profile) {
+    console.log("updating profile");
+    console.log(profile);
+    $scope.loading = true;
+    user = {profile: {}};
+    user.username = profile.username;
+    user.email = profile.email;
+    user.profile.email2 = profile.email2;
+    user.profile.phone1 = profile.phone1;
+    user.profile.phone2 = profile.phone2;
+    user.profile.timezone = profile.timezone;
+
+    $http({
+      method: 'PATCH',
+      url: 'http://local.ciabos.dev/api/v1/updateProfile',
+      data: {user: sessionService.user, userProfile: user}
+    }).then(function successCallback(response) {
+      // this callback will be called asynchronously
+      // when the response is available
+      console.log("updated profile");
+      console.log(response);
+      if (response.data) {
+        $scope.successMessage = response.data.message;
+      }
+      $scope.loading = false;
+      $scope.status = response.status;
+
+      console.log(response.status);
+    }, function errorCallback(response) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+      $scope.statusText = response.statusText;
+      if (response.data) {
+        $scope.errorMessage = response.data.message;
+      }
+      $scope.loading = false;
+      $scope.status = response.status;
+      console.log("error");
+      console.log(response.status);
+
+    });
   };
 
 }])
@@ -469,7 +507,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
     }).then(function successCallback(response) {
       // this callback will be called asynchronously
       // when the response is available
-      console.log("success");
+      console.log("gotten coaching sessions");
       console.log(response);
       if (response.data.pathway){
         $scope.coachingSessions = response.data.pathway.coaching_sessions;
@@ -598,22 +636,10 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   console.log($stateParams);
   console.log(sessionService);
   $scope.loading = true;
-
+  $scope.allSlots = $stateParams.all_slots;
   $scope.date = function(d){
     var date = new Date(d);
     return date;
-  }
-
-  $scope.dateHours = function(d){
-    var date = new Date(d);
-    var hours = date.getHours();
-    return ("0" + hours).slice(-2);
-  }
-
-  $scope.dateMins = function(d){
-    var date = new Date(d);
-    var mins = date.getMinutes();
-    return ("0" + mins).slice(-2);
   }
 
   $http({
@@ -623,11 +649,15 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   }).then(function successCallback(response) {
     // this callback will be called asynchronously
     // when the response is available
-    $scope.availabilitySlots = response.data;
+    console.log("gotten availability");
+    console.log(response);
+    console.log(response.data.slots);
+    $scope.availabilitySlots = response.data.slots;
     $scope.coachingSession = $stateParams.coachingSession;
     $scope.loading = false;
     $scope.status = response.status;
-    console.log("success");
+    console.log("gotten availability");
+    console.log(response);
     console.log(response.data);
     console.log($stateParams.coachingSession);
   }, function errorCallback(response) {
