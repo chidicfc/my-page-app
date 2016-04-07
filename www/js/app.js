@@ -33,10 +33,6 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
       templateUrl: 'templates/sign-in.html',
       controller: 'SignInCtrl'
     })
-    .state('forgotpassword', {
-      url: '/forgot-password',
-      templateUrl: 'templates/forgot-password.html'
-    })
 
     .state('tabs', {
       url: '/tabs',
