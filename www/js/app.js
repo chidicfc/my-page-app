@@ -738,37 +738,47 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
     var date = new Date(d);
     return date;
   }
+  // getAvailability function gets the schedule of a coach assigned to a coaching session
+  var getAvailability = function(){
+    $http({
+      method: 'GET',
+      url: 'http://local.ciabos.dev/api/v1/get_availability/' + $stateParams.coachingSession + '/' + $stateParams.all_slots,
+      params: {user: sessionService.user}
+    }).then(function successCallback(response) {
+      // this callback will be called asynchronously
+      // when the response is available
+      console.log("gotten availability");
+      console.log(response);
+      console.log(response.data.slots);
+      $scope.availabilitySlots = response.data.slots;
+      $scope.coachingSession = $stateParams.coachingSession;
+      $scope.loading = false;
+      $scope.status = response.status;
+      console.log("gotten availability");
+      console.log(response);
+      console.log(response.data);
+      console.log($stateParams.coachingSession);
+    }, function errorCallback(response) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+      $scope.statusText = response.statusText;
+      if (response.data) {
+        $scope.errorMessage = response.data.message;
+      }
+      $scope.loading = false;
+      $scope.status = response.status;
+      console.log("error");
+      console.log(response);
+    });
+  }
+  // call getAvailability function
+  getAvailability();
 
-  $http({
-    method: 'GET',
-    url: 'http://local.ciabos.dev/api/v1/get_availability/' + $stateParams.coachingSession + '/' + $stateParams.all_slots,
-    params: {user: sessionService.user}
-  }).then(function successCallback(response) {
-    // this callback will be called asynchronously
-    // when the response is available
-    console.log("gotten availability");
-    console.log(response);
-    console.log(response.data.slots);
-    $scope.availabilitySlots = response.data.slots;
-    $scope.coachingSession = $stateParams.coachingSession;
-    $scope.loading = false;
-    $scope.status = response.status;
-    console.log("gotten availability");
-    console.log(response);
-    console.log(response.data);
-    console.log($stateParams.coachingSession);
-  }, function errorCallback(response) {
-    // called asynchronously if an error occurs
-    // or server returns response with an error status.
-    $scope.statusText = response.statusText;
-    if (response.data) {
-      $scope.errorMessage = response.data.message;
-    }
-    $scope.loading = false;
-    $scope.status = response.status;
-    console.log("error");
-    console.log(response);
-  });
+  $scope.refreshAvailabilityList = function(){
+    getAvailability();
+    //Stop the ion-refresher from spinning
+    $scope.$broadcast('scroll.refreshComplete');
+  }
 
   $scope.bookSession = function(coachingSession, availabilitySlot) {
     console.log(coachingSession);
