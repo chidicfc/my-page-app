@@ -362,7 +362,7 @@
 
       <ion-view view-title="View Materials">
         <ion-content padding="true">
-
+          <ion-refresher on-refresh="refreshMaterialsList()"></ion-refresher>
           <pre-loader> </pre-loader>
           <error-message> </error-message>
           <label class="red"> {{ noMaterial }} </label>
@@ -384,13 +384,15 @@
     <script id="templates/coach-availability.html" type="text/ng-template">
 
       <ion-view view-title="Coach Availability">
-        <ion-content padding="true">
-        
-          <ion-refresher on-refresh="refreshAvailabilityList()"></ion-refresher>
-          <pre-loader> </pre-loader>
-          <error-message> </error-message>
+        <ion-content>
+          <div class="padding">
+            <ion-refresher on-refresh="refreshAvailabilityList()"></ion-refresher>
+            <pre-loader> </pre-loader>
+            <error-message> </error-message>
+            <label class="block padding"> Please note that the times of all appointments are shown in your local time </label>
+          </div>
 
-          <div class="list availability padding" ng-show="status == '200'">
+          <div class="list availability" ng-show="status == '200'">
 
             <div class="item">
               <a class="button button-calm button-small" ui-sref="tabs.home.pathway-details.coach-availability({ coachingSession: coachingSession, all_slots: 'true' })" ng-if="allSlots == 'false'">
