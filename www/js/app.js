@@ -177,6 +177,15 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   };
 })
 
+.service('authenticationService', ["sessionService", "$state", function(sessionService, $state) {
+  this.checkAuthentication = function(){
+    if(Object.keys(sessionService.user).length === 0 && JSON.stringify(sessionService.user) === JSON.stringify({})){
+      $state.go('signin');
+      return
+    }
+  }
+}])
+
 .service('signOutService', ["sessionService", "profileService", "pathwayService", "$state", function(sessionService, profileService, pathwayService, $state) {
   this.signOut = function(){
     console.log("signing out");
@@ -296,14 +305,16 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
 }])
 
-.controller('HomeTabCtrl', ["$scope", "pathwayService", function($scope, pathwayService) {
+.controller('HomeTabCtrl', ["$scope", "pathwayService", "authenticationService", function($scope, pathwayService, authenticationService) {
+  authenticationService.checkAuthentication();
   $scope.pathways = pathwayService.pathways
 
   console.log("in home controller");
   console.log(pathwayService.pathways);
 }])
 
-.controller('CoachesTabCtrl', ["$scope", "$http", "sessionService", function($scope, $http, sessionService) {
+.controller('CoachesTabCtrl', ["$scope", "$http", "sessionService", "authenticationService", function($scope, $http, sessionService, authenticationService) {
+  authenticationService.checkAuthentication();
   console.log("coaches tab");
 
   $http({
@@ -338,7 +349,8 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
 }])
 
-.controller('SettingsTabCtrl', ["$scope", "$ionicPopup", "sessionService", "$http", "$state", "profileService", function($scope, $ionicPopup, sessionService, $http, $state, profileService) {
+.controller('SettingsTabCtrl', ["$scope", "$ionicPopup", "sessionService", "$http", "$state", "profileService", "authenticationService", function($scope, $ionicPopup, sessionService, $http, $state, profileService, authenticationService) {
+  authenticationService.checkAuthentication();
   $scope.confirmPasswordChange = function() {
     var confirmPopup = $ionicPopup.confirm({
       title: 'Confirm',
@@ -403,7 +415,8 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
 }])
 
-.controller('EditProfileCtrl', ["$scope", "profileService", "$http", "sessionService", function($scope, profileService, $http, sessionService) {
+.controller('EditProfileCtrl', ["$scope", "profileService", "$http", "sessionService", "authenticationService", function($scope, profileService, $http, sessionService, authenticationService) {
+  authenticationService.checkAuthentication();
   console.log("edit profile ctrl");
   console.log(profileService);
 
@@ -505,7 +518,8 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
 }])
 
-.controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "sessionService", "$http", "$state", "pathwayService", function($scope, $stateParams, sessionService, $http, $state, pathwayService) {
+.controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "sessionService", "$http", "$state", "pathwayService", "authenticationService", function($scope, $stateParams, sessionService, $http, $state, pathwayService, authenticationService) {
+  authenticationService.checkAuthentication();
   console.log("get pathway details");
   $scope.loading = true;
   $scope.bookingErrorMessage = false;
@@ -622,7 +636,8 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
 }])
 
-.controller('ViewMaterialsCtrl', ["$scope", "$stateParams", "$http", "sessionService", function($scope, $stateParams, $http, sessionService) {
+.controller('ViewMaterialsCtrl', ["$scope", "$stateParams", "$http", "sessionService", "authenticationService", function($scope, $stateParams, $http, sessionService, authenticationService) {
+  authenticationService.checkAuthentication();
   console.log("view materials");
   console.log($stateParams);
   $scope.loading = true;
@@ -656,7 +671,8 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
 }])
 
-.controller('CoachAvailabilityCtrl', ["$scope", "$stateParams", "$http", "sessionService", "$state", "pathwayService", function($scope, $stateParams, $http, sessionService, $state, pathwayService) {
+.controller('CoachAvailabilityCtrl', ["$scope", "$stateParams", "$http", "sessionService", "$state", "pathwayService", "authenticationService", function($scope, $stateParams, $http, sessionService, $state, pathwayService, authenticationService) {
+  authenticationService.checkAuthentication();
   console.log("coach availability");
   console.log("All slots:" + $stateParams.all_slots);
   console.log($stateParams);
@@ -735,7 +751,8 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
 }])
 
-.controller('ViewPreWorksCtrl', ["$scope", "$stateParams", "$http", "pathwayService", "sessionService", function($scope, $stateParams, $http, pathwayService, sessionService) {
+.controller('ViewPreWorksCtrl', ["$scope", "$stateParams", "$http", "pathwayService", "sessionService", "authenticationService", function($scope, $stateParams, $http, pathwayService, sessionService, authenticationService) {
+  authenticationService.checkAuthentication();
   console.log("pre-works");
   $scope.preWorks = pathwayService.pathway.session.preWorks;
   console.log($scope.preWorks);
@@ -774,7 +791,8 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   }
 }])
 
-.controller('ViewNonBookableSessionDetailsCtrl', ["$scope", "pathwayService", function($scope, pathwayService) {
+.controller('ViewNonBookableSessionDetailsCtrl', ["$scope", "pathwayService", "authenticationService", function($scope, pathwayService, authenticationService) {
+  authenticationService.checkAuthentication();
   console.log("viewing non-bookable session details");
   console.log(pathwayService.pathway.session.nonBookableSessionDetails);
   $scope.nonBookableSessionDetails = pathwayService.pathway.session.nonBookableSessionDetails;
@@ -784,13 +802,15 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   }
 }])
 
-.controller('ViewGroupCoachingSessionDetailsCtrl', ["$scope", "pathwayService", function($scope, pathwayService) {
+.controller('ViewGroupCoachingSessionDetailsCtrl', ["$scope", "pathwayService", "authenticationService", function($scope, pathwayService, authenticationService) {
+  authenticationService.checkAuthentication();
   console.log("viewing group coaching session details");
   console.log(pathwayService.pathway.groupCoachingSession);
   $scope.groupCoachingSession = pathwayService.pathway.groupCoachingSession;
 }])
 
-.controller('SendEmailCtrl', ["$scope", "$stateParams", "sessionService", "$http", function($scope, $stateParams, sessionService, $http) {
+.controller('SendEmailCtrl', ["$scope", "$stateParams", "sessionService", "$http", "authenticationService", function($scope, $stateParams, sessionService, $http, authenticationService) {
+  authenticationService.checkAuthentication();
   console.log("send email controller");
   console.log($stateParams.coachId);
   $scope.coachId = $stateParams.coachId;
