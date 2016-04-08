@@ -385,7 +385,8 @@
 
       <ion-view view-title="Coach Availability">
         <ion-content padding="true">
-
+        
+          <ion-refresher on-refresh="refreshAvailabilityList()"></ion-refresher>
           <pre-loader> </pre-loader>
           <error-message> </error-message>
 
