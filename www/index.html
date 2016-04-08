@@ -100,9 +100,10 @@
       <ion-view hide-nav-bar="true">
         <ion-content>
 
-          <div class="list">
+          <ion-refresher on-refresh="refreshPathwayList()"></ion-refresher>
 
-            <div class="item">
+          <div class="list">
+            <div class="padding">
               <pre-loader> </pre-loader>
               <error-message> </error-message>
             </div>
@@ -128,6 +129,7 @@
 
       <ion-view hide-nav-bar="true">
         <ion-content padding="true">
+
 
         <pre-loader> </pre-loader>
         <error-message> </error-message>
@@ -276,6 +278,7 @@
       <ion-view view-title="Coaching Sessions">
 
         <ion-content padding="true">
+          <ion-refresher on-refresh="refreshCoachingSessionsList()"></ion-refresher>
 
           <pre-loader ng-if="!(coachingSessionId)"> </pre-loader>
           <error-message> </error-message>
