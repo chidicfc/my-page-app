@@ -130,11 +130,13 @@
       <ion-view hide-nav-bar="true">
         <ion-content padding="true">
 
+        <div>
+          <ion-refresher on-refresh="refreshCoachesList()"></ion-refresher>
+          <pre-loader> </pre-loader>
+          <error-message> </error-message>
+        </div>
 
-        <pre-loader> </pre-loader>
-        <error-message> </error-message>
-
-          <div class="list list-inset" ng-repeat="coach in coaches | filter: query">
+          <div class="list list-inset padding" ng-repeat="coach in coaches | filter: query">
             <div class="item item-thumbnail-left">
               <img ng-src="{{ coach.profile_image ? 'http://local.ciabos.dev' + coach.profile_image : 'img/avatar.png' }}"/>
               <h2>{{ coach.name }}</h2>
