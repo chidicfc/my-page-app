@@ -696,33 +696,46 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   console.log("view materials");
   console.log($stateParams);
   $scope.loading = true;
-  $http({
-    method: 'GET',
-    url: 'http://local.ciabos.dev/api/v1/materials',
-    params: {user: sessionService.user, pathway: {id: $stateParams.pathwayId}}
-  }).then(function successCallback(response) {
-    // this callback will be called asynchronously
-    // when the response is available
-    $scope.loading = false;
-    $scope.status = response.status;
-    $scope.materials = response.data.materials;
-    if (response.data) {
-      $scope.noMaterial = response.data.message;
-    }
-    console.log("materials gotten");
-    console.log(response);
-  }, function errorCallback(response) {
-    // called asynchronously if an error occurs
-    // or server returns response with an error status.
-    $scope.statusText = response.statusText;
-    if (response.data) {
-      $scope.errorMessage = response.data.message;
-    }
-    $scope.loading = false;
-    $scope.status = response.status;
-    console.log($scope);
-    console.log(response);
-  });
+  // getMaterials functions fetches the list of materials for a coaching session
+  // via an ajax get request
+  var getMaterials = function(){
+    $http({
+      method: 'GET',
+      url: 'http://local.ciabos.dev/api/v1/materials',
+      params: {user: sessionService.user, pathway: {id: $stateParams.pathwayId}}
+    }).then(function successCallback(response) {
+      // this callback will be called asynchronously
+      // when the response is available
+      $scope.loading = false;
+      $scope.status = response.status;
+      $scope.materials = response.data.materials;
+      if (response.data) {
+        $scope.noMaterial = response.data.message;
+      }
+      console.log("materials gotten");
+      console.log(response);
+    }, function errorCallback(response) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+      $scope.statusText = response.statusText;
+      if (response.data) {
+        $scope.errorMessage = response.data.message;
+      }
+      $scope.loading = false;
+      $scope.status = response.status;
+      console.log($scope);
+      console.log(response);
+    });
+  }
+  // call getMaterials function
+  getMaterials();
+
+  $scope.refreshMaterialsList = function(){
+    getMaterials();
+    //Stop the ion-refresher from spinning
+    $scope.$broadcast('scroll.refreshComplete');
+  }
+
 
 }])
 
