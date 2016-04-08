@@ -431,38 +431,46 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
     $state.go('tabs.settings.edit-profile');
   }
 
-
   $scope.loading = true;
   console.log("in settings controller")
-  $http({
-    method: 'GET',
-    url: 'http://local.ciabos.dev/api/v1/profile',
-    params: {user: sessionService.user}
-  }).then(function successCallback(response) {
-    // this callback will be called asynchronously
-    // when the response is available
-    console.log("gotten profile");
-    console.log(response);
 
-    $scope.loading = false;
-    $scope.status = response.status;
-    $scope.profile = response.data.profile
-    console.log(response.status);
-  }, function errorCallback(response) {
-    // called asynchronously if an error occurs
-    // or server returns response with an error status.
-    $scope.statusText = response.statusText;
-    if (response.data) {
-      $scope.errorMessage = response.data.message;
-    }
-    $scope.loading = false;
-    $scope.status = response.status;
+  // get profile of a coachee
+  var getProfile = function(){
+    $http({
+      method: 'GET',
+      url: 'http://local.ciabos.dev/api/v1/profile',
+      params: {user: sessionService.user}
+    }).then(function successCallback(response) {
+      // this callback will be called asynchronously
+      // when the response is available
+      console.log("gotten profile");
+      console.log(response);
+      $scope.loading = false;
+      $scope.status = response.status;
+      $scope.profile = response.data.profile
+      console.log(response.status);
+    }, function errorCallback(response) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+      $scope.statusText = response.statusText;
+      if (response.data) {
+        $scope.errorMessage = response.data.message;
+      }
+      $scope.loading = false;
+      $scope.status = response.status;
+      console.log("error");
+      console.log(response.status);
+    });
+  }
 
-    console.log("error");
+  // call getProfile method
+  getProfile();
 
-    console.log(response.status);
-
-  });
+  $scope.refreshProfile = function(){
+    getProfile();
+    //Stop the ion-refresher from spinning
+    $scope.$broadcast('scroll.refreshComplete');
+  }
 
 }])
 
