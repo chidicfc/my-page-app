@@ -354,35 +354,48 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 .controller('CoachesTabCtrl', ["$scope", "$http", "sessionService", "authenticationService", function($scope, $http, sessionService, authenticationService) {
   authenticationService.checkAuthentication();
   console.log("coaches tab");
+  $scope.loading = true;
 
-  $http({
-    method: 'GET',
-    url: 'http://local.ciabos.dev/api/v1/coaches',
-    params: {user: sessionService.user}
-  }).then(function successCallback(response) {
-    // this callback will be called asynchronously
-    // when the response is available
-    console.log("success");
-    console.log(response);
+  // getCoaches function fetches the list of coaches that have been
+  // assigned to a coachee
+  var getCoaches = function(){
+    $http({
+      method: 'GET',
+      url: 'http://local.ciabos.dev/api/v1/coaches',
+      params: {user: sessionService.user}
+    }).then(function successCallback(response) {
+      // this callback will be called asynchronously
+      // when the response is available
+      console.log("success");
+      console.log(response);
 
-    $scope.loading = false;
-    $scope.status = response.status;
-    $scope.coaches = response.data.coaches;
-    console.log(response.status);
-  }, function errorCallback(response) {
-    // called asynchronously if an error occurs
-    // or server returns response with an error status.
-    $scope.statusText = response.statusText;
-    if (response.data) {
-      $scope.errorMessage = response.data.message;
-    }
-    $scope.loading = false;
-    $scope.status = response.status;
-    console.log("error");
-    console.log(response);
-    console.log(response.status);
+      $scope.loading = false;
+      $scope.status = response.status;
+      $scope.coaches = response.data.coaches;
+      console.log(response.status);
+    }, function errorCallback(response) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+      $scope.statusText = response.statusText;
+      if (response.data) {
+        $scope.errorMessage = response.data.message;
+      }
+      $scope.loading = false;
+      $scope.status = response.status;
+      console.log("error");
+      console.log(response);
+      console.log(response.status);
+    });
+  }
 
-  });
+  // call getCoaches function
+  getCoaches();
+
+  $scope.refreshCoachesList = function(){
+    getCoaches();
+    //Stop the ion-refresher from spinning
+    $scope.$broadcast('scroll.refreshComplete');
+  }
 
 
 }])
