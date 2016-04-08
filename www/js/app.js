@@ -305,9 +305,47 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
 }])
 
-.controller('HomeTabCtrl', ["$scope", "pathwayService", "authenticationService", function($scope, pathwayService, authenticationService) {
+.controller('HomeTabCtrl', ["$scope", "pathwayService", "authenticationService", "sessionService", "$http", function($scope, pathwayService, authenticationService, sessionService, $http) {
+  // check if user is authenticated
   authenticationService.checkAuthentication();
+  // pathwayService is used to transfer details of a pathway
+  // and list of pathways belonging to a coachee among controllers
   $scope.pathways = pathwayService.pathways
+
+ // pulling down the home view refreshes the list of pathways
+ // by calling this refreshPathwayList function
+  $scope.refreshPathwayList = function(){
+    console.log("refreshing pathways");
+    console.log(sessionService)
+    $http({
+      method: 'GET',
+      url: 'http://local.ciabos.dev/api/v1/get_pathways',
+      params: {user: sessionService.user}
+    }).then(function successCallback(response) {
+      // this callback will be called asynchronously
+      // when the response is available
+      pathwayService.pathways = response.data.user.pathway_attributes;
+      $scope.pathways = response.data.user.pathway_attributes;
+      $scope.loading = false;
+      $scope.status = response.status;
+      //Stop the ion-refresher from spinning
+      $scope.$broadcast('scroll.refreshComplete');
+      console.log("refreshed pathways");
+      console.log(response);
+    }, function errorCallback(response) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+      //Stop the ion-refresher from spinning
+      $scope.$broadcast('scroll.refreshComplete');
+      $scope.statusText = response.statusText;
+      if (response.data) {
+        $scope.errorMessage = response.data.message;
+      }
+      $scope.loading = false;
+      $scope.status = response.status;
+    });
+  }
+  //refreshPathwayList function ends
 
   console.log("in home controller");
   console.log(pathwayService.pathways);
@@ -520,26 +558,19 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
 .controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "sessionService", "$http", "$state", "pathwayService", "authenticationService", function($scope, $stateParams, sessionService, $http, $state, pathwayService, authenticationService) {
   authenticationService.checkAuthentication();
-  console.log("get pathway details");
+  console.log("getting pathway details");
+  console.log($stateParams);
   $scope.loading = true;
   $scope.bookingErrorMessage = false;
+  // this date function creates a Date object which is used to format
+  // dates in the 'templates/pathway-details.html' view related to this controller
   $scope.date = function(d){
     var date = new Date(d);
     return date;
   }
 
-  if (pathwayService.pathway.session.booked){
-    // fetch data from pathwayService
-    console.log("in if construct");
-    $scope.coachingSessions = pathwayService.pathway.sessions;
-    $scope.pathwayName = pathwayService.pathway.name;
-    $scope.pathwayId = pathwayService.pathway.id;
-    $scope.loading = false;
-    $scope.status = 200;
-    pathwayService.pathway.session.booked = false;
-  }else {
-    // fetch data from api
-    console.log("not in if construct");
+  // function to get the list of coaching sessions for a pathway
+  var getPathwayDetails = function(){
     $http({
       method: 'GET',
       url: 'http://local.ciabos.dev/api/v1/pathways',
@@ -577,7 +608,33 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
       pathwayService.pathway.session.booked = false;
     });
   }
+  // getPathwayDetails function ends
 
+  // checks if coachee just booked a session. If true don't make ajax request
+  // Use details stored in pathwayService instead
+  // If not true make ajax request to fetch the details
+  if (pathwayService.pathway.session.booked){
+    // fetch data from pathwayService
+    console.log("in if construct");
+    $scope.coachingSessions = pathwayService.pathway.sessions;
+    $scope.pathwayName = pathwayService.pathway.name;
+    $scope.pathwayId = pathwayService.pathway.id;
+    $scope.loading = false;
+    $scope.status = 200;
+    pathwayService.pathway.session.booked = false;
+  }else {
+    // fetch data from api
+    console.log("not in if construct");
+    getPathwayDetails();
+  }
+
+  $scope.refreshCoachingSessionsList = function(){
+    getPathwayDetails();
+    //Stop the ion-refresher from spinning
+    $scope.$broadcast('scroll.refreshComplete');
+  }
+
+  // deleteBooking function deletes an existing booking for a coaching session
   $scope.deleteBooking = function(coachingSessionId){
     console.log("deleting coaching session");
     console.log(coachingSessionId);
@@ -610,10 +667,8 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
       //$scope.coachingSessions = response.data.pathway.coaching_sessions;
       //$scope.pathwayName = response.data.pathway.name;
     });
-
-
-
   }
+  // deleteBooking function ends here
 
   $scope.viewPreWorks = function(preWorks){
     console.log(preWorks);
