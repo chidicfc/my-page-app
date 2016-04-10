@@ -226,6 +226,32 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
 // service ends
 
+// factory begins
+.factory('pathwaysFactory', ["$http", "$q", "sessionService", function($http, $q, sessionService){
+  return {
+    getPathways: function(){
+      console.log("in factory");
+      //Creating a deferred object
+       var deferred = $q.defer();
+       // set http request params
+       var requestParams = {
+         method: 'GET',
+         url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/get_pathways',
+         params: {user: sessionService.user}
+       };
+       return $http(requestParams).then(function(response){
+         if(response.status == 200){
+           deferred.resolve(response);
+         }else{
+           deferred.reject(response);
+         }
+         return deferred.promise;
+       });
+    }
+  }
+}])
+// factory ends
+
 
 // directive starts
 .directive("preLoader", function() {
@@ -286,7 +312,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 })
 // filter ends
 
-.controller('SignInCtrl', ["$scope", "$state", "$http", "sessionService", "pathwayService", "$cordovaInAppBrowser", "signInService", function($scope, $state, $http, sessionService, pathwayService, $cordovaInAppBrowser, signInService) {
+.controller('SignInCtrl', ["$scope", "$state", "sessionService", "pathwayService", "$cordovaInAppBrowser", "signInService", function($scope, $state, sessionService, pathwayService, $cordovaInAppBrowser, signInService) {
 
   $scope.signIn = function(user) {
     // call ajax if user object has username and password
@@ -294,29 +320,29 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       $scope.loading = true;
       console.log(user);
 
-      signInService.login(user).then(function(response){
+      signInService.login(user).then(function(responseSuccess){
         // this callback will be called asynchronously
         // when the response is available
-        sessionService.user.id = response.data.user.id;
-        sessionService.user.token = response.data.user.token;
-        sessionService.user.username = response.data.user.username;
-        pathwayService.pathways = response.data.user.pathway_attributes;
+        sessionService.user.id = responseSuccess.data.user.id;
+        sessionService.user.token = responseSuccess.data.user.token;
+        sessionService.user.username = responseSuccess.data.user.username;
+        pathwayService.pathways = responseSuccess.data.user.pathway_attributes;
         $scope.loading = false;
-        $scope.status = response.status;
+        $scope.status = responseSuccess.status;
         console.log("signed in");
-        console.log(response);
+        console.log(responseSuccess);
         console.log(sessionService.user);
         $state.go('tabs.home');
       },
-      function(response){
+      function(responseError){
         // called asynchronously if an error occurs
         // or server returns response with an error status.
-        $scope.statusText = response.statusText;
-        if (response.data) {
-          $scope.errorMessage = response.data.message;
+        $scope.statusText = responseError.statusText;
+        if (responseError.data) {
+          $scope.errorMessage = responseError.data.message;
         }
         $scope.loading = false;
-        $scope.status = response.status;
+        $scope.status = responseError.status;
       });
     }
   };
@@ -340,50 +366,47 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
 }])
 
-.controller('HomeTabCtrl', ["$scope", "pathwayService", "authenticationService", "sessionService", "$http", function($scope, pathwayService, authenticationService, sessionService, $http) {
+.controller('HomeTabCtrl', ["$scope", "pathwayService", "authenticationService", "sessionService", "pathwaysFactory", function($scope, pathwayService, authenticationService, sessionService, pathwaysFactory) {
   // check if user is authenticated
   authenticationService.checkAuthentication();
   // pathwayService is used to transfer details of a pathway
   // and list of pathways belonging to a coachee among controllers
   $scope.pathways = pathwayService.pathways
+  console.log("in home controller");
+  console.log(pathwayService.pathways);
 
  // pulling down the home view refreshes the list of pathways
  // by calling this refreshPathwayList function
   $scope.refreshPathwayList = function(){
     console.log("refreshing pathways");
     console.log(sessionService)
-    $http({
-      method: 'GET',
-      url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/get_pathways',
-      params: {user: sessionService.user}
-    }).then(function successCallback(response) {
+
+    pathwaysFactory.getPathways().then(function(responseSuccess){
       // this callback will be called asynchronously
       // when the response is available
-      pathwayService.pathways = response.data.user.pathway_attributes;
-      $scope.pathways = response.data.user.pathway_attributes;
+      pathwayService.pathways = responseSuccess.data.user.pathway_attributes;
+      $scope.pathways = responseSuccess.data.user.pathway_attributes;
       $scope.loading = false;
-      $scope.status = response.status;
+      $scope.status = responseSuccess.status;
       //Stop the ion-refresher from spinning
       $scope.$broadcast('scroll.refreshComplete');
       console.log("refreshed pathways");
-      console.log(response);
-    }, function errorCallback(response) {
+      console.log(responseSuccess);
+    },
+    function(responseError){
       // called asynchronously if an error occurs
       // or server returns response with an error status.
       //Stop the ion-refresher from spinning
       $scope.$broadcast('scroll.refreshComplete');
-      $scope.statusText = response.statusText;
-      if (response.data) {
-        $scope.errorMessage = response.data.message;
+      $scope.statusText = responseError.statusText;
+      if (responseError.data) {
+        $scope.errorMessage = responseError.data.message;
       }
       $scope.loading = false;
-      $scope.status = response.status;
+      $scope.status = responseError.status;
     });
   }
   //refreshPathwayList function ends
-
-  console.log("in home controller");
-  console.log(pathwayService.pathways);
 }])
 
 .controller('CoachesTabCtrl', ["$scope", "$http", "sessionService", "authenticationService", function($scope, $http, sessionService, authenticationService) {
