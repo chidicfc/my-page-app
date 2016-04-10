@@ -16,6 +16,9 @@
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
 
+    <!-- ionic modal used for list of timezones-->
+    <script src="lib/ionic-modal-select/dist/ionic-modal-select.min.js"></script>
+
     <script src="js/ng-cordova.min.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
@@ -23,6 +26,7 @@
 
     <!-- your app's js -->
     <script src="js/app.js"></script>
+
   </head>
   <body>
 
@@ -198,7 +202,7 @@
             <div class="item item-divider">
             </div>
 
-            <a class="item item-icon-left" ng-click="editProfile(profile)">
+            <a class="item item-icon-left" ng-click="editProfile()">
               <i class="icon ion-person button-small"></i>
               Edit Profile
             </a>
@@ -231,9 +235,10 @@
             </div>
 
             <div class="item item-thumbnail-left" href="#">
-              // <img ng-src="{{ profile.photo ? 'http://ci-ciabos-pr-276.herokuapp.com' + profile.photo : 'img/avatar.png' }}"/>
-              <img ng-src="{{ profile.photo ? profile.photo : 'img/avatar.png' }}"/>
-              <input type="file" file-upload />
+              <img ng-src="{{ profile.photo ? 'http://ci-ciabos-pr-276.herokuapp.com' + profile.photo : 'img/avatar.png' }}"/>
+              <button class="button button-calm button-small button-clear" ng-click="takePhoto">
+                Edit Photo
+              </button>
             </div>
 
             <label class="item item-input">
@@ -266,12 +271,19 @@
               <input type="tel" ng-model="profile.phone2">
             </label>
 
-            <label class="item item-input item-select">
+            <label class="item item-input">
               <span class="input-label">Timezone:</span>
-              <select ng-model="profile.timezone">
-                <option ng-repeat="timezone in profile.timezones">{{ timezone }}</option>
-              </select>
+              <span class="input-label"> {{ profile.timezone }}</span>
             </label>
+
+            <div class="item">
+              <button class="button button-calm button-small" modal-select="" ng-model="profile.timezone" options="profile.timezones" modal-title="Select a timezone" has-search="true">
+                Select Timezone
+                <div class="option">
+                  {{option}}
+                </div>
+              </button>
+            </div>
 
             <div class="padding">
               <button class="button button-block button-calm" ng-click="updateProfile(profile)">
