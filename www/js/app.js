@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('myPage', ['ionic', 'ngSanitize'])
+angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -263,7 +263,8 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 })
 // filter ends
 
-.controller('SignInCtrl', ["$scope", "$state", "$http", "sessionService", "pathwayService", function($scope, $state, $http, sessionService, pathwayService) {
+.controller('SignInCtrl', ["$scope", "$state", "$http", "sessionService", "pathwayService", "$cordovaInAppBrowser", function($scope, $state, $http, sessionService, pathwayService, $cordovaInAppBrowser) {
+
   $scope.signIn = function(user) {
     $scope.statusText = null;
     // call ajax if user object has username and password
@@ -273,7 +274,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
       $http({
         method: 'POST',
-        url: 'http://local.ciabos.dev/api/v1/sessions',
+        url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/sessions',
         data: {user: user}
       }).then(function successCallback(response) {
         // this callback will be called asynchronously
@@ -303,6 +304,24 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
   };
 
+  var options = {
+    location: 'yes',
+    clearcache: 'yes',
+    toolbar: 'no'
+  };
+
+  $scope.forgotPassword = function(){
+    $cordovaInAppBrowser.open('http://ci-ciabos-pr-276.herokuapp.com/users/password/new', '_blank', options)
+    .then(function(event) {
+      // success
+      console.log("successfully opened link");
+    })
+    .catch(function(event) {
+      // error
+      console.log("could not open link");
+    });
+  }
+
 }])
 
 .controller('HomeTabCtrl', ["$scope", "pathwayService", "authenticationService", "sessionService", "$http", function($scope, pathwayService, authenticationService, sessionService, $http) {
@@ -319,7 +338,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
     console.log(sessionService)
     $http({
       method: 'GET',
-      url: 'http://local.ciabos.dev/api/v1/get_pathways',
+      url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/get_pathways',
       params: {user: sessionService.user}
     }).then(function successCallback(response) {
       // this callback will be called asynchronously
@@ -361,7 +380,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   var getCoaches = function(){
     $http({
       method: 'GET',
-      url: 'http://local.ciabos.dev/api/v1/coaches',
+      url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/coaches',
       params: {user: sessionService.user}
     }).then(function successCallback(response) {
       // this callback will be called asynchronously
@@ -400,7 +419,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
 }])
 
-.controller('SettingsTabCtrl', ["$scope", "$ionicPopup", "sessionService", "$http", "$state", "profileService", "authenticationService", function($scope, $ionicPopup, sessionService, $http, $state, profileService, authenticationService) {
+.controller('SettingsTabCtrl', ["$scope", "$ionicPopup", "sessionService", "$http", "$state", "profileService", "authenticationService", "signOutService", function($scope, $ionicPopup, sessionService, $http, $state, profileService, authenticationService, signOutService) {
   authenticationService.checkAuthentication();
   $scope.confirmPasswordChange = function() {
     var confirmPopup = $ionicPopup.confirm({
@@ -412,7 +431,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
       if(res) {
         console.log('Ok clicked');
         signOutService.signOut();
-        window.open('http://local.ciabos.dev/users/password/new', '_blank', 'location=yes');
+        window.open('http://ci-ciabos-pr-276.herokuapp.com/users/password/new', '_blank', 'location=yes');
       } else {
         console.log('Cancel clicked');
       }
@@ -438,7 +457,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   var getProfile = function(){
     $http({
       method: 'GET',
-      url: 'http://local.ciabos.dev/api/v1/profile',
+      url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/profile',
       params: {user: sessionService.user}
     }).then(function successCallback(response) {
       // this callback will be called asynchronously
@@ -474,7 +493,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
 }])
 
-.controller('EditProfileCtrl', ["$scope", "profileService", "$http", "sessionService", "authenticationService", function($scope, profileService, $http, sessionService, authenticationService) {
+.controller('EditProfileCtrl', ["$scope", "profileService", "$http", "sessionService", "authenticationService", "$cordovaCamera", function($scope, profileService, $http, sessionService, authenticationService, $cordovaCamera) {
   authenticationService.checkAuthentication();
   console.log("edit profile ctrl");
   console.log(profileService);
@@ -483,54 +502,84 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
   $scope.files = [];
 
-  $scope.$on("fileSelected", function (event, args) {
-    $scope.$apply(function () {
-      //add the file object to the scope's files collection
-      $scope.files.push(args.file);
-    });
+  // $scope.takePhoto = function() {
+  //
+  //   document.addEventListener("deviceready", function () {
+  //      var options = {
+  //      fileKey: "avatar",
+  //      fileName: "image.png",
+  //      chunkedMode: "false",
+  //      mimeType: "false",
+  //      quality: 75,
+  //      destinationType: Camera.DestinationType.FILE_URI,
+  //      sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+  //      encodingType: Camera.EncodingType.JPEG,
+  //      targetWidth: 100,
+  //      targetHeight: 100,
+  //      popoverOptions: CameraPopoverOptions,
+  //      saveToPhotoAlbum: false
+  //    };
+  //    $cordovaCamera.getPicture(options).then(function(imageData) {
+  //      $scope.profile.photo = "data:image/jpeg;base64," + imageData;
+  //      console.log("photo selected");
+  //      console.log(imageData);
+  //      console.log($scope.profile.photo);
+  //     }, function(err) {
+  //       // An error occured. Show a message to the user
+  //       console.log("error in selecting pic");
+  //       console.log(err);
+  //     });
+  //   }, false);
+  // };
 
-    $scope.loading = true;
-    $http({
-      method: 'POST',
-      url: 'http://local.ciabos.dev/api/v1/uploadPhoto',
-      headers: { 'Content-Type': undefined },
-      transformRequest: function (data) {
-          var formData = new FormData();
-          formData.append("user", angular.toJson(data.user));
-          formData.append("photo", data.files[0]);
-          return formData;
-      },
-      //Create an object that contains the model and files which will be transformed
-      // in the above transformRequest method
-      data: { user: sessionService.user, files: $scope.files }
-    }).then(function successCallback(response) {
-      // this callback will be called asynchronously
-      // when the response is available
-      console.log("success");
-      console.log(response);
-      console.log($scope);
-      if(response.data.photo_url){
-        $scope.profile.photo = response.data.photo_url;
-      }
-      $scope.loading = false;
-      $scope.files = [];
-      $scope.status = response.status;
-      console.log(response.status);
-    }, function errorCallback(response) {
-      // called asynchronously if an error occurs
-      // or server returns response with an error status.
-      $scope.statusText = response.statusText;
-      if (response.data) {
-        $scope.errorMessage = response.data.message;
-      }
-      $scope.loading = false;
-      $scope.status = response.status;
-      $scope.files = [];
-      console.log("error");
-      console.log(response);
-
-    });
-  });
+  // $scope.$on("fileSelected", function (event, args) {
+  //   $scope.$apply(function () {
+  //     //add the file object to the scope's files collection
+  //     $scope.files.push(args.file);
+  //   });
+  //
+  //   $scope.loading = true;
+  //   $http({
+  //     method: 'POST',
+  //     url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/uploadPhoto',
+  //     headers: { 'Content-Type': undefined },
+  //     transformRequest: function (data) {
+  //         var formData = new FormData();
+  //         formData.append("user", angular.toJson(data.user));
+  //         formData.append("photo", data.files[0]);
+  //         return formData;
+  //     },
+  //     //Create an object that contains the model and files which will be transformed
+  //     // in the above transformRequest method
+  //     data: { user: sessionService.user, files: $scope.files }
+  //   }).then(function successCallback(response) {
+  //     // this callback will be called asynchronously
+  //     // when the response is available
+  //     console.log("success");
+  //     console.log(response);
+  //     console.log($scope);
+  //     if(response.data.photo_url){
+  //       $scope.profile.photo = response.data.photo_url;
+  //     }
+  //     $scope.loading = false;
+  //     $scope.files = [];
+  //     $scope.status = response.status;
+  //     console.log(response.status);
+  //   }, function errorCallback(response) {
+  //     // called asynchronously if an error occurs
+  //     // or server returns response with an error status.
+  //     $scope.statusText = response.statusText;
+  //     if (response.data) {
+  //       $scope.errorMessage = response.data.message;
+  //     }
+  //     $scope.loading = false;
+  //     $scope.status = response.status;
+  //     $scope.files = [];
+  //     console.log("error");
+  //     console.log(response);
+  //
+  //   });
+  // });
 
   $scope.updateProfile = function(profile) {
     console.log("updating profile");
@@ -546,7 +595,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
     $http({
       method: 'PATCH',
-      url: 'http://local.ciabos.dev/api/v1/updateProfile',
+      url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/updateProfile',
       data: {user: sessionService.user, userProfile: user}
     }).then(function successCallback(response) {
       // this callback will be called asynchronously
@@ -594,7 +643,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   var getPathwayDetails = function(){
     $http({
       method: 'GET',
-      url: 'http://local.ciabos.dev/api/v1/pathways',
+      url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/pathways',
       params: {user: sessionService.user, pathway: {id: $stateParams.pathwayId}}
     }).then(function successCallback(response) {
       // this callback will be called asynchronously
@@ -663,7 +712,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
     $scope.coachingSessionId = coachingSessionId;
     $http({
       method: 'DELETE',
-      url: 'http://local.ciabos.dev/api/v1/delete_booking/' + coachingSessionId,
+      url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/delete_booking/' + coachingSessionId,
       params: {user: sessionService.user, pathway: {id: $stateParams.pathwayId}}
     }).then(function successCallback(response) {
       // this callback will be called asynchronously
@@ -722,7 +771,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   var getMaterials = function(){
     $http({
       method: 'GET',
-      url: 'http://local.ciabos.dev/api/v1/materials',
+      url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/materials',
       params: {user: sessionService.user, pathway: {id: $stateParams.pathwayId}}
     }).then(function successCallback(response) {
       // this callback will be called asynchronously
@@ -776,7 +825,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
   var getAvailability = function(){
     $http({
       method: 'GET',
-      url: 'http://local.ciabos.dev/api/v1/get_availability/' + $stateParams.coachingSession + '/' + $stateParams.all_slots,
+      url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/get_availability/' + $stateParams.coachingSession + '/' + $stateParams.all_slots,
       params: {user: sessionService.user}
     }).then(function successCallback(response) {
       // this callback will be called asynchronously
@@ -820,7 +869,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
 
     $http({
       method: 'POST',
-      url: 'http://local.ciabos.dev/api/v1/book_session/' + coachingSession + '/' + availabilitySlot.id,
+      url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/book_session/' + coachingSession + '/' + availabilitySlot.id,
       params: {user: sessionService.user}
     }).then(function successCallback(response) {
       // this callback will be called asynchronously
@@ -861,7 +910,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
     $scope.preWorkId = preWork.id
     $http({
       method: 'PATCH',
-      url: 'http://local.ciabos.dev/api/v1/pre_works/' + preWork.id + '/is_complete/' + preWork.is_complete,
+      url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/pre_works/' + preWork.id + '/is_complete/' + preWork.is_complete,
       params: {user: sessionService.user}
     }).then(function successCallback(response) {
       // this callback will be called asynchronously
@@ -930,7 +979,7 @@ angular.module('myPage', ['ionic', 'ngSanitize'])
       $scope.loading = true;
       $http({
         method: 'POST',
-        url: 'http://local.ciabos.dev/api/v1/send_email/' + coachId,
+        url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/send_email/' + coachId,
         data: {user: sessionService.user, message: message}
       }).then(function successCallback(response) {
         // this callback will be called asynchronously
