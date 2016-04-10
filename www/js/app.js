@@ -201,6 +201,29 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   }
 }])
 
+.service('signInService', ["$http", "$q", function($http, $q){
+  return {
+    login: function(user){
+      //Creating a deferred object
+       var deferred = $q.defer();
+       // set http request params
+       var requestParams = {
+         method: 'POST',
+         url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/sessions',
+         data: {user: user}
+       };
+       return $http(requestParams).then(function(response){
+         if(response.status == 200){
+           deferred.resolve(response);
+         }else{
+           deferred.reject(response);
+         }
+         return deferred.promise;
+       });
+    }
+  }
+}])
+
 // service ends
 
 
@@ -263,20 +286,15 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 })
 // filter ends
 
-.controller('SignInCtrl', ["$scope", "$state", "$http", "sessionService", "pathwayService", "$cordovaInAppBrowser", function($scope, $state, $http, sessionService, pathwayService, $cordovaInAppBrowser) {
+.controller('SignInCtrl', ["$scope", "$state", "$http", "sessionService", "pathwayService", "$cordovaInAppBrowser", "signInService", function($scope, $state, $http, sessionService, pathwayService, $cordovaInAppBrowser, signInService) {
 
   $scope.signIn = function(user) {
-    $scope.statusText = null;
     // call ajax if user object has username and password
     if (user && user.username && user.password) {
       $scope.loading = true;
       console.log(user);
 
-      $http({
-        method: 'POST',
-        url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/sessions',
-        data: {user: user}
-      }).then(function successCallback(response) {
+      signInService.login(user).then(function(response){
         // this callback will be called asynchronously
         // when the response is available
         sessionService.user.id = response.data.user.id;
@@ -289,7 +307,8 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
         console.log(response);
         console.log(sessionService.user);
         $state.go('tabs.home');
-      }, function errorCallback(response) {
+      },
+      function(response){
         // called asynchronously if an error occurs
         // or server returns response with an error status.
         $scope.statusText = response.statusText;
@@ -299,20 +318,17 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
         $scope.loading = false;
         $scope.status = response.status;
       });
-
     }
-
-  };
-
-  var options = {
-    location: 'no',
-    clearcache: 'yes',
-    toolbar: 'no'
   };
 
   $scope.forgotPassword = function(){
-    $cordovaInAppBrowser.open('http://ci-ciabos-pr-276.herokuapp.com/users/password/new', '_blank', options)
-    .then(function(event) {
+    var options = {
+      location: 'no',
+      clearcache: 'yes',
+      toolbar: 'no'
+    };
+
+    $cordovaInAppBrowser.open('http://ci-ciabos-pr-276.herokuapp.com/users/password/new', '_blank', options).then(function(event) {
       // success
       console.log("successfully opened link");
     })
