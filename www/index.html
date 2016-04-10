@@ -46,7 +46,7 @@
 
          <pre-loader> </pre-loader>
 
-         <form name="loginForm" ng-submit="signIn(user)" novalidate class="padding">
+         <form name="loginForm" novalidate class="padding">
            <div class="list">
              <label class="item item-input">
                <span class="input-label">Username:</span>
@@ -64,7 +64,7 @@
               <label ng-show="(loginForm.password.$dirty || loginForm.$submitted) && loginForm.password.$error.required">Password is required</label>
             </div>
            <div>
-             <button class="button button-block button-calm" type="submit">
+             <button class="button button-block button-calm" ng-click="signIn(user)">
                SIGN IN
              </button>
            </div>
