@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <meta http-equiv="Content-Security-Policy" content="default-src *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src  'self' 'unsafe-inline' *">
     <title>Coach in a Box</title>
 
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
@@ -14,6 +15,8 @@
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <script src="js/ng-cordova.min.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
@@ -60,11 +63,13 @@
              <button class="button button-block button-calm" type="submit">
                SIGN IN
              </button>
-             <p>
-               <a href="#" browse-to="http://local.ciabos.dev/users/password/new"> Forgot password </a>
-             </p>
            </div>
          </form>
+
+           <button class="button button-calm button-small button-clear" ng-click="forgotPassword()">
+             Forgot password
+           </button>
+
       </ion-content>
      </ion-view>
     </script>
@@ -130,15 +135,16 @@
       <ion-view hide-nav-bar="true">
         <ion-content padding="true">
 
-        <div>
           <ion-refresher on-refresh="refreshCoachesList()"></ion-refresher>
+
+
           <pre-loader> </pre-loader>
           <error-message> </error-message>
-        </div>
+
 
           <div class="list list-inset padding" ng-repeat="coach in coaches | filter: query">
             <div class="item item-thumbnail-left">
-              <img ng-src="{{ coach.profile_image ? 'http://local.ciabos.dev' + coach.profile_image : 'img/avatar.png' }}"/>
+              <img ng-src="{{ coach.profile_image ? 'http://ci-ciabos-pr-276.herokuapp.com' + coach.profile_image : 'img/avatar.png' }}"/>
               <h2>{{ coach.name }}</h2>
               <p class="small" ng-show="coach.timezone"> ({{ coach.timezone }}) </p>
               <p class="small" ng-show="coach.email"> {{ coach.email }}</p>
@@ -170,7 +176,7 @@
             </div>
 
             <div class="item item-thumbnail-left" href="#">
-              <img ng-src="{{ profile.photo ? 'http://local.ciabos.dev' + profile.photo : 'img/avatar.png' }}"/>
+              <img ng-src="{{ profile.photo ? 'http://ci-ciabos-pr-276.herokuapp.com' + profile.photo : 'img/avatar.png' }}"/>
               <h2> {{ profile.name }}</h2>
               <p> {{ profile.username }} </p>
             </div>
@@ -225,8 +231,8 @@
             </div>
 
             <div class="item item-thumbnail-left" href="#">
-              <img ng-src="{{ profile.photo ? 'http://local.ciabos.dev' + profile.photo : 'img/avatar.png' }}"/>
-
+              // <img ng-src="{{ profile.photo ? 'http://ci-ciabos-pr-276.herokuapp.com' + profile.photo : 'img/avatar.png' }}"/>
+              <img ng-src="{{ profile.photo ? profile.photo : 'img/avatar.png' }}"/>
               <input type="file" file-upload />
             </div>
 
@@ -307,7 +313,7 @@
               <label ng-show="coachingSession.summary">Summary: <strong>{{ coachingSession.summary }}</strong></label>
               <label ng-show="coachingSession.booking_date"> {{ date(coachingSession.booking_date).toDateString() }} </label>
               <label ng-show="coachingSession.start_time_in_12hour"> {{ coachingSession.start_time_in_12hour}} </label>
-              <a href="#" browse-to="http://local.ciabos.dev/documents/download/{{ coachingSession.material }}" ng-show="coachingSession.material">
+              <a href="#" browse-to="http://ci-ciabos-pr-276.herokuapp.com/documents/download/{{ coachingSession.material }}" ng-show="coachingSession.material">
                 <img src="img/pdf-icon.png" />
               </a>
 
@@ -390,8 +396,8 @@
 
       <ion-view view-title="Coach Availability">
         <ion-content>
+          <ion-refresher on-refresh="refreshAvailabilityList()"></ion-refresher>
           <div class="padding">
-            <ion-refresher on-refresh="refreshAvailabilityList()"></ion-refresher>
             <pre-loader> </pre-loader>
             <error-message> </error-message>
             <label class="block padding"> Please note that the times of all appointments are shown in your local time </label>
@@ -436,7 +442,7 @@
               <label><strong> Title:</strong> Tile 1</label>
               <label ng-if="!(preWork.pre_work_type_name == 'Material' || preWork.pre_work_type_name == 'CiaB Diagnostic')"> <a href="#" browse-to="http://{{ preWork.link }}"> Link </a></label>
 
-              <label ng-if="preWork.pre_work_type_name == 'Material'"><a href="#" browse-to="http://local.ciabos.dev/documents/download/{{ preWork.link }}"><img src="img/pdf-icon.png" /></a></label>
+              <label ng-if="preWork.pre_work_type_name == 'Material'"><a href="#" browse-to="http://ci-ciabos-pr-276.herokuapp.com/documents/download/{{ preWork.link }}"><img src="img/pdf-icon.png" /></a></label>
 
               <label ng-if="preWork.pre_work_type_name == 'CiaB Diagnostic'"><a href="#" browse-to="http://{{ preWork.link }}"> Card Sort </a></label>
 
