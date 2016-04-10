@@ -235,10 +235,12 @@
             </div>
 
             <div class="item item-thumbnail-left" href="#">
-              <img ng-src="{{ profile.photo ? 'http://ci-ciabos-pr-276.herokuapp.com' + profile.photo : 'img/avatar.png' }}"/>
-              <button class="button button-calm button-small button-clear" ng-click="takePhoto">
+              <img ng-if="imgURI !== undefined" ng-src="{{ imgURI }}">
+              <img ng-if="imgURI === undefined" ng-src="{{ profile.photo ? 'http://ci-ciabos-pr-276.herokuapp.com' + profile.photo : 'img/avatar.png' }}">
+              <button class="button button-calm button-small button-clear" ng-click="takePhoto()">
                 Edit Photo
               </button>
+              <label class="red block"> {{ uploadMessage }}</label>
             </div>
 
             <label class="item item-input">
