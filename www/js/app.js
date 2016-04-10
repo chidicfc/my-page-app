@@ -489,7 +489,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
 }])
 
-.controller('EditProfileCtrl', ["$scope", "profileService", "$http", "sessionService", "authenticationService", "$cordovaCamera", function($scope, profileService, $http, sessionService, authenticationService, $cordovaCamera) {
+.controller('EditProfileCtrl', ["$scope", "profileService", "$http", "sessionService", "authenticationService", "$cordovaCamera", "$cordovaFileTransfer", function($scope, profileService, $http, sessionService, authenticationService, $cordovaCamera, $cordovaFileTransfer) {
   authenticationService.checkAuthentication();
   console.log("edit profile ctrl");
   console.log(profileService);
@@ -497,27 +497,44 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   $scope.profile = profileService.profile;
 
   $scope.takePhoto = function() {
-
+    $scope.loading = true;
     document.addEventListener("deviceready", function () {
        var options = {
-       fileKey: "avatar",
-       fileName: "image.png",
-       chunkedMode: "false",
-       mimeType: "false",
+       fileKey: "photo",
+       fileName: "profile_pic.jpeg",
+       chunkedMode: false,
+       mimeType: "image/jpeg",
        quality: 75,
        destinationType: Camera.DestinationType.FILE_URI,
        sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-       encodingType: Camera.EncodingType.JPEG,
        targetWidth: 100,
        targetHeight: 100,
        popoverOptions: CameraPopoverOptions,
        saveToPhotoAlbum: false
      };
      $cordovaCamera.getPicture(options).then(function(imageData) {
-       $scope.profile.photo = "data:image/jpeg;base64," + imageData;
+       $scope.imgURI = imageData;
        console.log("photo selected");
        console.log(imageData);
-       console.log($scope.profile.photo);
+       console.log($scope.imgURI);
+       options.params = {user: sessionService.user};
+       options.fileName = $scope.imgURI.substr($scope.imgURI.lastIndexOf('/') + 1);
+       $cordovaFileTransfer.upload('http://ci-ciabos-pr-276.herokuapp.com/api/v1/uploadPhoto', $scope.imgURI, options).then(function(result) {
+         console.log("successfully uploaded pic");
+         console.log(result.response);
+         console.log(result.response["photo_url"]);
+         console.log(result);
+         if(result.response){
+           $scope.profile.photo = $scope.imgURI;
+         }
+         $scope.loading = false;
+         $scope.uploadMessage = "Photo upload successful";
+       }, function(error) {
+         console.log("upload error");
+         console.log(error);
+         $scope.loading = false;
+         $scope.uploadMessage = "Photo upload failed";
+       });
       }, function(err) {
         // An error occured. Show a message to the user
         console.log("error in selecting pic");
