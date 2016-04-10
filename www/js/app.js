@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova'])
+angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-select'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -305,7 +305,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova'])
   };
 
   var options = {
-    location: 'yes',
+    location: 'no',
     clearcache: 'yes',
     toolbar: 'no'
   };
@@ -431,20 +431,16 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova'])
       if(res) {
         console.log('Ok clicked');
         signOutService.signOut();
-        window.open('http://ci-ciabos-pr-276.herokuapp.com/users/password/new', '_blank', 'location=yes');
+        window.open('http://ci-ciabos-pr-276.herokuapp.com/users/password/new', '_blank', 'location=no');
       } else {
         console.log('Cancel clicked');
       }
     });
-
-    $scope.signOut = function(){
-      console.log("signing out");
-    }
   }
 
 
-  $scope.editProfile = function(profile) {
-    profileService.profile = profile;
+  $scope.editProfile = function() {
+    profileService.profile = $scope.profile;
     console.log("profile editing");
     console.log(profileService);
     $state.go('tabs.settings.edit-profile');
@@ -500,86 +496,35 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova'])
 
   $scope.profile = profileService.profile;
 
-  $scope.files = [];
+  $scope.takePhoto = function() {
 
-  // $scope.takePhoto = function() {
-  //
-  //   document.addEventListener("deviceready", function () {
-  //      var options = {
-  //      fileKey: "avatar",
-  //      fileName: "image.png",
-  //      chunkedMode: "false",
-  //      mimeType: "false",
-  //      quality: 75,
-  //      destinationType: Camera.DestinationType.FILE_URI,
-  //      sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-  //      encodingType: Camera.EncodingType.JPEG,
-  //      targetWidth: 100,
-  //      targetHeight: 100,
-  //      popoverOptions: CameraPopoverOptions,
-  //      saveToPhotoAlbum: false
-  //    };
-  //    $cordovaCamera.getPicture(options).then(function(imageData) {
-  //      $scope.profile.photo = "data:image/jpeg;base64," + imageData;
-  //      console.log("photo selected");
-  //      console.log(imageData);
-  //      console.log($scope.profile.photo);
-  //     }, function(err) {
-  //       // An error occured. Show a message to the user
-  //       console.log("error in selecting pic");
-  //       console.log(err);
-  //     });
-  //   }, false);
-  // };
-
-  // $scope.$on("fileSelected", function (event, args) {
-  //   $scope.$apply(function () {
-  //     //add the file object to the scope's files collection
-  //     $scope.files.push(args.file);
-  //   });
-  //
-  //   $scope.loading = true;
-  //   $http({
-  //     method: 'POST',
-  //     url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/uploadPhoto',
-  //     headers: { 'Content-Type': undefined },
-  //     transformRequest: function (data) {
-  //         var formData = new FormData();
-  //         formData.append("user", angular.toJson(data.user));
-  //         formData.append("photo", data.files[0]);
-  //         return formData;
-  //     },
-  //     //Create an object that contains the model and files which will be transformed
-  //     // in the above transformRequest method
-  //     data: { user: sessionService.user, files: $scope.files }
-  //   }).then(function successCallback(response) {
-  //     // this callback will be called asynchronously
-  //     // when the response is available
-  //     console.log("success");
-  //     console.log(response);
-  //     console.log($scope);
-  //     if(response.data.photo_url){
-  //       $scope.profile.photo = response.data.photo_url;
-  //     }
-  //     $scope.loading = false;
-  //     $scope.files = [];
-  //     $scope.status = response.status;
-  //     console.log(response.status);
-  //   }, function errorCallback(response) {
-  //     // called asynchronously if an error occurs
-  //     // or server returns response with an error status.
-  //     $scope.statusText = response.statusText;
-  //     if (response.data) {
-  //       $scope.errorMessage = response.data.message;
-  //     }
-  //     $scope.loading = false;
-  //     $scope.status = response.status;
-  //     $scope.files = [];
-  //     console.log("error");
-  //     console.log(response);
-  //
-  //   });
-  // });
+    document.addEventListener("deviceready", function () {
+       var options = {
+       fileKey: "avatar",
+       fileName: "image.png",
+       chunkedMode: "false",
+       mimeType: "false",
+       quality: 75,
+       destinationType: Camera.DestinationType.FILE_URI,
+       sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+       encodingType: Camera.EncodingType.JPEG,
+       targetWidth: 100,
+       targetHeight: 100,
+       popoverOptions: CameraPopoverOptions,
+       saveToPhotoAlbum: false
+     };
+     $cordovaCamera.getPicture(options).then(function(imageData) {
+       $scope.profile.photo = "data:image/jpeg;base64," + imageData;
+       console.log("photo selected");
+       console.log(imageData);
+       console.log($scope.profile.photo);
+      }, function(err) {
+        // An error occured. Show a message to the user
+        console.log("error in selecting pic");
+        console.log(err);
+      });
+    }, false);
+  };
 
   $scope.updateProfile = function(profile) {
     console.log("updating profile");
