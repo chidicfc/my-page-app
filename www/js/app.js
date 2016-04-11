@@ -570,7 +570,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
   $scope.forgotPassword = function(){
     var options = {
-      location: 'no',
+      location: 'yes',
       clearcache: 'yes',
       toolbar: 'no'
     };
@@ -704,7 +704,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       if(res) {
         $log.log('Ok clicked');
         signOutService.signOut();
-        window.open('http://ci-ciabos-pr-276.herokuapp.com/users/password/new', '_blank', 'location=no');
+        window.open('http://ci-ciabos-pr-276.herokuapp.com/users/password/new', '_blank', 'location=yes');
       } else {
         $log.log('Cancel clicked');
       }
