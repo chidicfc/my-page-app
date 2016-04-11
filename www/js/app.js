@@ -274,6 +274,30 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
     }
   }
 }])
+
+.factory('profileFactory', ["$http", "$q", "sessionService", function($http, $q, sessionService){
+  return {
+    getProfile: function(){
+      console.log("in profile factory");
+      //Creating a deferred object
+       var deferred = $q.defer();
+       // set http request params
+       var requestParams = {
+         method: 'GET',
+         url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/profile',
+         params: {user: sessionService.user}
+       };
+       return $http(requestParams).then(function(response){
+         if(response.status == 200){
+           deferred.resolve(response);
+         }else{
+           deferred.reject(response);
+         }
+         return deferred.promise;
+       });
+    }
+  }
+}])
 // factory ends
 
 
@@ -475,8 +499,11 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   }
 }])
 
-.controller('SettingsTabCtrl', ["$scope", "$ionicPopup", "sessionService", "$http", "$state", "profileService", "authenticationService", "signOutService", function($scope, $ionicPopup, sessionService, $http, $state, profileService, authenticationService, signOutService) {
+.controller('SettingsTabCtrl', ["$scope", "$ionicPopup", "profileFactory", "$state", "profileService", "authenticationService", "signOutService", function($scope, $ionicPopup, profileFactory, $state, profileService, authenticationService, signOutService) {
   authenticationService.checkAuthentication();
+  $scope.loading = true;
+  console.log("in settings controller")
+
   $scope.confirmPasswordChange = function() {
     var confirmPopup = $ionicPopup.confirm({
       title: 'Confirm',
@@ -494,7 +521,6 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
     });
   }
 
-
   $scope.editProfile = function() {
     profileService.profile = $scope.profile;
     console.log("profile editing");
@@ -502,35 +528,29 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
     $state.go('tabs.settings.edit-profile');
   }
 
-  $scope.loading = true;
-  console.log("in settings controller")
-
   // get profile of a coachee
   var getProfile = function(){
-    $http({
-      method: 'GET',
-      url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/profile',
-      params: {user: sessionService.user}
-    }).then(function successCallback(response) {
+    profileFactory.getProfile().then(function(responseSuccess){
       // this callback will be called asynchronously
       // when the response is available
       console.log("gotten profile");
-      console.log(response);
+      console.log(responseSuccess);
       $scope.loading = false;
-      $scope.status = response.status;
-      $scope.profile = response.data.profile
-      console.log(response.status);
-    }, function errorCallback(response) {
+      $scope.status = responseSuccess.status;
+      $scope.profile = responseSuccess.data.profile
+      console.log(responseSuccess.status);
+    },
+    function(responseError){
       // called asynchronously if an error occurs
       // or server returns response with an error status.
-      $scope.statusText = response.statusText;
-      if (response.data) {
-        $scope.errorMessage = response.data.message;
+      $scope.statusText = responseError.statusText;
+      if (responseError.data) {
+        $scope.errorMessage = responseError.data.message;
       }
       $scope.loading = false;
-      $scope.status = response.status;
+      $scope.status = responseError.status;
       console.log("error");
-      console.log(response.status);
+      console.log(responseError.status);
     });
   }
 
