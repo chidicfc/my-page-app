@@ -257,6 +257,25 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
 .service('coachingSessionService', ["$http", "$q", "sessionService", "$stateParams", function($http, $q, sessionService, $stateParams){
 
+  this.deleteBooking = function(coachingSessionId){
+    //Creating a deferred object
+     var deferred = $q.defer();
+     // set http request params
+     var requestParams = {
+       method: 'DELETE',
+       url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/delete_booking/' + coachingSessionId,
+       params: {user: sessionService.user, pathway: {id: $stateParams.pathwayId}}
+     };
+     return $http(requestParams).then(function(response){
+       if(response.status == 200){
+         deferred.resolve(response);
+       }else{
+         deferred.reject(response);
+       }
+       return deferred.promise;
+     });
+  }
+
   this.getAvailability = function(){
     //Creating a deferred object
      var deferred = $q.defer();
@@ -730,7 +749,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
 }])
 
-.controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "sessionService", "$http", "$state", "pathwayService", "authenticationService", "coachingSessionsFactory", function($scope, $stateParams, sessionService, $http, $state, pathwayService, authenticationService, coachingSessionsFactory) {
+.controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "coachingSessionService", "$state", "pathwayService", "authenticationService", "coachingSessionsFactory", function($scope, $stateParams, coachingSessionService, $state, pathwayService, authenticationService, coachingSessionsFactory) {
   authenticationService.checkAuthentication();
   console.log("getting pathway details");
   console.log($stateParams);
@@ -812,23 +831,21 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
     console.log(coachingSessionId);
     $scope.loading = true;
     $scope.coachingSessionId = coachingSessionId;
-    $http({
-      method: 'DELETE',
-      url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/delete_booking/' + coachingSessionId,
-      params: {user: sessionService.user, pathway: {id: $stateParams.pathwayId}}
-    }).then(function successCallback(response) {
+
+    coachingSessionService.deleteBooking(coachingSessionId).then(function(responseSuccess){
       // this callback will be called asynchronously
       // when the response is available
-      console.log("success");
-      console.log(response);
-      $scope.coachingSessions = response.data.pathway.coaching_sessions;
-      $scope.pathwayName = response.data.pathway.name;
+      console.log("successfully deleted booking");
+      console.log(responseSuccess);
+      $scope.coachingSessions = responseSuccess.data.pathway.coaching_sessions;
+      $scope.pathwayName = responseSuccess.data.pathway.name;
       $scope.loading = false;
-      $scope.status = response.status;
+      $scope.status = responseSuccess.status;
       console.log($scope.coachingSessions);
       console.log($scope.pathwayName);
-      console.log(response.status);
-    }, function errorCallback(response) {
+      console.log(responseSuccess.status);
+    },
+    function(responseError){
       // called asynchronously if an error occurs
       // or server returns response with an error status.
       console.log("error");
@@ -836,8 +853,6 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       $scope.coachingSessionId = coachingSessionId;
       $scope.loading = false;
       console.log($scope);
-      //$scope.coachingSessions = response.data.pathway.coaching_sessions;
-      //$scope.pathwayName = response.data.pathway.name;
     });
   }
   // deleteBooking function ends here
@@ -911,12 +926,11 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
 }])
 
-.controller('CoachAvailabilityCtrl', ["$scope", "$stateParams", "$http", "sessionService", "$state", "pathwayService", "authenticationService", "coachingSessionService", function($scope, $stateParams, $http, sessionService, $state, pathwayService, authenticationService, coachingSessionService) {
+.controller('CoachAvailabilityCtrl', ["$scope", "$stateParams", "$http", "$state", "pathwayService", "authenticationService", "coachingSessionService", function($scope, $stateParams, $http, $state, pathwayService, authenticationService, coachingSessionService) {
   authenticationService.checkAuthentication();
   console.log("coach availability");
   console.log("All slots:" + $stateParams.all_slots);
   console.log($stateParams);
-  console.log(sessionService);
   $scope.loading = true;
   $scope.allSlots = $stateParams.all_slots;
   $scope.date = function(d){
@@ -985,10 +999,9 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       $scope.loading = false;
       $scope.status = responseError.status;
       console.log("error");
-      console.log(response);
+      console.log(responseError);
     });
   }
-
 }])
 
 .controller('ViewPreWorksCtrl', ["$scope", "$stateParams", "$http", "pathwayService", "sessionService", "authenticationService", function($scope, $stateParams, $http, pathwayService, sessionService, authenticationService) {
