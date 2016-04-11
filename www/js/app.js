@@ -749,7 +749,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
 }])
 
-.controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "coachingSessionService", "$state", "pathwayService", "authenticationService", "coachingSessionsFactory", function($scope, $stateParams, coachingSessionService, $state, pathwayService, authenticationService, coachingSessionsFactory) {
+.controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "coachingSessionService", "pathwayService", "authenticationService", "coachingSessionsFactory", function($scope, $stateParams, coachingSessionService, pathwayService, authenticationService, coachingSessionsFactory) {
   authenticationService.checkAuthentication();
   console.log("getting pathway details");
   console.log($stateParams);
