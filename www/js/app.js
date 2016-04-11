@@ -329,6 +329,30 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
     }
   }
 }])
+
+.factory('coachingSessionsFactory', ["$http", "$q", "sessionService", function($http, $q, sessionService){
+  return {
+    getCoachingSessions: function(pathwayId){
+      console.log("in coaching sessions factory");
+      //Creating a deferred object
+       var deferred = $q.defer();
+       // set http request params
+       var requestParams = {
+         method: 'GET',
+         url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/pathways',
+         params: {user: sessionService.user, pathway: {id: pathwayId}}
+       };
+       return $http(requestParams).then(function(response){
+         if(response.status == 200){
+           deferred.resolve(response);
+         }else{
+           deferred.reject(response);
+         }
+         return deferred.promise;
+       });
+    }
+  }
+}])
 // factory ends
 
 
@@ -681,7 +705,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
 }])
 
-.controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "sessionService", "$http", "$state", "pathwayService", "authenticationService", function($scope, $stateParams, sessionService, $http, $state, pathwayService, authenticationService) {
+.controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "sessionService", "$http", "$state", "pathwayService", "authenticationService", "coachingSessionsFactory", function($scope, $stateParams, sessionService, $http, $state, pathwayService, authenticationService, coachingSessionsFactory) {
   authenticationService.checkAuthentication();
   console.log("getting pathway details");
   console.log($stateParams);
@@ -696,40 +720,38 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
   // function to get the list of coaching sessions for a pathway
   var getPathwayDetails = function(){
-    $http({
-      method: 'GET',
-      url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/pathways',
-      params: {user: sessionService.user, pathway: {id: $stateParams.pathwayId}}
-    }).then(function successCallback(response) {
+
+    coachingSessionsFactory.getCoachingSessions($stateParams.pathwayId).then(function(responseSuccess){
       // this callback will be called asynchronously
       // when the response is available
       console.log("gotten coaching sessions");
-      console.log(response);
-      if (response.data.pathway){
-        $scope.coachingSessions = response.data.pathway.coaching_sessions;
-        $scope.pathwayName = response.data.pathway.name;
-        $scope.pathwayId = response.data.pathway.id;
+      console.log(responseSuccess);
+      if (responseSuccess.data.pathway){
+        $scope.coachingSessions = responseSuccess.data.pathway.coaching_sessions;
+        $scope.pathwayName = responseSuccess.data.pathway.name;
+        $scope.pathwayId = responseSuccess.data.pathway.id;
       }
-      if (response.data.noProgramme){
-        $scope.noProgrammeMessage = response.data.noProgramme;
+      if (responseSuccess.data.noProgramme){
+        $scope.noProgrammeMessage = responseSuccess.data.noProgramme;
       }
       $scope.loading = false;
-      $scope.status = response.status;
+      $scope.status = responseSuccess.status;
       console.log($scope.coachingSessions);
       console.log($scope.pathwayName);
-      console.log(response.status);
-    }, function errorCallback(response) {
+      console.log(responseSuccess.status);
+    },
+    function(responseError){
       // called asynchronously if an error occurs
       // or server returns response with an error status.
-      $scope.statusText = response.statusText;
-      if (response.data) {
-        $scope.errorMessage = response.data.message;
+      $scope.statusText = responseError.statusText;
+      if (responseError.data) {
+        $scope.errorMessage = responseError.data.message;
       }
       $scope.loading = false;
-      $scope.status = response.status;
+      $scope.status = responseError.status;
       console.log("error");
-      console.log(response);
-      console.log(response.status);
+      console.log(responseError);
+      console.log(responseError.status);
       pathwayService.pathway.session.booked = false;
     });
   }
