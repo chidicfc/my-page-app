@@ -23,13 +23,14 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $logProvider) {
 
   $ionicConfigProvider.tabs.position('bottom');
   $ionicConfigProvider.views.maxCache(0);
   var jsScrolling = (ionic.Platform.isAndroid() ) ? false : true;
   $ionicConfigProvider.scrolling.jsScrolling(jsScrolling);
-  
+  //$logProvider.debugEnabled(false);
+
   $stateProvider
     .state('signin', {
       url: '/sign-in',
@@ -168,13 +169,13 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   this.user = {}
 })
 
-.service('profileService', ["$http", "$q", "sessionService", function($http, $q, sessionService) {
+.service('profileService', ["$log", "$http", "$q", "sessionService", function($log, $http, $q, sessionService) {
   this.profile = {};
 
   this.updateProfile = function(profile) {
 
-    console.log("updating profile");
-    console.log(profile);
+    $log.log("updating profile");
+    $log.log(profile);
     var user = {profile: {}};
     user.username = profile.username;
     user.email = profile.email;
@@ -224,9 +225,9 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   }
 }])
 
-.service('signOutService', ["sessionService", "profileService", "pathwayService", "$state", "coachesService", function(sessionService, profileService, pathwayService, $state, coachesService) {
+.service('signOutService', ["$log", "sessionService", "profileService", "pathwayService", "$state", "coachesService", function($log, sessionService, profileService, pathwayService, $state, coachesService) {
   this.signOut = function(){
-    console.log("signing out");
+    $log.log("signing out");
     sessionService.user = {};
     profileService.profile = {};
     coachesService.coaches = [];
@@ -363,10 +364,10 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 // service ends
 
 // factory begins
-.factory('pathwaysFactory', ["$http", "$q", "sessionService", function($http, $q, sessionService){
+.factory('pathwaysFactory', ["$log", "$http", "$q", "sessionService", function($log, $http, $q, sessionService){
   return {
     getPathways: function(){
-      console.log("in pathways factory");
+      $log.log("in pathways factory");
       //Creating a deferred object
        var deferred = $q.defer();
        // set http request params
@@ -387,10 +388,10 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   }
 }])
 
-.factory('coachesFactory', ["$http", "$q", "sessionService", function($http, $q, sessionService){
+.factory('coachesFactory', ["$log", "$http", "$q", "sessionService", function($log, $http, $q, sessionService){
   return {
     getCoaches: function(){
-      console.log("in coaches factory");
+      $log.log("in coaches factory");
       //Creating a deferred object
        var deferred = $q.defer();
        // set http request params
@@ -411,10 +412,10 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   }
 }])
 
-.factory('profileFactory', ["$http", "$q", "sessionService", function($http, $q, sessionService){
+.factory('profileFactory', ["$log", "$http", "$q", "sessionService", function($log, $http, $q, sessionService){
   return {
     getProfile: function(){
-      console.log("in profile factory");
+      $log.log("in profile factory");
       //Creating a deferred object
        var deferred = $q.defer();
        // set http request params
@@ -435,10 +436,10 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   }
 }])
 
-.factory('coachingSessionsFactory', ["$http", "$q", "sessionService", function($http, $q, sessionService){
+.factory('coachingSessionsFactory', ["$log", "$http", "$q", "sessionService", function($log, $http, $q, sessionService){
   return {
     getCoachingSessions: function(pathwayId){
-      console.log("in coaching sessions factory");
+      $log.log("in coaching sessions factory");
       //Creating a deferred object
        var deferred = $q.defer();
        // set http request params
@@ -459,10 +460,10 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   }
 }])
 
-.factory('materialsFactory', ["$http", "$q", "sessionService", "$stateParams", function($http, $q, sessionService, $stateParams){
+.factory('materialsFactory', ["$log", "$http", "$q", "sessionService", "$stateParams", function($log, $http, $q, sessionService, $stateParams){
   return {
     getMaterials: function(){
-      console.log("in materials factory");
+      $log.log("in materials factory");
       //Creating a deferred object
        var deferred = $q.defer();
        // set http request params
@@ -528,13 +529,13 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 })
 // filter ends
 
-.controller('SignInCtrl', ["$scope", "$state", "sessionService", "pathwayService", "$cordovaInAppBrowser", "signInService", function($scope, $state, sessionService, pathwayService, $cordovaInAppBrowser, signInService) {
+.controller('SignInCtrl', ["$log", "$scope", "$state", "sessionService", "pathwayService", "$cordovaInAppBrowser", "signInService", function($log, $scope, $state, sessionService, pathwayService, $cordovaInAppBrowser, signInService) {
 
   $scope.signIn = function(user) {
     // call ajax if user object has username and password
     if (user && user.username && user.password) {
       $scope.loading = true;
-      console.log(user);
+      $log.log(user);
 
       signInService.login(user).then(function(responseSuccess){
         // this callback will be called asynchronously
@@ -545,9 +546,9 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
         pathwayService.pathways = responseSuccess.data.user.pathway_attributes;
         $scope.loading = false;
         $scope.status = responseSuccess.status;
-        console.log("signed in");
-        console.log(responseSuccess);
-        console.log(sessionService.user);
+        $log.log("signed in");
+        $log.log(responseSuccess);
+        $log.log(sessionService.user);
         $state.go('tabs.home');
       },
       function(responseError){
@@ -572,27 +573,27 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
     $cordovaInAppBrowser.open('http://ci-ciabos-pr-276.herokuapp.com/users/password/new', '_blank', options).then(function(event) {
       // success
-      console.log("successfully opened link");
+      $log.log("successfully opened link");
     })
     .catch(function(event) {
       // error
-      console.log("could not open link");
+      $log.log("could not open link");
     });
   }
 
 }])
 
-.controller('HomeTabCtrl', ["$scope", "pathwayService", "authenticationService", "sessionService", "pathwaysFactory", function($scope, pathwayService, authenticationService, sessionService, pathwaysFactory) {
+.controller('HomeTabCtrl', ["$log", "$scope", "pathwayService", "authenticationService", "sessionService", "pathwaysFactory", function($log, $scope, pathwayService, authenticationService, sessionService, pathwaysFactory) {
   // check if user is authenticated
   authenticationService.checkAuthentication();
-  console.log("in home controller");
-  console.log(pathwayService.pathways);
+  $log.log("in home controller");
+  $log.log(pathwayService.pathways);
 
  // pulling down the home view refreshes the list of pathways
  // by calling this refreshPathwayList function
   var getPathwayList = function(){
-    console.log("refreshing pathways");
-    console.log(sessionService)
+    $log.log("refreshing pathways");
+    $log.log(sessionService)
 
     pathwaysFactory.getPathways().then(function(responseSuccess){
       // this callback will be called asynchronously
@@ -600,8 +601,8 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       pathwayService.pathways = responseSuccess.data.user.pathway_attributes;
       $scope.pathways = responseSuccess.data.user.pathway_attributes;
       $scope.status = responseSuccess.status;
-      console.log("refreshed pathways");
-      console.log(responseSuccess);
+      $log.log("refreshed pathways");
+      $log.log(responseSuccess);
     },
     function(responseError){
       // called asynchronously if an error occurs
@@ -617,12 +618,12 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   // pathwayService is used to transfer details of a pathway
   // and list of pathways belonging to a coachee among controllers
   if(pathwayService.pathways.length == 0){
-    console.log("no pathways in pathwayService");
+    $log.log("no pathways in pathwayService");
     $scope.loading = true;
     getPathwayList();
     $scope.loading = false;
   }else{
-    console.log("pathways exist in pathwayService");
+    $log.log("pathways exist in pathwayService");
     $scope.pathways = pathwayService.pathways
     getPathwayList();
   }
@@ -635,21 +636,21 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   }
 }])
 
-.controller('CoachesTabCtrl', ["$scope", "coachesFactory", "authenticationService", "coachesService", function($scope, coachesFactory, authenticationService, coachesService) {
+.controller('CoachesTabCtrl', ["$log", "$scope", "coachesFactory", "authenticationService", "coachesService", function($log, $scope, coachesFactory, authenticationService, coachesService) {
   authenticationService.checkAuthentication();
-  console.log("coaches tab");
+  $log.log("coaches tab");
   // getCoaches function fetches the list of coaches that have been
   // assigned to a coachee
   var getCoaches = function(){
     coachesFactory.getCoaches().then(function(responseSuccess){
     // this callback will be called asynchronously
     // when the response is available
-    console.log("success");
-    console.log(responseSuccess);
+    $log.log("success");
+    $log.log(responseSuccess);
     $scope.status = responseSuccess.status;
     coachesService.coaches = responseSuccess.data.coaches;
     $scope.coaches = responseSuccess.data.coaches;
-    console.log(responseSuccess.status);
+    $log.log(responseSuccess.status);
     },
     function(responseError){
       // called asynchronously if an error occurs
@@ -659,20 +660,20 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
         $scope.errorMessage = responseError.data.message;
       }
       $scope.status = responseError.status;
-      console.log("error");
-      console.log(responseError);
-      console.log(responseError.status);
+      $log.log("error");
+      $log.log(responseError);
+      $log.log(responseError.status);
     });
   }
 
   // call getCoaches function if coachesService.coaches is empty
   if (coachesService.coaches.length == 0) {
-    console.log("no coaches in coachesService");
+    $log.log("no coaches in coachesService");
     $scope.loading = true;
     getCoaches();
     $scope.loading = false;
   }else{
-    console.log("coachesService.coaches is not empty");
+    $log.log("coachesService.coaches is not empty");
     $scope.status = 200;
     $scope.coaches = coachesService.coaches;
     getCoaches();
@@ -685,9 +686,9 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   }
 }])
 
-.controller('SettingsTabCtrl', ["$scope", "$ionicPopup", "profileFactory", "$state", "profileService", "authenticationService", "signOutService", function($scope, $ionicPopup, profileFactory, $state, profileService, authenticationService, signOutService) {
+.controller('SettingsTabCtrl', ["$log", "$scope", "$ionicPopup", "profileFactory", "$state", "profileService", "authenticationService", "signOutService", function($log, $scope, $ionicPopup, profileFactory, $state, profileService, authenticationService, signOutService) {
   authenticationService.checkAuthentication();
-  console.log("in settings controller")
+  $log.log("in settings controller")
 
   $scope.confirmPasswordChange = function() {
     var confirmPopup = $ionicPopup.confirm({
@@ -697,11 +698,11 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
     confirmPopup.then(function(res) {
       if(res) {
-        console.log('Ok clicked');
+        $log.log('Ok clicked');
         signOutService.signOut();
         window.open('http://ci-ciabos-pr-276.herokuapp.com/users/password/new', '_blank', 'location=no');
       } else {
-        console.log('Cancel clicked');
+        $log.log('Cancel clicked');
       }
     });
   }
@@ -711,12 +712,12 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
     profileFactory.getProfile().then(function(responseSuccess){
       // this callback will be called asynchronously
       // when the response is available
-      console.log("gotten profile");
-      console.log(responseSuccess);
+      $log.log("gotten profile");
+      $log.log(responseSuccess);
       $scope.status = responseSuccess.status;
       profileService.profile = responseSuccess.data.profile;
       $scope.profile = responseSuccess.data.profile;
-      console.log(responseSuccess.status);
+      $log.log(responseSuccess.status);
     },
     function(responseError){
       // called asynchronously if an error occurs
@@ -726,19 +727,19 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
         $scope.errorMessage = responseError.data.message;
       }
       $scope.status = responseError.status;
-      console.log("error");
-      console.log(responseError.status);
+      $log.log("error");
+      $log.log(responseError.status);
     });
   }
 
   // call getProfile method if profileService.profile is empty
   if(Object.keys(profileService.profile).length === 0 && JSON.stringify(profileService.profile) === JSON.stringify({})){
-    console.log("profile service's profile is empty");
+    $log.log("profile service's profile is empty");
     $scope.loading = true;
     getProfile();
     $scope.loading = false;
   }else{
-    console.log("profile service's profile is not empty");
+    $log.log("profile service's profile is not empty");
     $scope.status = 200;
     $scope.profile = profileService.profile;
     getProfile();
@@ -752,17 +753,17 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
   $scope.editProfile = function() {
     profileService.profile = $scope.profile;
-    console.log("profile editing");
-    console.log(profileService);
+    $log.log("profile editing");
+    $log.log(profileService);
     $state.go('tabs.settings.edit-profile');
   }
 
 }])
 
-.controller('EditProfileCtrl', ["$scope", "profileService", "$http", "sessionService", "authenticationService", "$cordovaCamera", "$cordovaFileTransfer", function($scope, profileService, $http, sessionService, authenticationService, $cordovaCamera, $cordovaFileTransfer) {
+.controller('EditProfileCtrl', ["$log", "$scope", "profileService", "$http", "sessionService", "authenticationService", "$cordovaCamera", "$cordovaFileTransfer", function($log, $scope, profileService, $http, sessionService, authenticationService, $cordovaCamera, $cordovaFileTransfer) {
   authenticationService.checkAuthentication();
-  console.log("edit profile ctrl");
-  console.log(profileService);
+  $log.log("edit profile ctrl");
+  $log.log(profileService);
 
   $scope.profile = profileService.profile;
 
@@ -784,16 +785,16 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
      };
      $cordovaCamera.getPicture(options).then(function(imageData) {
        $scope.imgURI = imageData;
-       console.log("photo selected");
-       console.log(imageData);
-       console.log($scope.imgURI);
+       $log.log("photo selected");
+       $log.log(imageData);
+       $log.log($scope.imgURI);
        options.params = {user: sessionService.user};
        options.fileName = $scope.imgURI.substr($scope.imgURI.lastIndexOf('/') + 1);
        $cordovaFileTransfer.upload('http://ci-ciabos-pr-276.herokuapp.com/api/v1/uploadPhoto', $scope.imgURI, options).then(function(result) {
-         console.log("successfully uploaded pic");
-         console.log(result.response);
-         console.log(result.response["photo_url"]);
-         console.log(result);
+         $log.log("successfully uploaded pic");
+         $log.log(result.response);
+         $log.log(result.response["photo_url"]);
+         $log.log(result);
          if(result.response){
            $scope.profile.photo = $scope.imgURI;
            profileService.profile.photo = $scope.imgURI;
@@ -801,15 +802,15 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
          $scope.loading = false;
          $scope.uploadMessage = "Photo upload successful";
        }, function(error) {
-         console.log("upload error");
-         console.log(error);
+         $log.log("upload error");
+         $log.log(error);
          $scope.loading = false;
          $scope.uploadMessage = "Photo upload failed";
        });
       }, function(err) {
         // An error occured. Show a message to the user
-        console.log("error in selecting pic");
-        console.log(err);
+        $log.log("error in selecting pic");
+        $log.log(err);
       });
     }, false);
   };
@@ -819,15 +820,15 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
     profileService.updateProfile(profile).then(function(responseSuccess){
       // this callback will be called asynchronously
       // when the response is available
-      console.log("updated profile");
-      console.log(responseSuccess);
+      $log.log("updated profile");
+      $log.log(responseSuccess);
       if (responseSuccess.data) {
         $scope.successMessage = responseSuccess.data.message;
       }
       $scope.loading = false;
       $scope.status = responseSuccess.status;
 
-      console.log(responseSuccess.status);
+      $log.log(responseSuccess.status);
     },
     function(responseError){
       // called asynchronously if an error occurs
@@ -838,17 +839,17 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       }
       $scope.loading = false;
       $scope.status = responseError.status;
-      console.log("error");
-      console.log(responseError.status);
+      $log.log("error");
+      $log.log(responseError.status);
     });
   };
 
 }])
 
-.controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "coachingSessionService", "pathwayService", "authenticationService", "coachingSessionsFactory", "$state", function($scope, $stateParams, coachingSessionService, pathwayService, authenticationService, coachingSessionsFactory, $state) {
+.controller('PathwayDetailsCtrl', ["$log", "$scope", "$stateParams", "coachingSessionService", "pathwayService", "authenticationService", "coachingSessionsFactory", "$state", function($log, $scope, $stateParams, coachingSessionService, pathwayService, authenticationService, coachingSessionsFactory, $state) {
   authenticationService.checkAuthentication();
-  console.log("getting pathway details");
-  console.log($stateParams);
+  $log.log("getting pathway details");
+  $log.log($stateParams);
   $scope.bookingErrorMessage = false;
   // this date function creates a Date object which is used to format
   // dates in the 'templates/pathway-details.html' view related to this controller
@@ -863,8 +864,8 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
     coachingSessionsFactory.getCoachingSessions($stateParams.pathwayId).then(function(responseSuccess){
       // this callback will be called asynchronously
       // when the response is available
-      console.log("gotten coaching sessions");
-      console.log(responseSuccess);
+      $log.log("gotten coaching sessions");
+      $log.log(responseSuccess);
       if (responseSuccess.data.pathway){
 
         $scope.coachingSessions = responseSuccess.data.pathway.coaching_sessions;
@@ -875,9 +876,9 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
         $scope.noProgrammeMessage = responseSuccess.data.noProgramme;
       }
       $scope.status = responseSuccess.status;
-      console.log($scope.coachingSessions);
-      console.log($scope.pathwayName);
-      console.log(responseSuccess.status);
+      $log.log($scope.coachingSessions);
+      $log.log($scope.pathwayName);
+      $log.log(responseSuccess.status);
     },
     function(responseError){
       // called asynchronously if an error occurs
@@ -887,9 +888,9 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
         $scope.errorMessage = responseError.data.message;
       }
       $scope.status = responseError.status;
-      console.log("error");
-      console.log(responseError);
-      console.log(responseError.status);
+      $log.log("error");
+      $log.log(responseError);
+      $log.log(responseError.status);
       pathwayService.pathway.session.booked = false;
     });
   }
@@ -900,7 +901,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   // If not true make ajax request to fetch the details
   if (pathwayService.pathway.session.booked){
     // fetch data from pathwayService
-    console.log("in if construct");
+    $log.log("in if construct");
     $scope.coachingSessions = pathwayService.pathway.sessions;
     $scope.pathwayName = pathwayService.pathway.name;
     $scope.pathwayId = pathwayService.pathway.id;
@@ -909,7 +910,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
     getPathwayDetails();
   }else {
     // fetch data from api
-    console.log("not in if construct");
+    $log.log("not in if construct");
     $scope.loading = true;
     getPathwayDetails();
     $scope.loading = false;
@@ -923,60 +924,60 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
   // deleteBooking function deletes an existing booking for a coaching session
   $scope.deleteBooking = function(coachingSessionId){
-    console.log("deleting coaching session");
-    console.log(coachingSessionId);
+    $log.log("deleting coaching session");
+    $log.log(coachingSessionId);
     $scope.loading = true;
     $scope.coachingSessionId = coachingSessionId;
 
     coachingSessionService.deleteBooking(coachingSessionId).then(function(responseSuccess){
       // this callback will be called asynchronously
       // when the response is available
-      console.log("successfully deleted booking");
-      console.log(responseSuccess);
+      $log.log("successfully deleted booking");
+      $log.log(responseSuccess);
       $scope.coachingSessions = responseSuccess.data.pathway.coaching_sessions;
       $scope.pathwayName = responseSuccess.data.pathway.name;
       $scope.loading = false;
       $scope.status = responseSuccess.status;
-      console.log($scope.coachingSessions);
-      console.log($scope.pathwayName);
-      console.log(responseSuccess.status);
+      $log.log($scope.coachingSessions);
+      $log.log($scope.pathwayName);
+      $log.log(responseSuccess.status);
     },
     function(responseError){
       // called asynchronously if an error occurs
       // or server returns response with an error status.
-      console.log("error");
+      $log.log("error");
       $scope.bookingErrorMessage = "Error! Could not delete booking";
       $scope.coachingSessionId = coachingSessionId;
       $scope.loading = false;
-      console.log($scope);
+      $log.log($scope);
     });
   }
   // deleteBooking function ends here
 
   $scope.viewPreWorks = function(preWorks){
-    console.log(preWorks);
+    $log.log(preWorks);
     pathwayService.pathway.session.preWorks = preWorks;
     $state.go('tabs.home.pathway-details.view-pre-works');
   }
 
   $scope.viewGroupSessionDetails = function(groupCoachingSession){
-    console.log("in group coaching session");
-    console.log(groupCoachingSession);
+    $log.log("in group coaching session");
+    $log.log(groupCoachingSession);
     pathwayService.pathway.groupCoachingSession = groupCoachingSession;
     $state.go('tabs.home.pathway-details.view-group-coaching-session-details');
   }
 
   $scope.viewNonBookableDetails = function(coachingSession){
-    console.log(coachingSession.nonbookable_session_details);
+    $log.log(coachingSession.nonbookable_session_details);
     pathwayService.pathway.session.nonBookableSessionDetails = coachingSession.nonbookable_session_details;
     $state.go('tabs.home.pathway-details.view-non-bookable-session-details');
   }
 
 }])
 
-.controller('ViewMaterialsCtrl', ["$scope", "authenticationService", "materialsFactory", function($scope, authenticationService, materialsFactory) {
+.controller('ViewMaterialsCtrl', ["$log", "$scope", "authenticationService", "materialsFactory", function($log, $scope, authenticationService, materialsFactory) {
   authenticationService.checkAuthentication();
-  console.log("view materials");
+  $log.log("view materials");
   $scope.loading = true;
   // getMaterials functions fetches the list of materials for a coaching session
   // via an ajax get request
@@ -991,8 +992,8 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       if (responseSuccess.data) {
         $scope.noMaterial = responseSuccess.data.message;
       }
-      console.log("materials gotten from materials factory");
-      console.log(responseSuccess);
+      $log.log("materials gotten from materials factory");
+      $log.log(responseSuccess);
     },
     function(responseError){
       // called asynchronously if an error occurs
@@ -1003,8 +1004,8 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       }
       $scope.loading = false;
       $scope.status = responseError.status;
-      console.log($scope);
-      console.log(responseError);
+      $log.log($scope);
+      $log.log(responseError);
     });
 
   }
@@ -1020,11 +1021,11 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
 }])
 
-.controller('CoachAvailabilityCtrl', ["$scope", "$stateParams", "$http", "$state", "pathwayService", "authenticationService", "coachingSessionService", function($scope, $stateParams, $http, $state, pathwayService, authenticationService, coachingSessionService) {
+.controller('CoachAvailabilityCtrl', ["$log", "$scope", "$stateParams", "$http", "$state", "pathwayService", "authenticationService", "coachingSessionService", function($log, $scope, $stateParams, $http, $state, pathwayService, authenticationService, coachingSessionService) {
   authenticationService.checkAuthentication();
-  console.log("coach availability");
-  console.log("All slots:" + $stateParams.all_slots);
-  console.log($stateParams);
+  $log.log("coach availability");
+  $log.log("All slots:" + $stateParams.all_slots);
+  $log.log($stateParams);
   $scope.allSlots = $stateParams.all_slots;
   $scope.date = function(d){
     var date = new Date(d);
@@ -1036,10 +1037,10 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
     coachingSessionService.getAvailability().then(function(responseSuccess){
       // this callback will be called asynchronously
       // when the response is available
-      console.log("gotten availability from coaching service");
-      console.log(responseSuccess);
-      console.log(responseSuccess.data);
-      console.log($stateParams.coachingSession);
+      $log.log("gotten availability from coaching service");
+      $log.log(responseSuccess);
+      $log.log(responseSuccess.data);
+      $log.log($stateParams.coachingSession);
       $scope.availabilitySlots = responseSuccess.data.slots;
       $scope.coachingSession = $stateParams.coachingSession;
       $scope.status = responseSuccess.status;
@@ -1052,8 +1053,8 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
         $scope.errorMessage = responseError.data.message;
       }
       $scope.status = responseError.status;
-      console.log("error");
-      console.log(responseError);
+      $log.log("error");
+      $log.log(responseError);
     });
     $scope.loading = false;
   }
@@ -1067,16 +1068,16 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   }
 
   $scope.bookSession = function(coachingSession, availabilitySlot) {
-    console.log(coachingSession);
+    $log.log(coachingSession);
     $scope.loading = true;
-    console.log(availabilitySlot.id);
+    $log.log(availabilitySlot.id);
     coachingSessionService.bookSession(coachingSession, availabilitySlot).then(function(responseSuccess){
       // this callback will be called asynchronously
       // when the response is available
       $scope.loading = false;
       $scope.status = responseSuccess.status;
-      console.log("success from book session");
-      console.log(responseSuccess.data);
+      $log.log("success from book session");
+      $log.log(responseSuccess.data);
       pathwayService.pathway.session.booked = true;
       pathwayService.pathway.sessions = responseSuccess.data.pathway.coaching_sessions;
       pathwayService.pathway.name = responseSuccess.data.pathway.name;
@@ -1092,19 +1093,19 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       }
       $scope.loading = false;
       $scope.status = responseError.status;
-      console.log("error");
-      console.log(responseError);
+      $log.log("error");
+      $log.log(responseError);
     });
   }
 }])
 
-.controller('ViewPreWorksCtrl', ["$scope", "$stateParams", "pathwayService", "authenticationService", "coachingSessionService", function($scope, $stateParams, pathwayService, authenticationService, coachingSessionService) {
+.controller('ViewPreWorksCtrl', ["$log", "$scope", "$stateParams", "pathwayService", "authenticationService", "coachingSessionService", function($log, $scope, $stateParams, pathwayService, authenticationService, coachingSessionService) {
   authenticationService.checkAuthentication();
-  console.log("pre-works");
+  $log.log("pre-works");
   $scope.preWorks = pathwayService.pathway.session.preWorks;
-  console.log($scope.preWorks);
+  $log.log($scope.preWorks);
   $scope.completePreWork = function(preWork){
-    console.log(preWork);
+    $log.log(preWork);
     $scope.loading = true;
     $scope.preWorkId = preWork.id
 
@@ -1114,8 +1115,8 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       $scope.loading = false;
       $scope.status = responseSuccess.status;
       $scope.completionStatus = "Completion status updated";
-      console.log("pre-work completed");
-      console.log(responseSuccess);
+      $log.log("pre-work completed");
+      $log.log(responseSuccess);
     },
     function(responseError){
       // called asynchronously if an error occurs
@@ -1128,17 +1129,17 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       }
       $scope.loading = false;
       $scope.status = responseError.status;
-      console.log($scope);
-      console.log("error: status not completed");
-      console.log(responseError);
+      $log.log($scope);
+      $log.log("error: status not completed");
+      $log.log(responseError);
     });
   }
 }])
 
-.controller('ViewNonBookableSessionDetailsCtrl', ["$scope", "pathwayService", "authenticationService", function($scope, pathwayService, authenticationService) {
+.controller('ViewNonBookableSessionDetailsCtrl', ["$log", "$scope", "pathwayService", "authenticationService", function($log, $scope, pathwayService, authenticationService) {
   authenticationService.checkAuthentication();
-  console.log("viewing non-bookable session details");
-  console.log(pathwayService.pathway.session.nonBookableSessionDetails);
+  $log.log("viewing non-bookable session details");
+  $log.log(pathwayService.pathway.session.nonBookableSessionDetails);
   $scope.nonBookableSessionDetails = pathwayService.pathway.session.nonBookableSessionDetails;
   $scope.date = function(d){
     var date = new Date(d);
@@ -1146,32 +1147,32 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   }
 }])
 
-.controller('ViewGroupCoachingSessionDetailsCtrl', ["$scope", "pathwayService", "authenticationService", function($scope, pathwayService, authenticationService) {
+.controller('ViewGroupCoachingSessionDetailsCtrl', ["$log", "$scope", "pathwayService", "authenticationService", function($log, $scope, pathwayService, authenticationService) {
   authenticationService.checkAuthentication();
-  console.log("viewing group coaching session details");
-  console.log(pathwayService.pathway.groupCoachingSession);
+  $log.log("viewing group coaching session details");
+  $log.log(pathwayService.pathway.groupCoachingSession);
   $scope.groupCoachingSession = pathwayService.pathway.groupCoachingSession;
 }])
 
-.controller('SendEmailCtrl', ["$scope", "$stateParams", "sessionService", "$http", "authenticationService", "coachingSessionService", function($scope, $stateParams, sessionService, $http, authenticationService, coachingSessionService) {
+.controller('SendEmailCtrl', ["$log", "$scope", "$stateParams", "sessionService", "$http", "authenticationService", "coachingSessionService", function($log, $scope, $stateParams, sessionService, $http, authenticationService, coachingSessionService) {
   authenticationService.checkAuthentication();
-  console.log("send email controller");
-  console.log($stateParams.coachId);
+  $log.log("send email controller");
+  $log.log($stateParams.coachId);
   $scope.coachId = $stateParams.coachId;
   $scope.message = {};
 
   $scope.expandTextArea = function(){
   	var element = document.getElementById("message");
-    console.log("increasing");
+    $log.log("increasing");
   	element.style.height =  element.scrollHeight + "px";
   }
 
   $scope.sendEmail = function(message, coachId){
 
     if (message && message.subject && message.content) {
-      console.log("sending email");
-      console.log(message);
-      console.log(coachId);
+      $log.log("sending email");
+      $log.log(message);
+      $log.log(coachId);
       $scope.loading = true;
 
       coachingSessionService.sendEmail(message, coachId).then(function(responseSuccess){
@@ -1182,8 +1183,8 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
         if (responseSuccess.data) {
           $scope.successMessage = responseSuccess.data.message;
         }
-        console.log("sent email");
-        console.log(responseSuccess);
+        $log.log("sent email");
+        $log.log(responseSuccess);
       },
       function(responseError){
         // called asynchronously if an error occurs
@@ -1194,7 +1195,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
         }
         $scope.loading = false;
         $scope.status = responseError.status;
-        console.log(responseError);
+        $log.log(responseError);
       });
     }
   }
