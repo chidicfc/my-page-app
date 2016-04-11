@@ -413,6 +413,30 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
     }
   }
 }])
+
+.factory('materialsFactory', ["$http", "$q", "sessionService", "$stateParams", function($http, $q, sessionService, $stateParams){
+  return {
+    getMaterials: function(){
+      console.log("in materials factory");
+      //Creating a deferred object
+       var deferred = $q.defer();
+       // set http request params
+       var requestParams = {
+         method: 'GET',
+         url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/materials',
+         params: {user: sessionService.user, pathway: {id: $stateParams.pathwayId}}
+       };
+       return $http(requestParams).then(function(response){
+         if(response.status == 200){
+           deferred.resolve(response);
+         }else{
+           deferred.reject(response);
+         }
+         return deferred.promise;
+       });
+    }
+  }
+}])
 // factory ends
 
 
@@ -878,7 +902,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
 }])
 
-.controller('ViewMaterialsCtrl', ["$scope", "$stateParams", "$http", "sessionService", "authenticationService", function($scope, $stateParams, $http, sessionService, authenticationService) {
+.controller('ViewMaterialsCtrl', ["$scope", "$stateParams", "$http", "sessionService", "authenticationService", "materialsFactory", function($scope, $stateParams, $http, sessionService, authenticationService, materialsFactory) {
   authenticationService.checkAuthentication();
   console.log("view materials");
   console.log($stateParams);
@@ -886,33 +910,32 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   // getMaterials functions fetches the list of materials for a coaching session
   // via an ajax get request
   var getMaterials = function(){
-    $http({
-      method: 'GET',
-      url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/materials',
-      params: {user: sessionService.user, pathway: {id: $stateParams.pathwayId}}
-    }).then(function successCallback(response) {
+
+    materialsFactory.getMaterials().then(function(responseSuccess){
       // this callback will be called asynchronously
       // when the response is available
       $scope.loading = false;
-      $scope.status = response.status;
-      $scope.materials = response.data.materials;
-      if (response.data) {
-        $scope.noMaterial = response.data.message;
+      $scope.status = responseSuccess.status;
+      $scope.materials = responseSuccess.data.materials;
+      if (responseSuccess.data) {
+        $scope.noMaterial = responseSuccess.data.message;
       }
-      console.log("materials gotten");
-      console.log(response);
-    }, function errorCallback(response) {
+      console.log("materials gotten from materials factory");
+      console.log(responseSuccess);
+    },
+    function(responseError){
       // called asynchronously if an error occurs
       // or server returns response with an error status.
-      $scope.statusText = response.statusText;
-      if (response.data) {
-        $scope.errorMessage = response.data.message;
+      $scope.statusText = responseError.statusText;
+      if (responseError.data) {
+        $scope.errorMessage = responseError.data.message;
       }
       $scope.loading = false;
-      $scope.status = response.status;
+      $scope.status = responseError.status;
       console.log($scope);
-      console.log(response);
+      console.log(responseError);
     });
+
   }
   // call getMaterials function
   getMaterials();
