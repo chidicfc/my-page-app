@@ -58,10 +58,10 @@
              </label>
            </div>
            <div class="messages red">
-              <label ng-show = "status && (status != '200')">Error! </label>
-              <label ng-show ="statusText">{{ statusText }}!</span> <span>{{ errorMessage }}</label>
-              <label ng-show="(loginForm.username.$dirty || loginForm.$submitted) && loginForm.username.$error.required">Username is required</label>
-              <label ng-show="(loginForm.password.$dirty || loginForm.$submitted) && loginForm.password.$error.required">Password is required</label>
+              <label ng-if = "status && (status != '200')">Error! </label>
+              <label ng-if ="statusText">{{ statusText }}!</span> <span>{{ errorMessage }}</label>
+              <label ng-if="(loginForm.username.$dirty || loginForm.$submitted) && loginForm.username.$error.required">Username is required</label>
+              <label ng-if="(loginForm.password.$dirty || loginForm.$submitted) && loginForm.password.$error.required">Password is required</label>
             </div>
            <div>
              <button class="button button-block button-calm" ng-click="signIn(user)">
@@ -150,12 +150,12 @@
             <div class="item item-thumbnail-left">
               <img ng-src="{{ coach.profile_image ? 'http://ci-ciabos-pr-276.herokuapp.com' + coach.profile_image : 'img/avatar.png' }}"/>
               <h2>{{ coach.name }}</h2>
-              <p class="small" ng-show="coach.timezone"> ({{ coach.timezone }}) </p>
-              <p class="small" ng-show="coach.email"> {{ coach.email }}</p>
-              <p class="small" ng-show="coach.phone"> {{ coach.phone }}</p>
+              <p class="small" ng-if="coach.timezone"> ({{ coach.timezone }}) </p>
+              <p class="small" ng-if="coach.email"> {{ coach.email }}</p>
+              <p class="small" ng-if="coach.phone"> {{ coach.phone }}</p>
             </div>
             <div class="item item-body">
-              <label ng-bind-html="coach.biography | unsafe" ng-show="coach.biography"></label>
+              <label ng-bind-html="coach.biography | unsafe" ng-if="coach.biography"></label>
             </div>
             <a class="item item-divider" href="#" ui-sref="tabs.coaches.send-email({ coachId: coach.id })">
               <i class="icon ion-email"></i>
@@ -187,12 +187,12 @@
 
             <div class="item">
               <h2>{{ profile.email }}</h2>
-              <p ng-show="profile.email2"> {{ profile.email2}} </p>
+              <p ng-if="profile.email2"> {{ profile.email2}} </p>
             </div>
 
             <div class="item">
-              <h2 ng-show="profile.phone1"> {{ profile.phone1 }}</h2>
-              <p ng-show="profile.phone2"> {{ profile.phone2}} </p>
+              <h2 ng-if="profile.phone1"> {{ profile.phone1 }}</h2>
+              <p ng-if="profile.phone2"> {{ profile.phone2}} </p>
             </div>
 
             <div class="item">
@@ -231,7 +231,7 @@
             <div class="item">
               <pre-loader> </pre-loader>
               <error-message> </error-message>
-              <label class="red block" ng-show='successMessage'> {{ successMessage }}</label>
+              <label class="red block" ng-if='successMessage'> {{ successMessage }}</label>
             </div>
 
             <div class="item item-thumbnail-left" href="#">
@@ -306,12 +306,12 @@
 
           <pre-loader ng-if="!(coachingSessionId)"> </pre-loader>
           <error-message> </error-message>
-          <label ng-show="noProgrammeMessage" class="red block"> {{ noProgrammeMessage }} </label>
-          <div ng-show="(status == '200')">
+          <label ng-if="noProgrammeMessage" class="red block"> {{ noProgrammeMessage }} </label>
+          <div ng-if="(status == '200')">
             <h4> {{ pathwayName }} </h4>
           <div>
 
-          <a ui-sref="tabs.home.pathway-details.view-materials({ pathwayId: pathwayId })" ng-show="(status == '200') && !(noProgrammeMessage)" href="#">
+          <a ui-sref="tabs.home.pathway-details.view-materials({ pathwayId: pathwayId })" ng-if="(status == '200') && !(noProgrammeMessage)" href="#">
             VIEW MATERIALS
           </a>
 
@@ -321,13 +321,13 @@
               <h2>{{ coachingSession.session_title }}</h2>
             </div>
             <div class="item item-body details">
-              <label ng-show="coachingSession.description"> {{ coachingSession.description}} </label>
-              <label ng-show="coachingSession.duration"> Date: <strong>{{ coachingSession.duration}}</strong> </label>
-              <label ng-show="coachingSession.venue"> Venue: <strong>{{ coachingSession.venue}}</strong> </label>
-              <label ng-show="coachingSession.summary">Summary: <strong>{{ coachingSession.summary }}</strong></label>
-              <label ng-show="coachingSession.booking_date"> {{ date(coachingSession.booking_date).toDateString() }} </label>
-              <label ng-show="coachingSession.start_time_in_12hour"> {{ coachingSession.start_time_in_12hour}} </label>
-              <a href="#" browse-to="http://ci-ciabos-pr-276.herokuapp.com/documents/download/{{ coachingSession.material }}" ng-show="coachingSession.material">
+              <label ng-if="coachingSession.description"> {{ coachingSession.description}} </label>
+              <label ng-if="coachingSession.duration"> Date: <strong>{{ coachingSession.duration}}</strong> </label>
+              <label ng-if="coachingSession.venue"> Venue: <strong>{{ coachingSession.venue}}</strong> </label>
+              <label ng-if="coachingSession.summary">Summary: <strong>{{ coachingSession.summary }}</strong></label>
+              <label ng-if="coachingSession.booking_date"> {{ date(coachingSession.booking_date).toDateString() }} </label>
+              <label ng-if="coachingSession.start_time_in_12hour"> {{ coachingSession.start_time_in_12hour}} </label>
+              <a href="#" browse-to="http://ci-ciabos-pr-276.herokuapp.com/documents/download/{{ coachingSession.material }}" ng-if="coachingSession.material">
                 <img src="img/pdf-icon.png" />
               </a>
 
@@ -375,7 +375,7 @@
             </div>
           </div>
 
-          <a ui-sref="tabs.home.pathway-details.view-materials({ pathwayId: pathwayId })" ng-show="(status == '200' && !(noProgrammeMessage))" href="#">
+          <a ui-sref="tabs.home.pathway-details.view-materials({ pathwayId: pathwayId })" ng-if="(status == '200' && !(noProgrammeMessage))" href="#">
             VIEW MATERIALS
           </a>
 
@@ -418,7 +418,7 @@
             <label class="block padding"> Please note that the times of all appointments are shown in your local time </label>
           </div>
 
-          <div class="list availability" ng-show="status == '200'">
+          <div class="list availability" ng-if="status == '200'">
 
             <div class="item">
               <a class="button button-calm button-small" ui-sref="tabs.home.pathway-details.coach-availability({ coachingSession: coachingSession, all_slots: 'true' })" ng-if="allSlots == 'false'">
@@ -462,7 +462,7 @@
               <label ng-if="preWork.pre_work_type_name == 'CiaB Diagnostic'"><a href="#" browse-to="http://{{ preWork.link }}"> Card Sort </a></label>
 
               <div ng-if="!(loading) && (preWorkId == preWork.id)">
-                <label ng-show = "completionStatus" class="red small"> {{ completionStatus }} </label>
+                <label ng-if = "completionStatus" class="red small"> {{ completionStatus }} </label>
               </div>
 
               <pre-loader ng-if="preWorkId == preWork.id"> </pre-loader>
@@ -491,11 +491,11 @@
             </div>
 
             <div class="item item-body">
-              <label ng-show="nonBookableSessionDetails.start_at"><strong>Start Date:</strong> {{ date(nonBookableSessionDetails.start_at).toDateString() }}</label>
-              <label ng-show="nonBookableSessionDetails.end_at"><strong>End Date:</strong> {{ date(nonBookableSessionDetails.end_at).toDateString() }}</label>
-              <label ng-show="nonBookableSessionDetails.venue"><strong>Venue:</strong> {{ nonBookableSessionDetails.venue }}</label>
-              <label ng-show="nonBookableSessionDetails.brief_details"><strong>Summary:</strong> {{ nonBookableSessionDetails.brief_details }}</label>
-              <label ng-show="nonBookableSessionDetails.additional_details"><strong>Additional Details:</strong> {{ nonBookableSessionDetails.additional_details }} </label>
+              <label ng-if="nonBookableSessionDetails.start_at"><strong>Start Date:</strong> {{ date(nonBookableSessionDetails.start_at).toDateString() }}</label>
+              <label ng-if="nonBookableSessionDetails.end_at"><strong>End Date:</strong> {{ date(nonBookableSessionDetails.end_at).toDateString() }}</label>
+              <label ng-if="nonBookableSessionDetails.venue"><strong>Venue:</strong> {{ nonBookableSessionDetails.venue }}</label>
+              <label ng-if="nonBookableSessionDetails.brief_details"><strong>Summary:</strong> {{ nonBookableSessionDetails.brief_details }}</label>
+              <label ng-if="nonBookableSessionDetails.additional_details"><strong>Additional Details:</strong> {{ nonBookableSessionDetails.additional_details }} </label>
             </div>
 
             <div class="item item-divider">
@@ -519,8 +519,8 @@
             </div>
 
             <div class="item item-body">
-              <label ng-show="groupCoachingSession.group_session_details.participant_details"><strong>Participant Details:</strong> {{ groupCoachingSession.group_session_details.participant_details }}</label>
-              <div ng-show="groupCoachingSession.group_coaching_members">
+              <label ng-if="groupCoachingSession.group_session_details.participant_details"><strong>Participant Details:</strong> {{ groupCoachingSession.group_session_details.participant_details }}</label>
+              <div ng-if="groupCoachingSession.group_coaching_members">
                 <label class="underline"><strong>Group Members</strong></label>
                 <label>{{ groupCoachingSession.coachee }}</label>
                 <label ng-repeat="coachingMember in groupCoachingSession.group_coaching_members"> {{ coachingMember }}</label>
@@ -543,7 +543,7 @@
 
           <pre-loader> </pre-loader>
           <error-message> </error-message>
-          <label class="red" ng-show="successMessage"> {{ successMessage }} </label>
+          <label class="red" ng-if="successMessage"> {{ successMessage }} </label>
 
           <form name="emailCoachForm" ng-submit="sendEmail(message, coachId)" novalidate class="padding">
             <div class="list">
@@ -560,8 +560,8 @@
               </label>
 
               <div class"messages red">
-                <label class="red block" ng-show="(emailCoachForm.subject.$dirty || emailCoachForm.$submitted) && emailCoachForm.subject.$error.required">Subject is required</label>
-                <label class="red block" ng-show="(emailCoachForm.content.$dirty || emailCoachForm.$submitted) && emailCoachForm.content.$error.required">Enter message</label>
+                <label class="red block" ng-if="(emailCoachForm.subject.$dirty || emailCoachForm.$submitted) && emailCoachForm.subject.$error.required">Subject is required</label>
+                <label class="red block" ng-if="(emailCoachForm.content.$dirty || emailCoachForm.$submitted) && emailCoachForm.content.$error.required">Enter message</label>
               </div>
 
               <button class="button button-calm button-small padding button-clear" type="submit">
