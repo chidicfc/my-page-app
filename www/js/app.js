@@ -257,6 +257,25 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
 .service('coachingSessionService', ["$http", "$q", "sessionService", "$stateParams", function($http, $q, sessionService, $stateParams){
 
+  this.completePreWork = function(preWork){
+    //Creating a deferred object
+     var deferred = $q.defer();
+     // set http request params
+     var requestParams = {
+       method: 'PATCH',
+       url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/pre_works/' + preWork.id + '/is_complete/' + preWork.is_complete,
+       params: {user: sessionService.user}
+     };
+     return $http(requestParams).then(function(response){
+       if(response.status == 200){
+         deferred.resolve(response);
+       }else{
+         deferred.reject(response);
+       }
+       return deferred.promise;
+     });
+  }
+
   this.deleteBooking = function(coachingSessionId){
     //Creating a deferred object
      var deferred = $q.defer();
@@ -773,7 +792,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
 }])
 
-.controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "coachingSessionService", "pathwayService", "authenticationService", "coachingSessionsFactory", function($scope, $stateParams, coachingSessionService, pathwayService, authenticationService, coachingSessionsFactory) {
+.controller('PathwayDetailsCtrl', ["$scope", "$stateParams", "coachingSessionService", "pathwayService", "authenticationService", "coachingSessionsFactory", "$state", function($scope, $stateParams, coachingSessionService, pathwayService, authenticationService, coachingSessionsFactory, $state) {
   authenticationService.checkAuthentication();
   console.log("getting pathway details");
   console.log($stateParams);
@@ -902,10 +921,9 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
 }])
 
-.controller('ViewMaterialsCtrl', ["$scope", "$stateParams", "$http", "sessionService", "authenticationService", "materialsFactory", function($scope, $stateParams, $http, sessionService, authenticationService, materialsFactory) {
+.controller('ViewMaterialsCtrl', ["$scope", "authenticationService", "materialsFactory", function($scope, authenticationService, materialsFactory) {
   authenticationService.checkAuthentication();
   console.log("view materials");
-  console.log($stateParams);
   $scope.loading = true;
   // getMaterials functions fetches the list of materials for a coaching session
   // via an ajax get request
@@ -1027,7 +1045,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   }
 }])
 
-.controller('ViewPreWorksCtrl', ["$scope", "$stateParams", "$http", "pathwayService", "sessionService", "authenticationService", function($scope, $stateParams, $http, pathwayService, sessionService, authenticationService) {
+.controller('ViewPreWorksCtrl', ["$scope", "$stateParams", "pathwayService", "authenticationService", "coachingSessionService", function($scope, $stateParams, pathwayService, authenticationService, coachingSessionService) {
   authenticationService.checkAuthentication();
   console.log("pre-works");
   $scope.preWorks = pathwayService.pathway.session.preWorks;
@@ -1036,34 +1054,31 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
     console.log(preWork);
     $scope.loading = true;
     $scope.preWorkId = preWork.id
-    $http({
-      method: 'PATCH',
-      url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/pre_works/' + preWork.id + '/is_complete/' + preWork.is_complete,
-      params: {user: sessionService.user}
-    }).then(function successCallback(response) {
+
+    coachingSessionService.completePreWork(preWork).then(function(responseSuccess){
       // this callback will be called asynchronously
       // when the response is available
       $scope.loading = false;
-      $scope.status = response.status;
+      $scope.status = responseSuccess.status;
       $scope.completionStatus = "Completion status updated";
       console.log("pre-work completed");
-      console.log(response);
-    }, function errorCallback(response) {
+      console.log(responseSuccess);
+    },
+    function(responseError){
       // called asynchronously if an error occurs
       // or server returns response with an error status.
       $scope.completionStatus = "Can't update completion status";
-      $scope.statusText = response.statusText;
+      $scope.statusText = responseError.statusText;
       preWork.is_complete = false;
-      if (response.data) {
-        $scope.errorMessage = response.data.message;
+      if (responseError.data) {
+        $scope.errorMessage = responseError.data.message;
       }
       $scope.loading = false;
-      $scope.status = response.status;
+      $scope.status = responseError.status;
       console.log($scope);
       console.log("error: status not completed");
-      console.log(response);
+      console.log(responseError);
     });
-
   }
 }])
 
