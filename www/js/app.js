@@ -27,6 +27,9 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
   $ionicConfigProvider.tabs.position('bottom');
   $ionicConfigProvider.views.maxCache(0);
+  var jsScrolling = (ionic.Platform.isAndroid() ) ? false : true;
+  $ionicConfigProvider.scrolling.jsScrolling(jsScrolling);
+  
   $stateProvider
     .state('signin', {
       url: '/sign-in',
