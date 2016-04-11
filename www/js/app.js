@@ -23,13 +23,17 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $logProvider) {
+.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $logProvider, $compileProvider) {
 
   $ionicConfigProvider.tabs.position('bottom');
   $ionicConfigProvider.views.maxCache(0);
   var jsScrolling = (ionic.Platform.isAndroid() ) ? false : true;
   $ionicConfigProvider.scrolling.jsScrolling(jsScrolling);
+
+  // uncomment this lines
   //$logProvider.debugEnabled(false);
+  //$compileProvider.debugInfoEnabled(false);
+  ///////////////////////////////////////////
 
   $stateProvider
     .state('signin', {
