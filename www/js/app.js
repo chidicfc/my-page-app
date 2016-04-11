@@ -31,8 +31,8 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   $ionicConfigProvider.scrolling.jsScrolling(jsScrolling);
 
   // uncomment this lines
-  //$logProvider.debugEnabled(false);
-  //$compileProvider.debugInfoEnabled(false);
+  $logProvider.debugEnabled(false);
+  $compileProvider.debugInfoEnabled(false);
   ///////////////////////////////////////////
 
   $stateProvider
