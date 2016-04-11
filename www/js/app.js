@@ -257,6 +257,25 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
 .service('coachingSessionService', ["$http", "$q", "sessionService", "$stateParams", function($http, $q, sessionService, $stateParams){
 
+  this.sendEmail = function(message, coachId){
+    //Creating a deferred object
+     var deferred = $q.defer();
+     // set http request params
+     var requestParams = {
+       method: 'POST',
+       url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/send_email/' + coachId,
+       data: {user: sessionService.user, message: message}
+     };
+     return $http(requestParams).then(function(response){
+       if(response.status == 200){
+         deferred.resolve(response);
+       }else{
+         deferred.reject(response);
+       }
+       return deferred.promise;
+     });
+  }
+
   this.completePreWork = function(preWork){
     //Creating a deferred object
      var deferred = $q.defer();
@@ -1100,7 +1119,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   $scope.groupCoachingSession = pathwayService.pathway.groupCoachingSession;
 }])
 
-.controller('SendEmailCtrl', ["$scope", "$stateParams", "sessionService", "$http", "authenticationService", function($scope, $stateParams, sessionService, $http, authenticationService) {
+.controller('SendEmailCtrl', ["$scope", "$stateParams", "sessionService", "$http", "authenticationService", "coachingSessionService", function($scope, $stateParams, sessionService, $http, authenticationService, coachingSessionService) {
   authenticationService.checkAuthentication();
   console.log("send email controller");
   console.log($stateParams.coachId);
@@ -1120,30 +1139,28 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       console.log(message);
       console.log(coachId);
       $scope.loading = true;
-      $http({
-        method: 'POST',
-        url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/send_email/' + coachId,
-        data: {user: sessionService.user, message: message}
-      }).then(function successCallback(response) {
+
+      coachingSessionService.sendEmail(message, coachId).then(function(responseSuccess){
         // this callback will be called asynchronously
         // when the response is available
         $scope.loading = false;
-        $scope.status = response.status;
-        if (response.data) {
-          $scope.successMessage = response.data.message;
+        $scope.status = responseSuccess.status;
+        if (responseSuccess.data) {
+          $scope.successMessage = responseSuccess.data.message;
         }
         console.log("sent email");
-        console.log(response);
-      }, function errorCallback(response) {
+        console.log(responseSuccess);
+      },
+      function(responseError){
         // called asynchronously if an error occurs
         // or server returns response with an error status.
         $scope.statusText = "message not sent";
-        if (response.data) {
-          $scope.errorMessage = response.data.message;
+        if (responseError.data) {
+          $scope.errorMessage = responseError.data.message;
         }
         $scope.loading = false;
-        $scope.status = response.status;
-        console.log(response);
+        $scope.status = responseError.status;
+        console.log(responseError);
       });
     }
   }
