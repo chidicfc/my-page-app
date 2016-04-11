@@ -208,6 +208,10 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   };
 })
 
+.service('coachesService', function() {
+  this.coaches = [];
+})
+
 .service('authenticationService', ["sessionService", "$state", function(sessionService, $state) {
   this.checkAuthentication = function(){
     if(Object.keys(sessionService.user).length === 0 && JSON.stringify(sessionService.user) === JSON.stringify({})){
@@ -222,7 +226,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
     console.log("signing out");
     sessionService.user = {};
     profileService.profile = {};
-
+    coachesService.coaches = [];
     pathwayService.pathways = [];
     pathwayService.pathway = {
       session: {},
@@ -578,15 +582,12 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 .controller('HomeTabCtrl', ["$scope", "pathwayService", "authenticationService", "sessionService", "pathwaysFactory", function($scope, pathwayService, authenticationService, sessionService, pathwaysFactory) {
   // check if user is authenticated
   authenticationService.checkAuthentication();
-  // pathwayService is used to transfer details of a pathway
-  // and list of pathways belonging to a coachee among controllers
-  $scope.pathways = pathwayService.pathways
   console.log("in home controller");
   console.log(pathwayService.pathways);
 
  // pulling down the home view refreshes the list of pathways
  // by calling this refreshPathwayList function
-  $scope.refreshPathwayList = function(){
+  var getPathwayList = function(){
     console.log("refreshing pathways");
     console.log(sessionService)
 
@@ -595,33 +596,45 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       // when the response is available
       pathwayService.pathways = responseSuccess.data.user.pathway_attributes;
       $scope.pathways = responseSuccess.data.user.pathway_attributes;
-      $scope.loading = false;
       $scope.status = responseSuccess.status;
-      //Stop the ion-refresher from spinning
-      $scope.$broadcast('scroll.refreshComplete');
       console.log("refreshed pathways");
       console.log(responseSuccess);
     },
     function(responseError){
       // called asynchronously if an error occurs
       // or server returns response with an error status.
-      //Stop the ion-refresher from spinning
-      $scope.$broadcast('scroll.refreshComplete');
       $scope.statusText = responseError.statusText;
       if (responseError.data) {
         $scope.errorMessage = responseError.data.message;
       }
-      $scope.loading = false;
       $scope.status = responseError.status;
     });
   }
+
+  // pathwayService is used to transfer details of a pathway
+  // and list of pathways belonging to a coachee among controllers
+  if(pathwayService.pathways.length == 0){
+    console.log("no pathways in pathwayService");
+    $scope.loading = true;
+    getPathwayList();
+    $scope.loading = false;
+  }else{
+    console.log("pathways exist in pathwayService");
+    $scope.pathways = pathwayService.pathways
+    getPathwayList();
+  }
+
   //refreshPathwayList function ends
+  $scope.refreshPathwayList = function(){
+    getPathwayList();
+    //Stop the ion-refresher from spinning
+    $scope.$broadcast('scroll.refreshComplete');
+  }
 }])
 
-.controller('CoachesTabCtrl', ["$scope", "coachesFactory", "authenticationService", function($scope, coachesFactory, authenticationService) {
+.controller('CoachesTabCtrl', ["$scope", "coachesFactory", "authenticationService", "coachesService", function($scope, coachesFactory, authenticationService, coachesService) {
   authenticationService.checkAuthentication();
   console.log("coaches tab");
-  $scope.loading = true;
   // getCoaches function fetches the list of coaches that have been
   // assigned to a coachee
   var getCoaches = function(){
@@ -630,8 +643,8 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
     // when the response is available
     console.log("success");
     console.log(responseSuccess);
-    $scope.loading = false;
     $scope.status = responseSuccess.status;
+    coachesService.coaches = responseSuccess.data.coaches;
     $scope.coaches = responseSuccess.data.coaches;
     console.log(responseSuccess.status);
     },
@@ -642,7 +655,6 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       if (responseError.data) {
         $scope.errorMessage = responseError.data.message;
       }
-      $scope.loading = false;
       $scope.status = responseError.status;
       console.log("error");
       console.log(responseError);
@@ -650,8 +662,18 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
     });
   }
 
-  // call getCoaches function
-  getCoaches();
+  // call getCoaches function if coachesService.coaches is empty
+  if (coachesService.coaches.length == 0) {
+    console.log("no coaches in coachesService");
+    $scope.loading = true;
+    getCoaches();
+    $scope.loading = false;
+  }else{
+    console.log("coachesService.coaches is not empty");
+    $scope.status = 200;
+    $scope.coaches = coachesService.coaches;
+    getCoaches();
+  }
 
   $scope.refreshCoachesList = function(){
     getCoaches();
@@ -662,7 +684,6 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
 .controller('SettingsTabCtrl', ["$scope", "$ionicPopup", "profileFactory", "$state", "profileService", "authenticationService", "signOutService", function($scope, $ionicPopup, profileFactory, $state, profileService, authenticationService, signOutService) {
   authenticationService.checkAuthentication();
-  $scope.loading = true;
   console.log("in settings controller")
 
   $scope.confirmPasswordChange = function() {
@@ -682,13 +703,6 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
     });
   }
 
-  $scope.editProfile = function() {
-    profileService.profile = $scope.profile;
-    console.log("profile editing");
-    console.log(profileService);
-    $state.go('tabs.settings.edit-profile');
-  }
-
   // get profile of a coachee
   var getProfile = function(){
     profileFactory.getProfile().then(function(responseSuccess){
@@ -696,9 +710,9 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       // when the response is available
       console.log("gotten profile");
       console.log(responseSuccess);
-      $scope.loading = false;
       $scope.status = responseSuccess.status;
-      $scope.profile = responseSuccess.data.profile
+      profileService.profile = responseSuccess.data.profile;
+      $scope.profile = responseSuccess.data.profile;
       console.log(responseSuccess.status);
     },
     function(responseError){
@@ -708,20 +722,36 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       if (responseError.data) {
         $scope.errorMessage = responseError.data.message;
       }
-      $scope.loading = false;
       $scope.status = responseError.status;
       console.log("error");
       console.log(responseError.status);
     });
   }
 
-  // call getProfile method
-  getProfile();
+  // call getProfile method if profileService.profile is empty
+  if(Object.keys(profileService.profile).length === 0 && JSON.stringify(profileService.profile) === JSON.stringify({})){
+    console.log("profile service's profile is empty");
+    $scope.loading = true;
+    getProfile();
+    $scope.loading = false;
+  }else{
+    console.log("profile service's profile is not empty");
+    $scope.status = 200;
+    $scope.profile = profileService.profile;
+    getProfile();
+  }
 
   $scope.refreshProfile = function(){
     getProfile();
     //Stop the ion-refresher from spinning
     $scope.$broadcast('scroll.refreshComplete');
+  }
+
+  $scope.editProfile = function() {
+    profileService.profile = $scope.profile;
+    console.log("profile editing");
+    console.log(profileService);
+    $state.go('tabs.settings.edit-profile');
   }
 
 }])
@@ -763,6 +793,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
          console.log(result);
          if(result.response){
            $scope.profile.photo = $scope.imgURI;
+           profileService.profile.photo = $scope.imgURI;
          }
          $scope.loading = false;
          $scope.uploadMessage = "Photo upload successful";
