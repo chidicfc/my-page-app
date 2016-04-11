@@ -165,9 +165,40 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   this.user = {}
 })
 
-.service('profileService', function() {
+.service('profileService', ["$http", "$q", "sessionService", function($http, $q, sessionService) {
   this.profile = {};
-})
+
+  this.updateProfile = function(profile) {
+
+    console.log("updating profile");
+    console.log(profile);
+    var user = {profile: {}};
+    user.username = profile.username;
+    user.email = profile.email;
+    user.profile.name = profile.name;
+    user.profile.email2 = profile.email2;
+    user.profile.phone1 = profile.phone1;
+    user.profile.phone2 = profile.phone2;
+    user.profile.timezone = profile.timezone;
+    //Creating a deferred object
+    var deferred = $q.defer();
+    // set http request params
+    var requestParams = {
+      method: 'PATCH',
+      url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/updateProfile',
+      data: {user: sessionService.user, userProfile: user}
+    };
+    return $http(requestParams).then(function(response){
+      if(response.status == 200){
+        deferred.resolve(response);
+      }else{
+        deferred.reject(response);
+      }
+      return deferred.promise;
+    });
+
+  }
+}])
 
 .service('pathwayService', function() {
   this.pathways = [];
@@ -620,45 +651,31 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   };
 
   $scope.updateProfile = function(profile) {
-    console.log("updating profile");
-    console.log(profile);
     $scope.loading = true;
-    user = {profile: {}};
-    user.username = profile.username;
-    user.email = profile.email;
-    user.profile.email2 = profile.email2;
-    user.profile.phone1 = profile.phone1;
-    user.profile.phone2 = profile.phone2;
-    user.profile.timezone = profile.timezone;
-
-    $http({
-      method: 'PATCH',
-      url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/updateProfile',
-      data: {user: sessionService.user, userProfile: user}
-    }).then(function successCallback(response) {
+    profileService.updateProfile(profile).then(function(responseSuccess){
       // this callback will be called asynchronously
       // when the response is available
       console.log("updated profile");
-      console.log(response);
-      if (response.data) {
-        $scope.successMessage = response.data.message;
+      console.log(responseSuccess);
+      if (responseSuccess.data) {
+        $scope.successMessage = responseSuccess.data.message;
       }
       $scope.loading = false;
-      $scope.status = response.status;
+      $scope.status = responseSuccess.status;
 
-      console.log(response.status);
-    }, function errorCallback(response) {
+      console.log(responseSuccess.status);
+    },
+    function(responseError){
       // called asynchronously if an error occurs
       // or server returns response with an error status.
-      $scope.statusText = response.statusText;
-      if (response.data) {
-        $scope.errorMessage = response.data.message;
+      $scope.statusText = responseError.statusText;
+      if (responseError.data) {
+        $scope.errorMessage = responseError.data.message;
       }
       $scope.loading = false;
-      $scope.status = response.status;
+      $scope.status = responseError.status;
       console.log("error");
-      console.log(response.status);
-
+      console.log(responseError.status);
     });
   };
 
