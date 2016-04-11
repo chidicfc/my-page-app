@@ -117,7 +117,7 @@
               <error-message> </error-message>
             </div>
 
-            <a class="item" ui-sref="tabs.home.pathway-details({ pathwayId: {{ pathway[0] }} })" ng-repeat="pathway in pathways | filter: query" href="#">
+            <a class="item" ui-sref="tabs.home.pathway-details({ pathwayId: {{ pathway[0] }} })" ng-repeat="pathway in pathways | filter: query track by pathway[0]" href="#">
               <h2> {{ pathway[1] }}</h2>
               <p> {{ pathway[2] }}</p>
             </a>
