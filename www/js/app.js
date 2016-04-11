@@ -255,6 +255,47 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   }
 }])
 
+.service('coachingSessionService', ["$http", "$q", "sessionService", "$stateParams", function($http, $q, sessionService, $stateParams){
+
+  this.getAvailability = function(){
+    //Creating a deferred object
+     var deferred = $q.defer();
+     // set http request params
+     var requestParams = {
+       method: 'GET',
+       url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/get_availability/' + $stateParams.coachingSession + '/' + $stateParams.all_slots,
+       params: {user: sessionService.user}
+     };
+     return $http(requestParams).then(function(response){
+       if(response.status == 200){
+         deferred.resolve(response);
+       }else{
+         deferred.reject(response);
+       }
+       return deferred.promise;
+     });
+  }
+
+  this.bookSession = function(coachingSession, availabilitySlot){
+    //Creating a deferred object
+     var deferred = $q.defer();
+     // set http request params
+     var requestParams = {
+       method: 'POST',
+       url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/book_session/' + coachingSession + '/' + availabilitySlot.id,
+       params: {user: sessionService.user}
+     };
+     return $http(requestParams).then(function(response){
+       if(response.status == 200){
+         deferred.resolve(response);
+       }else{
+         deferred.reject(response);
+       }
+       return deferred.promise;
+     });
+   }
+}])
+
 // service ends
 
 // factory begins
@@ -388,22 +429,6 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
    });
   }
  }
-})
-
-.directive('fileUpload', function () {
-  return {
-    scope: true,        //create a new scope
-    link: function (scope, element, attrs) {
-      element.bind('change', function (event) {
-        var files = event.target.files;
-        //iterate files since 'multiple' may be specified on the element
-        for (var i = 0;i<files.length;i++) {
-            //emit event upward
-            scope.$emit("fileSelected", { file: files[i] });
-        }
-      });
-    }
-  };
 })
 // directive ends
 
@@ -886,7 +911,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
 }])
 
-.controller('CoachAvailabilityCtrl', ["$scope", "$stateParams", "$http", "sessionService", "$state", "pathwayService", "authenticationService", function($scope, $stateParams, $http, sessionService, $state, pathwayService, authenticationService) {
+.controller('CoachAvailabilityCtrl', ["$scope", "$stateParams", "$http", "sessionService", "$state", "pathwayService", "authenticationService", "coachingSessionService", function($scope, $stateParams, $http, sessionService, $state, pathwayService, authenticationService, coachingSessionService) {
   authenticationService.checkAuthentication();
   console.log("coach availability");
   console.log("All slots:" + $stateParams.all_slots);
@@ -900,35 +925,29 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   }
   // getAvailability function gets the schedule of a coach assigned to a coaching session
   var getAvailability = function(){
-    $http({
-      method: 'GET',
-      url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/get_availability/' + $stateParams.coachingSession + '/' + $stateParams.all_slots,
-      params: {user: sessionService.user}
-    }).then(function successCallback(response) {
+    coachingSessionService.getAvailability().then(function(responseSuccess){
       // this callback will be called asynchronously
       // when the response is available
-      console.log("gotten availability");
-      console.log(response);
-      console.log(response.data.slots);
-      $scope.availabilitySlots = response.data.slots;
+      console.log("gotten availability from coaching service");
+      console.log(responseSuccess);
+      console.log(responseSuccess.data);
+      console.log($stateParams.coachingSession);
+      $scope.availabilitySlots = responseSuccess.data.slots;
       $scope.coachingSession = $stateParams.coachingSession;
       $scope.loading = false;
-      $scope.status = response.status;
-      console.log("gotten availability");
-      console.log(response);
-      console.log(response.data);
-      console.log($stateParams.coachingSession);
-    }, function errorCallback(response) {
+      $scope.status = responseSuccess.status;
+    },
+    function(responseError){
       // called asynchronously if an error occurs
       // or server returns response with an error status.
-      $scope.statusText = response.statusText;
-      if (response.data) {
-        $scope.errorMessage = response.data.message;
+      $scope.statusText = responseError.statusText;
+      if (responseError.data) {
+        $scope.errorMessage = responseError.data.message;
       }
       $scope.loading = false;
-      $scope.status = response.status;
+      $scope.status = responseError.status;
       console.log("error");
-      console.log(response);
+      console.log(responseError);
     });
   }
   // call getAvailability function
@@ -943,32 +962,28 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   $scope.bookSession = function(coachingSession, availabilitySlot) {
     console.log(coachingSession);
     console.log(availabilitySlot.id);
-
-    $http({
-      method: 'POST',
-      url: 'http://ci-ciabos-pr-276.herokuapp.com/api/v1/book_session/' + coachingSession + '/' + availabilitySlot.id,
-      params: {user: sessionService.user}
-    }).then(function successCallback(response) {
+    coachingSessionService.bookSession(coachingSession, availabilitySlot).then(function(responseSuccess){
       // this callback will be called asynchronously
       // when the response is available
       $scope.loading = false;
-      $scope.status = response.status;
+      $scope.status = responseSuccess.status;
       console.log("success from book session");
-      console.log(response.data);
+      console.log(responseSuccess.data);
       pathwayService.pathway.session.booked = true;
-      pathwayService.pathway.sessions = response.data.pathway.coaching_sessions;
-      pathwayService.pathway.name = response.data.pathway.name;
-      pathwayService.pathway.id = response.data.pathway.id;
+      pathwayService.pathway.sessions = responseSuccess.data.pathway.coaching_sessions;
+      pathwayService.pathway.name = responseSuccess.data.pathway.name;
+      pathwayService.pathway.id = responseSuccess.data.pathway.id;
       $state.go('tabs.home.pathway-details');
-    }, function errorCallback(response) {
+    },
+    function(responseError){
       // called asynchronously if an error occurs
       // or server returns response with an error status.
-      $scope.statusText = response.statusText;
-      if (response.data) {
-        $scope.errorMessage = response.data.message;
+      $scope.statusText = responseError.statusText;
+      if (responseError.data) {
+        $scope.errorMessage = responseError.data.message;
       }
       $scope.loading = false;
-      $scope.status = response.status;
+      $scope.status = responseError.status;
       console.log("error");
       console.log(response);
     });
