@@ -146,7 +146,7 @@
           <error-message> </error-message>
 
 
-          <div class="list list-inset padding" ng-repeat="coach in coaches | filter: query">
+          <div class="list list-inset padding" ng-repeat="coach in coaches | filter: query track by coach.id">
             <div class="item item-thumbnail-left">
               <img ng-src="{{ coach.profile_image ? 'http://ci-ciabos-pr-276.herokuapp.com' + coach.profile_image : 'img/avatar.png' }}"/>
               <h2>{{ coach.name }}</h2>
@@ -316,7 +316,7 @@
           </a>
 
           <div class="list list-inset coaching-sessions {{coachingSession.session_type}} {{coachingSession.status}}"
-            ng-class="{ 'nonbookable':  coachingSession.session_type == 'NonBookableCoachingSession' || coachingSession.session_type == 'SelfLearningCoachingSession', 'flexible': coachingSession.session_flexible, 'locked': coachingSession.session_locked }" ng-repeat="coachingSession in coachingSessions">
+            ng-class="{ 'nonbookable':  coachingSession.session_type == 'NonBookableCoachingSession' || coachingSession.session_type == 'SelfLearningCoachingSession', 'flexible': coachingSession.session_flexible, 'locked': coachingSession.session_locked }" ng-repeat="coachingSession in coachingSessions track by coachingSession.session_id">
             <div class="item item-divider item-text-wrap">
               <h2>{{ coachingSession.session_title }}</h2>
             </div>
@@ -394,7 +394,7 @@
 
           <div class="list padding">
 
-            <div class="item" ng-repeat="material in materials">
+            <div class="item" ng-repeat="material in materials track by material.id">
               <h3>
                 {{ material.name }}
               </h3>
@@ -426,7 +426,7 @@
               </a>
             </div>
 
-            <div ng-repeat="availabilitySlot in availabilitySlots">
+            <div ng-repeat="availabilitySlot in availabilitySlots track by availabilitySlot.id">
               <div class="item item-divider">
                 <span class="date"> {{  date(availabilitySlot.date).toDateString() }}</span>
               </div>
@@ -447,7 +447,7 @@
       <ion-view view-title="Self Learning Session">
         <ion-content padding="true">
 
-          <div class="list list-inset pre-works" ng-repeat="preWork in preWorks">
+          <div class="list list-inset pre-works" ng-repeat="preWork in preWorks track by preWork.id">
 
             <div class="item item-divider">
               {{$index + 1}}
