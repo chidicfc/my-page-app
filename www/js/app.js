@@ -221,7 +221,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   }
 }])
 
-.service('signOutService', ["sessionService", "profileService", "pathwayService", "$state", function(sessionService, profileService, pathwayService, $state) {
+.service('signOutService', ["sessionService", "profileService", "pathwayService", "$state", "coachesService", function(sessionService, profileService, pathwayService, $state, coachesService) {
   this.signOut = function(){
     console.log("signing out");
     sessionService.user = {};
@@ -846,7 +846,6 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   authenticationService.checkAuthentication();
   console.log("getting pathway details");
   console.log($stateParams);
-  $scope.loading = true;
   $scope.bookingErrorMessage = false;
   // this date function creates a Date object which is used to format
   // dates in the 'templates/pathway-details.html' view related to this controller
@@ -864,6 +863,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       console.log("gotten coaching sessions");
       console.log(responseSuccess);
       if (responseSuccess.data.pathway){
+
         $scope.coachingSessions = responseSuccess.data.pathway.coaching_sessions;
         $scope.pathwayName = responseSuccess.data.pathway.name;
         $scope.pathwayId = responseSuccess.data.pathway.id;
@@ -871,7 +871,6 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       if (responseSuccess.data.noProgramme){
         $scope.noProgrammeMessage = responseSuccess.data.noProgramme;
       }
-      $scope.loading = false;
       $scope.status = responseSuccess.status;
       console.log($scope.coachingSessions);
       console.log($scope.pathwayName);
@@ -884,7 +883,6 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       if (responseError.data) {
         $scope.errorMessage = responseError.data.message;
       }
-      $scope.loading = false;
       $scope.status = responseError.status;
       console.log("error");
       console.log(responseError);
@@ -894,7 +892,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   }
   // getPathwayDetails function ends
 
-  // checks if coachee just booked a session. If true don't make ajax request
+  // checks if coachee just booked a session.
   // Use details stored in pathwayService instead
   // If not true make ajax request to fetch the details
   if (pathwayService.pathway.session.booked){
@@ -903,13 +901,15 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
     $scope.coachingSessions = pathwayService.pathway.sessions;
     $scope.pathwayName = pathwayService.pathway.name;
     $scope.pathwayId = pathwayService.pathway.id;
-    $scope.loading = false;
     $scope.status = 200;
     pathwayService.pathway.session.booked = false;
+    getPathwayDetails();
   }else {
     // fetch data from api
     console.log("not in if construct");
+    $scope.loading = true;
     getPathwayDetails();
+    $scope.loading = false;
   }
 
   $scope.refreshCoachingSessionsList = function(){
@@ -1022,7 +1022,6 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   console.log("coach availability");
   console.log("All slots:" + $stateParams.all_slots);
   console.log($stateParams);
-  $scope.loading = true;
   $scope.allSlots = $stateParams.all_slots;
   $scope.date = function(d){
     var date = new Date(d);
@@ -1030,6 +1029,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   }
   // getAvailability function gets the schedule of a coach assigned to a coaching session
   var getAvailability = function(){
+    $scope.loading = true;
     coachingSessionService.getAvailability().then(function(responseSuccess){
       // this callback will be called asynchronously
       // when the response is available
@@ -1039,7 +1039,6 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       console.log($stateParams.coachingSession);
       $scope.availabilitySlots = responseSuccess.data.slots;
       $scope.coachingSession = $stateParams.coachingSession;
-      $scope.loading = false;
       $scope.status = responseSuccess.status;
     },
     function(responseError){
@@ -1049,11 +1048,11 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
       if (responseError.data) {
         $scope.errorMessage = responseError.data.message;
       }
-      $scope.loading = false;
       $scope.status = responseError.status;
       console.log("error");
       console.log(responseError);
     });
+    $scope.loading = false;
   }
   // call getAvailability function
   getAvailability();
@@ -1066,6 +1065,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
 
   $scope.bookSession = function(coachingSession, availabilitySlot) {
     console.log(coachingSession);
+    $scope.loading = true;
     console.log(availabilitySlot.id);
     coachingSessionService.bookSession(coachingSession, availabilitySlot).then(function(responseSuccess){
       // this callback will be called asynchronously
