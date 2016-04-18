@@ -30,7 +30,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
   var jsScrolling = (ionic.Platform.isAndroid() ) ? false : true;
   $ionicConfigProvider.scrolling.jsScrolling(jsScrolling);
 
-  // uncomment this lines
+  // uncomment these lines
   $logProvider.debugEnabled(false);
   $compileProvider.debugInfoEnabled(false);
   ///////////////////////////////////////////
@@ -164,7 +164,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
         }
       }
     })
-
+    // default route
    $urlRouterProvider.otherwise('/sign-in');
 
 })
