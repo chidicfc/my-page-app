@@ -803,12 +803,10 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
            $scope.profile.photo = $scope.imgURI;
            profileService.profile.photo = $scope.imgURI;
          }
-         $scope.loading = false;
          $scope.uploadMessage = "Photo upload successful";
        }, function(error) {
          $log.log("upload error");
          $log.log(error);
-         $scope.loading = false;
          $scope.uploadMessage = "Photo upload failed";
        });
       }, function(err) {
@@ -817,6 +815,7 @@ angular.module('myPage', ['ionic', 'ngSanitize', 'ngCordova', 'ionic-modal-selec
         $log.log(err);
       });
     }, false);
+    $scope.loading = false;
   };
 
   $scope.updateProfile = function(profile) {
